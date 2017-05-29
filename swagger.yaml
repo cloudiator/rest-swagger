@@ -526,6 +526,7 @@ paths:
   # Cloud related paths:
   /clouds:
     get:
+      consumes: []
       operationId: findClouds
       tags:
         - cloud
@@ -559,6 +560,7 @@ paths:
     
   /clouds/{id}:
     get:
+      consumes: []
       operationId: findCloud
       tags:
         - cloud
@@ -573,6 +575,7 @@ paths:
          schema:
           $ref: '#/definitions/Cloud'
     delete:
+      consumes: []
       operationId: deleteCloud
       tags:
         - cloud
@@ -587,6 +590,7 @@ paths:
   # Image related paths
   /images:
     get:
+      consumes: []
       operationId: findImages
       tags:
         - cloud
@@ -627,6 +631,7 @@ paths:
   # Hardware related paths
   /hardware:
     get:
+      consumes: []
       operationId: findHardware
       tags:
         - cloud
@@ -643,7 +648,8 @@ paths:
     
   # Location related paths
   /locations:
-    get:  
+    get:
+      consumes: []
       operationId: findLocations
       tags:
         - cloud
@@ -661,6 +667,7 @@ paths:
   # Component related paths
   /components:
     get:
+      consumes: []
       operationId: findComponents
       tags:
         - application
@@ -698,6 +705,7 @@ paths:
   # Task related paths
   /tasks:
     get:
+      consumes: []
       operationId: findTasks
       tags:
         - task
@@ -713,6 +721,7 @@ paths:
               
   /task/{id}:
     get:
+      consumes: []
       operationId: findTask
       tags:
         - task
