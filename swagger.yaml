@@ -119,6 +119,7 @@ definitions:
     type: object
     required:
       - name
+      - endpoint
       - api 
       - credential
       - cloudType
@@ -126,6 +127,9 @@ definitions:
       name:
         type: string
         description: "Human readable name for the cloud. Needs to be unique."
+      endpoint:
+        type: string
+        description: "URI where the api of this cloud provider can be accessed."
       cloudType:
         description: "Type of the cloud"
         type: string
