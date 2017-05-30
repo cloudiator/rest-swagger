@@ -681,7 +681,7 @@ paths:
             type: array
             items: 
               $ref: '#/definitions/Component'
-    put:
+    post:
       operationId: addComponent
       tags:
         - application
