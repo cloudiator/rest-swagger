@@ -10,7 +10,7 @@ info:
   contact:
     name: Daniel Baur
     email: daniel.baur@uni-ulm.de
-    url: cloudiator.org
+    url: http://cloudiator.org
   license:
     name: Apache License 2.0
     url: https://raw.githubusercontent.com/cloudiator/rest/master/LICENSE
@@ -57,6 +57,7 @@ definitions:
     - $ref: '#/definitions/NewCloud'
     - properties:
         id:
+          example: "1a79a4d60de6718e8e5b326e338ae533"
           type: string
           description: Unique identifier for the cloud
           
@@ -70,6 +71,7 @@ definitions:
       providerName:
         type: string
         description: Name of the API provider, maps to a driver
+        example: "openstack-nova"
   
   CloudCredential:
     description: |
@@ -83,16 +85,22 @@ definitions:
         type: string
         description: Username for authentication at the cloud provider's API
         minLength: 1
+        example: "tenant:username"
       secret:
         type: string
         description: Secret (e.g. Password) for authentication at the cloud provider's API
         minLength: 1
+        example: "MySuperSecurePassword"
         
   CloudConfiguration:
     description: |
       Repesents the configuration of a cloud.
     type: object
     properties:
+      nodeGroup:
+        type: string
+        description: A prefix all Cloudiator managed entities will belong to.
+        example: "cloudiator"
       properties:
         type: array
         description: Array of configuration properties.
@@ -109,9 +117,11 @@ definitions:
       key:
         type: string
         description: "Key of the property"
+        example: "sword.regions"
       value:
         type: string
         description: "Value of the property"
+        example: "RegionOne, RegionTwo"
       
   NewCloud:
     description: |
@@ -127,13 +137,16 @@ definitions:
       name:
         type: string
         description: "Human readable name for the cloud. Needs to be unique."
+        example: "Openstack"
       endpoint:
         type: string
         description: "URI where the api of this cloud provider can be accessed."
+        example: "https://endpoint.example.com"
       cloudType:
         description: "Type of the cloud"
         type: string
         enum: ['PRIVATE','PUBLIC']
+        example: 'PRIVATE'
       api:
         $ref: '#/definitions/Api'
       credential:
@@ -154,12 +167,15 @@ definitions:
       id:
         type: string
         description: "Unique identifier for this image"
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
       name:
         type: string
         description: "Human-readable name"
+        example: "Ubuntu 16.04 LTS AMD 64"
       providerId:
         type: string
         description: "Original id issued by provider"
+        example: "1"
       operatingSystem:
         $ref: '#/definitions/OperatingSystem'
         
@@ -194,24 +210,30 @@ definitions:
       id:
         description: "Unique identifier for the hardware"
         type: string
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
       name:
         description: "Human-readable name for the hardware"
         type: string
+        example: "m1.medium"
       providerId:
         description: "Original id issued by the provider"
         type: string
+        example: "1"
       cores:
         description: "Number of cores"
         type: integer
         format: int32
+        example: 4
       ram:
         description: "Amount of RAM"
         type: integer
         format: int64
+        example: 2048
       disk:
         description: "Amount of disk space"
         type: number
         format: double
+        example: 100
       location:
         $ref: '#/definitions/Location'
     
@@ -229,19 +251,24 @@ definitions:
       id:
         description: "Unique identifier"
         type: string
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne"
       name:
         description: "Human-readable name"
         type: string
+        example: "RegionOne"
       providerId:
         description: "Original id issued by the provider"
         type: string
+        example: "RegionOne"
       locationScope:
         description: "Scope of the location"
         type: string
         enum: ['PROVIDER', 'REGION', 'ZONE', 'HOST']
+        example: 'ZONE'
       isAssignable:
         description: "True of the location can be used to start virtual machines, false if not"
         type: boolean
+        example: true
       parent:
         # self reference is broken in editor and UI
         # see https://github.com/swagger-api/swagger-editor/issues/1005
