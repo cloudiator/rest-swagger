@@ -36,6 +36,11 @@ parameters:
 # Definitions
 definitions:
 
+  CloudType:
+    type: string
+    description: type of the cloud
+    enum: ['PRIVATE','PUBLIC']
+
   Error:
     required:
       - code
