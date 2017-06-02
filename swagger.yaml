@@ -148,10 +148,7 @@ definitions:
         description: "URI where the api of this cloud provider can be accessed."
         example: "https://endpoint.example.com"
       cloudType:
-        description: "Type of the cloud"
-        type: string
-        enum: ['PRIVATE','PUBLIC']
-        example: 'PRIVATE'
+        $ref: '#/definitions/CloudType'
       api:
         $ref: '#/definitions/Api'
       credential:
