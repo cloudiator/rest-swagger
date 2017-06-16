@@ -133,16 +133,11 @@ definitions:
       Represents a new cloud that is to be created
     type: object
     required:
-      - name
       - endpoint
       - api 
       - credential
       - cloudType
     properties:
-      name:
-        type: string
-        description: "Human readable name for the cloud. Needs to be unique."
-        example: "Openstack"
       endpoint:
         type: string
         description: "URI where the api of this cloud provider can be accessed."
