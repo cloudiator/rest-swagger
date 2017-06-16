@@ -425,6 +425,7 @@ definitions:
       name:
         description: "Human-readable name"
         type: string
+        example: "haproxy"
   
   DockerComponent:
     description: |
@@ -472,10 +473,12 @@ definitions:
             description: |
               Executed before installation action. Can be e.g. used for downloading binaries.
             type: string
+            example: "sudo apt-get -y update && sudo apt-get -y install git && git clone https://github.com/dbaur/mediawiki-tutorial.git"
           install:
             description: |
               Used for installing the application.
             type: string
+            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
           postInstall:
             description: |
               Used for configuration of the application component. First action where Lance environment variables are set.
@@ -488,6 +491,7 @@ definitions:
             description: |
               Starts the component. Needs to return for PlainContainer and not return for Docker.
             type: string
+            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
           startDetection:
             description: |
               Detects the start of the application. Required if the application does not start instantianous.
@@ -524,24 +528,77 @@ definitions:
     properties:
       name:
         type: string
-  
-  ApplicationComponent:
-    type: object
+      components:
+        type: array
+        items:
+          $ref: '#/definitions/Component'
+      ports:
+        type: array
+        items:
+          $ref: '#/definitions/Port'
+      communications:
+        type: array
+        items:
+          $ref: '#/definitions/Communication'
+
+  Port:
+    description: |
+      Represents a communication port of a component
+    required:
+      - name
     properties:
-      test:
+      name:
         type: string
-        
+        example: "LOADBALANCERREQWIKI"
+
+  PortProvided:
+    description: |
+      Represents a communication port that the component provides for other components
+      or the end user.
+    allOf:
+      - $ref: '#/definitions/Port'
+      - properties:
+          port:
+            type: integer
+            format: int32
+            example: 80
+
+  PortRequired:
+    description: |
+      Represents a communication port that the component requires from other (downstream) components.
+    allOf:
+      - $ref: '#/definitions/Port'
+      - properties:
+          updateAction:
+            type: string
+            description: |
+              A script that is executed if a new instance of a downstream component is available.
+            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
+          isMandatory:
+            type: boolean
+            description: |
+              States if an instance of a downstream components needs to be already started (true), or
+              if the component can start without a downstream component (false).
+            example: true
+
+  Communication:
+    description: |
+      Represents a communication requirement between two components by mapping a required port of a
+      component to a provided port of another component.
+    properties:
+      portRequired:
+        type: string
+        description: |
+          The name of the required port this communication refers to.
+      portProvided:
+        type: string
+        description: |
+          The name of the provided port this communication refers to.
+
   Node:
     type: object
     properties:
       name:
-        type: string
-        
-    
-  Relationship:
-    type: object
-    properties:
-      test:
         type: string
         
   VirtualMachine:
