@@ -418,9 +418,12 @@ definitions:
           Discriminator for polymorphism.
         type: string
       name:
-        description: "Human-readable name"
+        description: "Human-readable name. Uniquely identifies a component."
         type: string
-        example: "haproxy"
+      ports:
+        type: array
+        items:
+          $ref: '#/definitions/Port'
   
   DockerComponent:
     description: |
@@ -468,12 +471,10 @@ definitions:
             description: |
               Executed before installation action. Can be e.g. used for downloading binaries.
             type: string
-            example: "sudo apt-get -y update && sudo apt-get -y install git && git clone https://github.com/dbaur/mediawiki-tutorial.git"
           install:
             description: |
               Used for installing the application.
             type: string
-            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
           postInstall:
             description: |
               Used for configuration of the application component. First action where Lance environment variables are set.
@@ -486,7 +487,6 @@ definitions:
             description: |
               Starts the component. Needs to return for PlainContainer and not return for Docker.
             type: string
-            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
           startDetection:
             description: |
               Detects the start of the application. Required if the application does not start instantianous.
@@ -515,26 +515,43 @@ definitions:
             description: |
               Executed before the container is shutdown. Can be used to backup state.
             type: string
+    example:
+      name: haproxy
+      preInstall: |
+        sudo apt-get -y update && sudo apt-get -y install git &&
+        git clone https://github.com/dbaur/mediawiki-tutorial.git
+      install: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
+      start: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
+
         
   Application:
     description: |
       Represents an application. An application is a logical group of components.
     type: object
+    required:
+      - name
+      - components
+      - communications
     properties:
       name:
         type: string
       components:
         type: array
         items:
-          $ref: '#/definitions/Component'
-      ports:
-        type: array
-        items:
-          $ref: '#/definitions/Port'
+          type: string
+        description: |
+          An array of components (referenced by names) that form this application.
+        example:
       communications:
         type: array
         items:
           $ref: '#/definitions/Communication'
+    example:
+      name: "MediaWiki Application"
+      components:
+        - "HaProxy"
+        - "MediaWiki"
+        - "MariaDB"
 
   Port:
     description: |
@@ -544,6 +561,9 @@ definitions:
     properties:
       name:
         type: string
+        description: |
+          Uniquely identifies a port. Defines the name of the environment variables holding
+          IP addresses of remote components.
         example: "LOADBALANCERREQWIKI"
 
   PortProvided:
@@ -765,6 +785,45 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Location'
+
+  # Application related paths
+
+  /applications:
+    get:
+      consumers: []
+      operationId: findApplications
+      tags:
+        - application
+      description: |
+        Returns all applications visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+    post:
+      operationId: addApplication
+      tags:
+        - application
+      description:
+        Creates a new application
+      parameters:
+        - name: application
+          in: body
+          description: |
+            Application to be created.
+          required: true
+          schema:
+            $ref: '#/definitions/Application'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Application'
   
   # Component related paths
   /components:
@@ -856,9 +915,8 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Task'
-    
       
-   # Platform related paths:
+  # Platform related paths:
   
   # Platform paths:
   /platform:
