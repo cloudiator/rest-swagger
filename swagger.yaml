@@ -554,11 +554,17 @@ definitions:
         - "MariaDB"
 
   Port:
+    type: object
+    discriminator: type
     description: |
       Represents a communication port of a component
     required:
       - name
     properties:
+      type:
+        description: |
+          Discriminator for polymorphism.
+        type: string
       name:
         type: string
         description: |
@@ -567,6 +573,7 @@ definitions:
         example: "LOADBALANCERREQWIKI"
 
   PortProvided:
+    type: object
     description: |
       Represents a communication port that the component provides for other components
       or the end user.
@@ -579,6 +586,7 @@ definitions:
             example: 80
 
   PortRequired:
+    type: object
     description: |
       Represents a communication port that the component requires from other (downstream) components.
     allOf:
