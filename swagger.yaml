@@ -798,7 +798,7 @@ paths:
 
   /applications:
     get:
-      consumers: []
+      consumes: []
       operationId: findApplications
       tags:
         - application
