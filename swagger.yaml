@@ -888,7 +888,7 @@ paths:
             items:
               $ref: '#/definitions/Task'
               
-  /task/{id}:
+  /tasks/{id}:
     get:
       consumes: []
       operationId: findTask
