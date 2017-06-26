@@ -229,7 +229,7 @@ definitions:
       disk:
         description: "Amount of disk space"
         type: number
-        format: double
+        format: float
         example: 100
       location:
         $ref: '#/definitions/Location'
@@ -683,8 +683,8 @@ paths:
           schema:
             $ref: '#/definitions/NewCloud'
       responses:
-        200:
-          description: "OK"
+        201:
+          description: "Created"
           schema:
             $ref: "#/definitions/Cloud"
         400:
@@ -892,7 +892,7 @@ paths:
             items:
               $ref: '#/definitions/Task'
               
-  /task/{id}:
+  /tasks/{id}:
     get:
       consumes: []
       operationId: findTask
