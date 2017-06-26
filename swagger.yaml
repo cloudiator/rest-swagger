@@ -650,6 +650,17 @@ definitions:
       location:
         type: string
         
+responses:
+  500ErrorResponse:
+    description: An unexpected Error occured
+    schema:
+      $ref: '#/definitions/Error'
+  504GatewayTimeout:
+    description: Server temporary not available
+    schema:
+      $ref: '#/definitions/Error'
+
+  
 # Paths
 paths:
 
@@ -670,6 +681,8 @@ paths:
             type: array
             items: 
               $ref: '#/definitions/Cloud'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addCloud
       tags:
@@ -687,6 +700,13 @@ paths:
           description: "Created"
           schema:
             $ref: "#/definitions/Cloud"
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          description: 'Service temporary unavailable'
+          schema:
+            $ref: '#/definitions/Error'
+        
     
   /clouds/{id}:
     get:
