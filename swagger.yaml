@@ -687,6 +687,10 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Cloud"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/Error"
     
   /clouds/{id}:
     get:
