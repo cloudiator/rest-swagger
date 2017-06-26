@@ -700,13 +700,17 @@ paths:
           description: "Created"
           schema:
             $ref: "#/definitions/Cloud"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/Error"
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
           description: 'Service temporary unavailable'
           schema:
             $ref: '#/definitions/Error'
-        
+
     
   /clouds/{id}:
     get:
