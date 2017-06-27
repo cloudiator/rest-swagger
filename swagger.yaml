@@ -617,17 +617,16 @@ definitions:
         type: string
         description: |
           The name of the provided port this communication refers to.
-
-  Node:
-    type: object
-    properties:
-      name:
-        type: string
         
   VirtualMachine:
     type: object
-    allOf:
-      - $ref: '#/definitions/Node'
+    properties:
+      image:
+        type: Image
+      hardware:
+        type: Hardware
+      location:
+        type: Location
       
   Task:
     description: |
@@ -639,9 +638,11 @@ definitions:
         enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
         description: |
           The status of the running task
-          
+
   VirtualMachineRequest:
     type: object
+    description: |
+      Represents a request to create a new virtual machine.
     properties:
       image:
         type: string
