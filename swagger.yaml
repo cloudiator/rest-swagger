@@ -622,11 +622,11 @@ definitions:
     type: object
     properties:
       image:
-        type: Image
+        $ref: '#/definitions/Image'
       hardware:
-        type: Hardware
+        $ref: '#/definitions/Hardware'
       location:
-        type: Location
+        $ref: '#/definitions/Location'
       
   Task:
     description: |
@@ -652,6 +652,14 @@ definitions:
         type: string
         
 responses:
+  401UnauthorizedResponse:
+    description: Authorization for this action is missing
+    schema:
+      $ref: '#/definitions/Error'
+  403ForbiddenResponse:
+    description: Forbidden action
+    schema:
+      $ref: '#/definition/Error'
   500ErrorResponse:
     description: An unexpected Error occured
     schema:
@@ -682,6 +690,12 @@ paths:
             type: array
             items: 
               $ref: '#/definitions/Cloud'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
     post:
@@ -705,6 +719,10 @@ paths:
           description: "Bad Request"
           schema:
             $ref: "#/definitions/Error"
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -729,6 +747,14 @@ paths:
           The cloud identified by the id
          schema:
           $ref: '#/definitions/Cloud'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     delete:
       consumes: []
       operationId: deleteCloud
@@ -741,6 +767,14 @@ paths:
       responses:
         200:
           description: "OK"
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   # Image related paths
   /images:
@@ -759,6 +793,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Image'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
               
   /images/{id}:
     put:
@@ -782,6 +824,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Image'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
 
   # Hardware related paths
   /hardware:
@@ -800,6 +850,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Hardware'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     
   # Location related paths
   /locations:
@@ -818,6 +876,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Location'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
 
   # Application related paths
 
@@ -837,6 +903,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Application'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addApplication
       tags:
@@ -857,6 +931,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Application'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   # Component related paths
   /components:
@@ -875,6 +957,14 @@ paths:
             type: array
             items: 
               $ref: '#/definitions/Component'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addComponent
       tags:
@@ -895,6 +985,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Component'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
             
   # Task related paths
   /tasks:
@@ -912,6 +1010,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Task'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
               
   /tasks/{id}:
     get:
@@ -928,6 +1034,14 @@ paths:
           description: 'OK'
           schema:
             $ref: '#/definitions/Task'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
         
   # Virtual machine related tasks
   /vm:
@@ -948,6 +1062,14 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Task'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
       
   # Platform related paths:
   
@@ -967,6 +1089,14 @@ paths:
             type: array
             items: 
               $ref: '#/definitions/Platform'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addPlatform
       tags:
@@ -984,6 +1114,14 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Platform"
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     
   /platform/{id}:
     get:
@@ -1000,6 +1138,14 @@ paths:
           The platform identified by the id
          schema:
           $ref: '#/definitions/Platform'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     delete:
       operationId: deletePlatform
       tags:
@@ -1011,6 +1157,14 @@ paths:
       responses:
         200:
           description: "OK"
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   # PlatformHardware related paths
   /platformHardware:
@@ -1028,6 +1182,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PlatformHardware'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     
     post:
       operationId: addPlatformHardware
@@ -1048,7 +1210,15 @@ paths:
           description: |
             OK
           schema:
-            $ref: '#/definitions/PlatformHardware'   
+            $ref: '#/definitions/PlatformHardware'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   /platformHardware/{id}:
     get:
@@ -1063,7 +1233,15 @@ paths:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/PlatformHardware'   
+            $ref: '#/definitions/PlatformHardware'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   # PlatformEnvironment related paths
   /platformEnvironment:
@@ -1081,7 +1259,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PlatformEnvironment'
-    
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addPlatformEnvironment
       tags:
@@ -1101,7 +1286,15 @@ paths:
           description: |
             OK
           schema:
-            $ref: '#/definitions/PlatformEnvironment'   
+            $ref: '#/definitions/PlatformEnvironment'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   /platformEnvironment/{id}:
     get:
@@ -1116,7 +1309,15 @@ paths:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/PlatformEnvironment'          
+            $ref: '#/definitions/PlatformEnvironment'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   # PlatformRuntime related paths
   /platformRuntime:
@@ -1134,6 +1335,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PlatformRuntime'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
     
     post:
       operationId: addPlatformRuntime
@@ -1154,7 +1363,15 @@ paths:
           description: |
             OK
           schema:
-            $ref: '#/definitions/PlatformRuntime'   
+            $ref: '#/definitions/PlatformRuntime'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
   
   /platformRuntime/{id}:
     get:
@@ -1169,5 +1386,13 @@ paths:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/PlatformRuntime'      
+            $ref: '#/definitions/PlatformRuntime'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
           
