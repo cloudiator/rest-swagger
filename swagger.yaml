@@ -652,12 +652,20 @@ definitions:
         type: string
         
 responses:
+  400BadRequestResponse:
+    description: Bad Request
+    schema:
+      $ref: '#/definitions/Error'
   401UnauthorizedResponse:
     description: Authorization for this action is missing
     schema:
       $ref: '#/definitions/Error'
   403ForbiddenResponse:
     description: Forbidden action
+    schema:
+      $ref: '#/definitions/Error'
+  404NotFoundResponse:
+    description: Item not found
     schema:
       $ref: '#/definitions/Error'
   500ErrorResponse:
@@ -716,13 +724,13 @@ paths:
           schema:
             $ref: "#/definitions/Cloud"
         400:
-          description: "Bad Request"
-          schema:
-            $ref: "#/definitions/Error"
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -767,10 +775,14 @@ paths:
       responses:
         200:
           description: "OK"
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -824,10 +836,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Image'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -931,10 +947,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Application'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -985,10 +1005,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Component'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1062,10 +1086,14 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Task'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1114,10 +1142,14 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Platform"
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1157,10 +1189,14 @@ paths:
       responses:
         200:
           description: "OK"
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1211,10 +1247,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/PlatformHardware'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1287,10 +1327,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/PlatformEnvironment'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
@@ -1364,10 +1408,14 @@ paths:
             OK
           schema:
             $ref: '#/definitions/PlatformRuntime'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
