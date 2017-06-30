@@ -659,7 +659,7 @@ responses:
   403ForbiddenResponse:
     description: Forbidden action
     schema:
-      $ref: '#/definition/Error'
+      $ref: '#/definitions/Error'
   500ErrorResponse:
     description: An unexpected Error occured
     schema:
