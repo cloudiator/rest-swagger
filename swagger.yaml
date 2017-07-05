@@ -1104,6 +1104,7 @@ paths:
   # Platform paths:
   /platform:
     get:
+      consumes: []
       operationId: findPlatforms
       tags:
         - platform
@@ -1157,6 +1158,7 @@ paths:
     
   /platform/{id}:
     get:
+      consumes: []
       operationId: findPlatform
       tags:
         - platform
@@ -1205,6 +1207,7 @@ paths:
   # PlatformHardware related paths
   /platformHardware:
     get:
+      consumes: []
       operationId: findPlatformHardwares
       tags:
         - platform
@@ -1262,6 +1265,7 @@ paths:
   
   /platformHardware/{id}:
     get:
+      consumes: []
       operationId: findPlatformHardware
       tags:
         - platform
@@ -1286,6 +1290,7 @@ paths:
   # PlatformEnvironment related paths
   /platformEnvironment:
     get:
+      consumes: []
       operationId: findPlatformEnvironments
       tags:
         - platform
@@ -1342,6 +1347,7 @@ paths:
   
   /platformEnvironment/{id}:
     get:
+      consumes: []
       operationId: findPlatformEnvironment
       tags:
         - platform
@@ -1366,6 +1372,7 @@ paths:
   # PlatformRuntime related paths
   /platformRuntime:
     get:
+      consumes: []
       operationId: findPlatformRuntimes
       tags:
         - platform
@@ -1423,6 +1430,7 @@ paths:
   
   /platformRuntime/{id}:
     get:
+      consumes: []
       operationId: findPlatformRuntime
       tags:
         - platform
