@@ -133,7 +133,6 @@ definitions:
       Represents a new cloud that is to be created
     type: object
     required:
-      - endpoint
       - api 
       - credential
       - cloudType
