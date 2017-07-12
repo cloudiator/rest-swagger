@@ -191,6 +191,9 @@ definitions:
   OperatingSystemFamily:
     description: "Type of OS Family"
     type: object
+    enum: ['AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
+    'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
+    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','UBUNTU','WINDOWS']
     properties:
       operatingSystemType:
         $ref: '#/definitions/OperatingSystemType'
