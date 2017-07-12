@@ -180,17 +180,42 @@ definitions:
       Represents the operating system of an image
     type: object 
     properties:
-      # todo: requires enum?
-      operatingSystemFamily: 
-        type: string
-        description: "Family of the OS"
-      # todo: requires enum?
+      operatingSystemFamily:
+        $ref: '#/definitions/OperatingSystemFamily'
       operatingSystemArchitecture:
-        type: string
-        description: "Architecture of the OS"
+        $ref: '#/definitions/OperatingSystemArchitecture'
       operatingSystemVersion:
         type: string
         description: "Version of the OS"
+
+  OperatingSystemFamily:
+    description: "Type of OS Family"
+    type: object
+    properties:
+      operatingSystemType:
+        $ref: '#/definitions/OperatingSystemType'
+      operatingSystemVersionFormat:
+        type: string
+      loginNameSupplier:
+        type: string
+        description: "Login Name"
+        example: "ubuntu"
+      downloadUrlFormat:
+        type: string
+        description: "DownloadUrl"
+
+  OperatingSystemType:
+    description: "OS Type"
+    type: string
+    enum: ['UNKOWN','UNIX','LINUX','WINDOWS','BSD','MAC']
+    example: "LINUX"
+
+  OperatingSystemArchitecture:
+    description: "Type of OS Architecture"
+    type: string
+    enum: ['UNKOWN','AMD64','I386']
+    example: "AMD64"
+
   
   Hardware:
     description: |
@@ -626,29 +651,50 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
+
+  VirtualMachineRequest:
+      type: object
+      description: |
+        Represents a request to create a new virtual machine.
+      properties:
+        image:
+          type: string
+        hardware:
+          type: string
+        location:
+          type: string
+
+  #Task replaces VirtualMachineRequest
       
   Task:
     description: |
       Represents a long-running task within the system
     type: object
     properties:
-      status:
+      id:
         type: string
-        enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
-        description: |
-          The status of the running task
+        description: "Unique identifier for the task"
+      taskType:
+        $ref: '#/definitions/TaskType'
+      taskStatus:
+        $ref: '#/definitions/TaskStatus'
+      virtualMachineSpecification:
+        $ref: '#/definitions/VirtualMachine'
+      relatedTask:
+        # Relation between VMR and VM, if VMR completed
+        $ref: '#/definitions/Task'
 
-  VirtualMachineRequest:
-    type: object
-    description: |
-      Represents a request to create a new virtual machine.
-    properties:
-      image:
-        type: string
-      hardware:
-        type: string
-      location:
-        type: string
+  TaskType:
+    description: "The type of this task"
+    type: string
+    enum: ['VirtualMachine','VirtualMachineRequest']
+
+  TaskStatus:
+    description: "The status of the running task"
+    type: string
+    enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
+
+
         
 responses:
   400BadRequestResponse:
