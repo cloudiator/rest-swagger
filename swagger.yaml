@@ -180,6 +180,8 @@ definitions:
       Represents the operating system of an image
     type: object 
     properties:
+      operatingSystemType:
+        $ref: '#/definitions/OperatingSystemType'
       operatingSystemFamily:
         $ref: '#/definitions/OperatingSystemFamily'
       operatingSystemArchitecture:
@@ -190,29 +192,15 @@ definitions:
 
   OperatingSystemFamily:
     description: "Type of OS Family"
-    type: object
-    properties:
-      operatingSystemFamilyName:
-        type: string
-        enum: ['AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
-            'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
-            'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','UBUNTU','WINDOWS']
-      operatingSystemType:
-        $ref: '#/definitions/OperatingSystemType'
-      operatingSystemVersionFormat:
-        type: string
-      loginNameSupplier:
-        type: string
-        description: "Login Name"
-        example: "ubuntu"
-      downloadUrlFormat:
-        type: string
-        description: "DownloadUrl"
+    type: string
+    enum: ['AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
+    'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
+    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','UBUNTU','WINDOWS']
 
   OperatingSystemType:
     description: "OS Type"
     type: string
-    enum: ['UNKOWN','UNIX','LINUX','WINDOWS','BSD','MAC']
+    enum: ['UNKOWN','UNIX','LINUX','WINDOWS_OS','BSD','MAC']
     example: "LINUX"
 
   OperatingSystemArchitecture:
