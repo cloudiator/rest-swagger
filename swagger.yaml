@@ -194,23 +194,22 @@ definitions:
   OperatingSystemFamily:
     description: "Type of OS Family"
     type: string
-    example: "UBUNTU"
-    enum: ['UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
+    enum: ['UBUNTU','UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
     'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
-    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','UBUNTU','WINDOWS']
+    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','WINDOWS']
 
 
   OperatingSystemType:
     description: "OS Type"
     type: string
-    enum: ['UNKOWN','UNIX','LINUX','WINDOWS_OS','BSD','MAC']
-    example: "LINUX"
+    enum: ['LINUX','UNKOWN','UNIX','WINDOWS_OS','BSD','MAC']
+
 
   OperatingSystemArchitecture:
     description: "Type of OS Architecture"
     type: string
-    enum: ['UNKOWN','AMD64','I386']
-    example: "AMD64"
+    enum: ['AMD64','UNKOWN','I386']
+
 
   
   Hardware:
