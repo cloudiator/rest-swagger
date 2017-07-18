@@ -421,117 +421,105 @@ definitions:
         description: "Human-readable name"
         type: string
       
-  Component:
+  Task:
     description: |
-      Represents a component of an application.
+      Represents a task of a job.
     type: object
-    discriminator: type
     required:
       - name
-      - type
     properties:
-      type:
-        description: |
-          Discriminator for polymorphism.
-        type: string
       name:
-        description: "Human-readable name. Uniquely identifies a component."
+        description: "Human-readable name. Uniquely identifies a task."
         type: string
       ports:
         type: array
         items:
           $ref: '#/definitions/Port'
-  
-  DockerComponent:
+      interfaces:
+        description: "Interfaces of this task"
+        type: array
+        items:
+          $ref: '#/definitions/Interface'
+
+  Interface:
     description: |
-      Represents a docker container
+      Represents an interface
     type: object
+    discriminator: type
     required:
-      - dockerImage
-    allOf:
-      - $ref: '#/definitions/Component'
-      - properties:
-          dockerImage:
-            description: |
-              Name of the docker image
-            type: string
-            
-            
-  PlatformComponent:
-    description: |
-      Represents a PaaS component
+      - type
+    properties:
+      type:
+        description: |
+          Discriminator for polymorphism.
+
+  DockerInterface:
     type: object
-    required:
-      - sourceRepository
-    allOf:
-      - $ref: '#/definitions/Component'
-      - properties:
-          sourceRepository:
-            description: |
-              url to the source code repository (currently only git is supported)
-            type: string
-        
-  LanceComponent:
+    properties:
+      dockerImage:
+        description: |
+          Name of the docker image
+        type: string
+
+  LanceInterface:
     description: |
-      Represents a lance component.
+      Represents a lance interface.
     type: object
     required:
       - start
-    allOf:
-      - $ref: '#/definitions/Component'
-      - properties:
-          init:
-            description: | 
-              Initialization action.
-            type: string
-          preInstall:
-            description: |
-              Executed before installation action. Can be e.g. used for downloading binaries.
-            type: string
-          install:
-            description: |
-              Used for installing the application.
-            type: string
-          postInstall:
-            description: |
-              Used for configuration of the application component. First action where Lance environment variables are set.
-            type: string
-          preStart:
-            description: |
-              Called before starting the application. Can be e.g. used for configuration an environment.
-            type: string
-          start:
-            description: |
-              Starts the component. Needs to return for PlainContainer and not return for Docker.
-            type: string
-          startDetection:
-            description: |
-              Detects the start of the application. Required if the application does not start instantianous.
-            type: string
-          stopDetection:
-            description: |
-              Checks if the application has stopped. Is periodically checked to detect a crash of the application.
-            type: string
-          postStart:
-            description: |
-              Executed after the application has successfully started.
-            type: string
-          preStop:
-            description: |
-              Called before the application is stopped.
-            type: string
-          stop:
-            description: |
-              Stops the application.
-            type: string
-          postStop:
-            description: |
-              Executed after the application is successfully stopped.
-            type: string
-          shutdown:
-            description: |
-              Executed before the container is shutdown. Can be used to backup state.
-            type: string
+    properties:
+      init:
+        description: |
+          Initialization action.
+        type: string
+      preInstall:
+        description: |
+          Executed before installation action. Can be e.g. used for downloading binaries.
+        type: string
+      install:
+        description: |
+          Used for installing the application.
+        type: string
+      postInstall:
+        description: |
+          Used for configuration of the application component. First action where Lance environment variables are set.
+        type: string
+      preStart:
+        description: |
+          Called before starting the application. Can be e.g. used for configuration an environment.
+        type: string
+      start:
+        description: |
+          Starts the component. Needs to return for PlainContainer and not return for Docker.
+        type: string
+      startDetection:
+        description: |
+          Detects the start of the application. Required if the application does not start instantianous.
+        type: string
+      stopDetection:
+        description: |
+          Checks if the application has stopped. Is periodically checked to detect a crash of the application.
+        type: string
+      postStart:
+        description: |
+          Executed after the application has successfully started.
+        type: string
+      preStop:
+        description: |
+          Called before the application is stopped.
+        type: string
+      stop:
+        description: |
+          Stops the application.
+        type: string
+      postStop:
+        description: |
+          Executed after the application is successfully stopped.
+        type: string
+      shutdown:
+        description: |
+          Executed before the container is shutdown. Can be used to backup state.
+        type: string
     example:
       name: haproxy
       preInstall: |
@@ -540,24 +528,35 @@ definitions:
       install: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
       start: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
 
-        
-  Application:
+  PlatformInterface:
     description: |
-      Represents an application. An application is a logical group of components.
+      Represents a PaaS interface
+    type: object
+    required:
+      - sourceRepository
+    properties:
+      sourceRepository:
+        description: |
+          URL to the source code repository (currently only git is supported)
+        type: string
+
+  Job:
+    description: |
+      Represents an job. An job is a logical group of tasks.
     type: object
     required:
       - name
-      - components
+      - tasks
       - communications
     properties:
       name:
         type: string
-      components:
+      tasks:
         type: array
         items:
           type: string
         description: |
-          An array of components (referenced by names) that form this application.
+          An array of tasks (referenced by names) that form this application.
         example:
       communications:
         type: array
@@ -574,7 +573,7 @@ definitions:
     type: object
     discriminator: type
     description: |
-      Represents a communication port of a component
+      Represents a communication port of a task
     required:
       - name
     properties:
@@ -586,13 +585,13 @@ definitions:
         type: string
         description: |
           Uniquely identifies a port. Defines the name of the environment variables holding
-          IP addresses of remote components.
+          IP addresses of remote tasks.
         example: "LOADBALANCERREQWIKI"
 
   PortProvided:
     type: object
     description: |
-      Represents a communication port that the component provides for other components
+      Represents a communication port that the tasks provides for other tasks
       or the end user.
     allOf:
       - $ref: '#/definitions/Port'
@@ -605,26 +604,26 @@ definitions:
   PortRequired:
     type: object
     description: |
-      Represents a communication port that the component requires from other (downstream) components.
+      Represents a communication port that the task requires from other (downstream) tasks.
     allOf:
       - $ref: '#/definitions/Port'
       - properties:
           updateAction:
             type: string
             description: |
-              A script that is executed if a new instance of a downstream component is available.
+              A script that is executed if a new instance of a downstream task is available.
             example: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
           isMandatory:
             type: boolean
             description: |
-              States if an instance of a downstream components needs to be already started (true), or
-              if the component can start without a downstream component (false).
+              States if an instance of a downstream tasks needs to be already started (true), or
+              if the task can start without a downstream task (false).
             example: true
 
   Communication:
     description: |
-      Represents a communication requirement between two components by mapping a required port of a
-      component to a provided port of another component.
+      Represents a communication requirement between two tasks by mapping a required port of a
+      task to a provided port of another task.
     properties:
       portRequired:
         type: string
@@ -656,34 +655,27 @@ definitions:
           type: string
         location:
           type: string
-
-  #Task replaces VirtualMachineRequest
       
-  Task:
+  LongRunningRequest:
     description: |
-      Represents a long-running task within the system
+      Represents a long-running request (LRR) within the system
     type: object
     properties:
       id:
         type: string
-        description: "Unique identifier for the task"
+        description: "Unique identifier for the LRR"
       taskType:
-        $ref: '#/definitions/TaskType'
+        $ref: '#/definitions/LRRType'
       taskStatus:
-        $ref: '#/definitions/TaskStatus'
-      virtualMachineSpecification:
-        $ref: '#/definitions/VirtualMachine'
-      relatedTask:
-        # Relation between VMR and VM, if VMR completed
-        $ref: '#/definitions/Task'
+        $ref: '#/definitions/LRRStatus'
 
-  TaskType:
-    description: "The type of this task"
+  LRRType:
+    description: "The type of this LRR"
     type: string
-    enum: ['VirtualMachine','VirtualMachineRequest']
+    enum: ['VirtualMachineRequest']
 
-  TaskStatus:
-    description: "The status of the running task"
+  LRRStatus:
+    description: "The status of the running LRR"
     type: string
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
@@ -939,16 +931,16 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
 
-  # Application related paths
+  # Jobs related paths
 
-  /applications:
+  /jobs:
     get:
       consumes: []
-      operationId: findApplications
+      operationId: findJobs
       tags:
-        - application
+        - job
       description: |
-        Returns all applications visible to the user
+        Returns all jobs visible to the user
       responses:
         200:
           description: |
@@ -956,7 +948,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/Job'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -966,25 +958,25 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
     post:
-      operationId: addApplication
+      operationId: addJob
       tags:
-        - application
+        - job
       description:
-        Creates a new application
+        Creates a new job
       parameters:
-        - name: application
+        - name: job
           in: body
           description: |
-            Application to be created.
+            Job to be created.
           required: true
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/Job'
       responses:
         200:
           description: |
             OK
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/Job'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
@@ -998,15 +990,15 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
   
-  # Component related paths
-  /components:
+  # Task related paths
+  /tasks:
     get:
       consumes: []
-      operationId: findComponents
+      operationId: findTasks
       tags:
-        - application
+        - job
       description: | 
-        Returns all components visible to the user
+        Returns all tasks visible to the user
       responses:
         200:
           description: |
@@ -1014,7 +1006,7 @@ paths:
           schema:
             type: array
             items: 
-              $ref: '#/definitions/Component'
+              $ref: '#/definitions/Task'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -1024,25 +1016,25 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
     post:
-      operationId: addComponent
+      operationId: addTask
       tags:
-        - application
+        - job
       description: |
-        Creates a new component
+        Creates a new task
       parameters:
-        - name: component
+        - name: task
           in: body
           description: |
-            Component to be created
+            Task to be created
           required: true
           schema:
-            $ref: '#/definitions/Component'
+            $ref: '#/definitions/Task'
       responses:
         200:
           description: |
             OK
           schema:
-            $ref: '#/definitions/Component'
+            $ref: '#/definitions/Task'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
@@ -1056,22 +1048,22 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
             
-  # Task related paths
-  /tasks:
+  # Long Running Request related paths
+  /longRunningRequests:
     get:
       consumes: []
-      operationId: findTasks
+      operationId: findAllLongRunningRequest
       tags:
-        - task
+        - longRunningRequest
       description: |
-        Returns all running tasks visible to the user
+        Returns all running LLRs visible to the user
       responses:
         200:
           description: 'OK'
           schema:
             type: array
             items:
-              $ref: '#/definitions/Task'
+              $ref: '#/definitions/LongRunningRequest'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -1081,21 +1073,21 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
               
-  /tasks/{id}:
+  /longRunningRequests/{id}:
     get:
       consumes: []
-      operationId: findTask
+      operationId: findLongRunningRequest
       tags:
-        - task
+        - longRunningRequest
       description: |
-        Returns the task identified by the id parameter.
+        Returns the LLR identified by the id parameter.
       parameters:
         - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/Task'
+            $ref: '#/definitions/LongRunningRequest'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -1123,7 +1115,7 @@ paths:
         202:
           description: ACCEPTED
           schema:
-            $ref: '#/definitions/Task'
+            $ref: '#/definitions/LongRunningRequest'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
