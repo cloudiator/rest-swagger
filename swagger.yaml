@@ -182,13 +182,17 @@ definitions:
     properties:
       operatingSystemType:
         $ref: '#/definitions/OperatingSystemType'
+        example: "AMD64"
       operatingSystemFamily:
         $ref: '#/definitions/OperatingSystemFamily'
+        example: "UBUNTU"
       operatingSystemArchitecture:
         $ref: '#/definitions/OperatingSystemArchitecture'
+        example: "LINUX"
       operatingSystemVersion:
         type: string
         description: "Version of the OS"
+        example: "16.04 LTS"
 
   OperatingSystemFamily:
     description: "Type of OS Family"
@@ -196,6 +200,7 @@ definitions:
     enum: ['UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
     'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
     'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','UBUNTU','WINDOWS']
+    example: "UBUNTU"
 
   OperatingSystemType:
     description: "OS Type"
