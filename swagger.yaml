@@ -676,6 +676,8 @@ definitions:
         $ref: '#/definitions/LRRType'
       taskStatus:
         $ref: '#/definitions/LRRStatus'
+      LRRData:
+        type: string
 
   LRRType:
     description: "The type of this LRR"
