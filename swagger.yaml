@@ -646,11 +646,14 @@ definitions:
     type: object
     properties:
       image:
-        $ref: '#/definitions/Image'
+        type: string
+        example: "I am the image"
       hardware:
-        $ref: '#/definitions/Hardware'
+        type: string
+        example: "this is vm hardware"
       location:
-        $ref: '#/definitions/Location'
+        type: string
+        example: "here I am"
 
   VirtualMachineRequest:
       type: object
