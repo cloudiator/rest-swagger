@@ -641,19 +641,50 @@ definitions:
         type: string
         description: |
           The name of the provided port this communication refers to.
-        
+
+  IpAddress:
+    type: object
+    required:
+      - IpAddressType
+      - IpVersion
+    properties:
+      IpAddressType:
+        $ref: '#/definitions/IpAddressType'
+      IpVersion:
+        $ref: '#/definitions/IpVersion'
+
+  IpAddressType:
+    type: string
+    enum: ['PUBLIC_IP','PRIVATE_IP']
+
+  IpVersion:
+    type: string
+    enum: ['V4','V6']
+
   VirtualMachine:
     type: object
     properties:
       image:
         type: string
-        example: "I am the image"
+        example: "the image"
       hardware:
         type: string
         example: "this is vm hardware"
       location:
         type: string
         example: "here I am"
+      id:
+        type: string
+        example: "1a79a4d60de6718e8e5b326e338ae5vm"
+      ipaddress:
+        $ref: '#/definitions/IpAddress'
+      logincredential:
+        $ref: '#/definitions/LoginCredential'
+
+  LoginCredential:
+    type: string
+    description: "Platzhalter"
+    example: "here to be here"
 
   VirtualMachineRequest:
       type: object
@@ -666,6 +697,7 @@ definitions:
           type: string
         location:
           type: string
+
       
   LongRunningRequest:
     description: |
