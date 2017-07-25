@@ -713,7 +713,11 @@ definitions:
         $ref: '#/definitions/LRRType'
       taskStatus:
         $ref: '#/definitions/LRRStatus'
-      LRRData:
+      lrrData:
+        type: string
+      lrrDiagnostic:
+        type: string
+      referenceId:
         type: string
 
   LRRType:
@@ -1127,7 +1131,7 @@ paths:
       tags:
         - longRunningRequest
       description: |
-        Returns the LLR identified by the id parameter.
+        Returns the LRR identified by the id parameter.
       parameters:
         - $ref: '#/parameters/id'
       responses:
