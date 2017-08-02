@@ -730,8 +730,18 @@ definitions:
     type: string
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
+  Testface:
+    description: 'for testing'
+    type: object
+    properties:
+      name:
+        description: 'ein name'
+        type: string
+      interfaces:
+        type: object
+        enum: [DockerInterface, LanceInterface]
 
-        
+
 responses:
   400BadRequestResponse:
     description: Bad Request
@@ -1532,4 +1542,25 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
-          
+
+  /testface:
+    get:
+      consumes: []
+      operationId: gettestfaces
+      tags:
+        - testface
+      description: "testing enum for objects with interfaces"
+      responses:
+        200:
+          description: |
+                  OK
+          schema:
+            $ref: '#/definitions/Testface'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
