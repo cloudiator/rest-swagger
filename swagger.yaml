@@ -739,7 +739,7 @@ definitions:
         type: string
       interfaces:
         type: object
-        enum: ['DockerInterface', 'LanceInterface']
+        enum: [ $ref: '#/definitions/DockerInterface', $ref: '#/definitions/LanceInterface']
 
 
 responses:
