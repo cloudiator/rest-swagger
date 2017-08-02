@@ -741,7 +741,6 @@ definitions:
         type: object
         enum: [ 'DockerInterface', 'LanceInterface']
 
-
 responses:
   400BadRequestResponse:
     description: Bad Request
