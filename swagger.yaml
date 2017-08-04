@@ -365,21 +365,26 @@ definitions:
       id:
         description: "Unique identifier for the hardware"
         type: string
+        example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
       name:
         description: "Human-readable name for the hardware"
         type: string
+        example: "example.p1"
       cores:
         description: "Number of cores"
         type: integer
         format: int32
+        example: 16
       ram:
         description: "Amount of RAM"
         type: integer
         format: int64
+        example: 2048
       disk:
         description: "Amount of disk space"
         type: number
-        format: double
+        format: float
+        example: 100
       
         
   PlatformRuntime:
