@@ -402,11 +402,12 @@ definitions:
       language:
         description: "the specific runtime language"
         type: string
+        enum: ['PHP','JAVA','RUBY','PYTHON']
       runtimeType:
         description: "specifies the runtime type"
         type: string
         enum:
-          - runtime
+          - standalone
           - server
       version:
         description: "the version of the specified type"
