@@ -641,10 +641,12 @@ definitions:
         type: string
         description: |
           The name of the required port this communication refers to.
+        example: "Re10375"
       portProvided:
         type: string
         description: |
           The name of the provided port this communication refers to.
+        example: "Pro11745"
 
   IpAddress:
     type: object
