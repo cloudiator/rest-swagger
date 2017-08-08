@@ -572,7 +572,7 @@ definitions:
           type: string
         description: |
           An array of tasks (referenced by names) that form this application.
-        example: |
+        example: 
             - "HaProxy"
             - "MediaWiki"
             - "MariaDB"
