@@ -573,9 +573,9 @@ definitions:
         description: |
           An array of tasks (referenced by names) that form this application.
         example: |
-            - HaProxy
-            - MediaWiki
-            - MariaDB
+            - "HaProxy"
+            - "MediaWiki"
+            - "MariaDB"
       communications:
         type: array
         items:
