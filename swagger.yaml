@@ -565,6 +565,7 @@ definitions:
     properties:
       name:
         type: string
+        example: "MediaWiki Application"
       tasks:
         type: array
         items:
@@ -572,16 +573,13 @@ definitions:
         description: |
           An array of tasks (referenced by names) that form this application.
         example:
+            - "HaProxy"
+            - "MediaWiki"
+            - "MariaDB"
       communications:
         type: array
         items:
           $ref: '#/definitions/Communication'
-    example:
-      name: "MediaWiki Application"
-      components:
-        - "HaProxy"
-        - "MediaWiki"
-        - "MariaDB"
 
   Port:
     type: object
