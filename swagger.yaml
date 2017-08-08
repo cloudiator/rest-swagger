@@ -580,6 +580,13 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Communication'
+        example:
+          -
+            PortRequired: "Re10457"
+            PortProvided: "Pro11345"
+          -
+            PortRequired: "Re12345"
+            PortProvided: "Pro10789"
 
   Port:
     type: object
