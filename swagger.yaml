@@ -447,9 +447,9 @@ definitions:
         description: "Interfaces of this task"
         type: array
         items:
-          $ref: '#/definitions/Interface'
+          $ref: '#/definitions/TaskInterface'
 
-  Interface:
+  TaskInterface:
     description: |
       Represents an interface
     type: object
@@ -464,7 +464,7 @@ definitions:
   DockerInterface:
     type: object
     allOf:
-    - $ref: '#/definitions/Interface'
+    - $ref: '#/definitions/TaskInterface'
     - properties:
         dockerImage:
           description: |
@@ -478,7 +478,7 @@ definitions:
     required:
       - start
     allOf:
-    - $ref: '#/definitions/Interface'
+    - $ref: '#/definitions/TaskInterface'
     - properties:
         init:
           description: |
@@ -547,7 +547,7 @@ definitions:
     required:
       - sourceRepository
     allOf:
-    - $ref: '#/definitions/Interface'
+    - $ref: '#/definitions/TaskInterface'
     - properties:
         sourceRepository:
           description: |
