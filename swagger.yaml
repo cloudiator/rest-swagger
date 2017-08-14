@@ -569,13 +569,9 @@ definitions:
       tasks:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/Task'
         description: |
-          An array of tasks (referenced by names) that form this application.
-        example: 
-            - "HaProxy"
-            - "MediaWiki"
-            - "MariaDB"
+          An array of tasks that form this application.
       communications:
         type: array
         items:
