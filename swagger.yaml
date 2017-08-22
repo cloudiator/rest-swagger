@@ -448,6 +448,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/TaskInterface'
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
 
   TaskInterface:
     description: |
@@ -554,6 +558,14 @@ definitions:
             URL to the source code repository (currently only git is supported)
           type: string
 
+  Requirement:
+    required:
+      - requirement
+    properties:
+      requirement:
+        type: string
+        example: "nodes.forAll(hardware.cores >= 4)"
+
   Job:
     description: |
       Represents an job. An job is a logical group of tasks.
@@ -576,6 +588,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Communication'
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
 
   Port:
     type: object
