@@ -718,7 +718,16 @@ definitions:
         location:
           type: string
 
-      
+  NodeRequest:
+    type: object
+    description: |
+      Represents a request to create a new node fullfilling the given requirements
+    properties:
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+
   LongRunningRequest:
     description: |
       Represents a long-running request (LRR) within the system
@@ -1161,6 +1170,38 @@ paths:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Node related tasks
+  /node:
+    post:
+      operationId: addNode
+      tags:
+        - node
+      description: 'Create a new node request'
+      parameters:
+        - name: nodeRequest
+          in: body
+          description: 'Node Request'
+          required: true
+          schema:
+            $ref: '#/definitions/NodeRequest'
+      responses:
+        202:
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/LongRunningRequest'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
