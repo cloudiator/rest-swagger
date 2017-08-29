@@ -680,6 +680,7 @@ definitions:
             example: true
 
   Communication:
+    type: object
     description: |
       Represents a communication requirement between two tasks by mapping a required port of a
       task to a provided port of another task.
