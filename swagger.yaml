@@ -435,6 +435,8 @@ definitions:
     type: object
     required:
       - name
+      - executionEnvironment
+      - type
     properties:
       name:
         description: "Human-readable name. Uniquely identifies a task."
@@ -448,10 +450,19 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/TaskInterface'
+      executionEnvironment:
+        $ref: '#/definitions/ExecutionEnvironment'
       requirements:
         type: array
         items:
           $ref: '#/definitions/Requirement'
+      type:
+        type: string
+        enum: ['BATCH','LONG_RUNNING']
+
+  ExecutionEnvironment:
+    type: string
+    enum: ['SPARK','NATIVE','CONTAINER','LANCE']
 
   TaskInterface:
     description: |
@@ -559,12 +570,36 @@ definitions:
           type: string
 
   Requirement:
+    type: object
+
+  OclRequirement:
     required:
-      - requirement
-    properties:
-      requirement:
-        type: string
-        example: "nodes.forAll(hardware.cores >= 4)"
+      - constraint
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          constraint:
+            type: string
+            example: "nodes.forAll(hardware.cores >= 4)"
+
+  IdentifierRequirement:
+    required:
+      - hardwareId
+      - locationId
+      - imageId
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          hardwareId:
+            type: string
+            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+          locationId:
+            type: string
+            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+          imageId:
+            type: string
+            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+
 
   Job:
     description: |
@@ -684,13 +719,13 @@ definitions:
     properties:
       image:
         type: string
-        example: "the image"
+        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
       hardware:
         type: string
-        example: "this is vm hardware"
+        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
       location:
         type: string
-        example: "here I am"
+        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
       id:
         type: string
         example: "1a79a4d60de6718e8e5b326e338ae5vm"
@@ -713,10 +748,13 @@ definitions:
       properties:
         image:
           type: string
+          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
         hardware:
           type: string
+          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
         location:
           type: string
+          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
 
   NodeRequest:
     type: object
