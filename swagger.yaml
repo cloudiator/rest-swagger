@@ -767,6 +767,25 @@ definitions:
         items:
           $ref: '#/definitions/Requirement'
 
+  OclProblem:
+    type: object
+    description: |
+      Represents a request to create a new node fullfilling the given requirements
+    properties:
+    requirements:
+      type: array
+        items:
+          $ref: '#/definitions/OclRequirement'
+
+  OclSolution:
+    type: object
+    description: |
+      Represents a solution to an ocl problem
+    properties:
+      type: array
+        items:
+          $ref: '#/definitions/VirtualMachineRequest'
+
   LongRunningRequest:
     description: |
       Represents a long-running request (LRR) within the system
@@ -1277,7 +1296,29 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
-      
+
+  # MISC
+  /ocl:
+    put:
+      operationId: solveOCL
+      tags:
+        - misc
+      description: 'Solves an Ocl Problem'
+      parameters:
+        - name: oclProblem
+          in: body
+          description: 'OCL Problem to solve'
+          required: true
+          schema:
+            $ref: '#/definitions/OclProblem'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OclSolution'
+
   # Platform related paths:
   
   # Platform paths:
