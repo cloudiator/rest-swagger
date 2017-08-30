@@ -772,8 +772,8 @@ definitions:
     description: |
       Represents a request to create a new node fullfilling the given requirements
     properties:
-    requirements:
-      type: array
+      requirements:
+        type: array
         items:
           $ref: '#/definitions/OclRequirement'
 
@@ -782,7 +782,8 @@ definitions:
     description: |
       Represents a solution to an ocl problem
     properties:
-      type: array
+      nodes:
+        type: array
         items:
           $ref: '#/definitions/VirtualMachineRequest'
 
