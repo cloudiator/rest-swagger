@@ -575,6 +575,7 @@ definitions:
     type: object
 
   OclRequirement:
+    type: object
     required:
       - constraint
     allOf:
@@ -585,6 +586,7 @@ definitions:
             example: "nodes.forAll(hardware.cores >= 4)"
 
   IdentifierRequirement:
+    type: object
     required:
       - hardwareId
       - locationId
