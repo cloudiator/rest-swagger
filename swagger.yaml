@@ -573,6 +573,13 @@ definitions:
 
   Requirement:
     type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+
 
   OclRequirement:
     type: object
