@@ -590,7 +590,14 @@ definitions:
       - properties:
           constraint:
             type: string
-            example: "nodes.forAll(hardware.cores >= 4)"
+            example:
+    example:
+      cores:
+        constraint: "nodes->forAll(hardware.cores >= 4)"
+        type: "OclRequirement"
+      image:
+        constraint: "nodes->forAll(image.providerId = '46554521-1ed4-4031-879d-7f869a8649c9')"
+        type: "OclRequirement"
 
   IdentifierRequirement:
     type: object
