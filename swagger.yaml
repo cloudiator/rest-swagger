@@ -590,14 +590,9 @@ definitions:
       - properties:
           constraint:
             type: string
-            example:
     example:
-      cores:
-        constraint: "nodes->forAll(hardware.cores >= 4)"
-        type: "OclRequirement"
-      image:
-        constraint: "nodes->forAll(image.providerId = '46554521-1ed4-4031-879d-7f869a8649c9')"
-        type: "OclRequirement"
+      constraint: "nodes->forAll(hardware.cores >= 4)"
+      type: "OclRequirement"
 
   IdentifierRequirement:
     type: object
@@ -610,14 +605,15 @@ definitions:
       - properties:
           hardwareId:
             type: string
-            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
           locationId:
             type: string
-            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
           imageId:
             type: string
-            example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
-
+    example:
+      hardwareId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+      locationId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+      imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+      type: "IdentifierRequirement"
 
   Job:
     description: |
