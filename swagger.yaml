@@ -311,14 +311,10 @@ definitions:
       Repesents a new PaaS provider to be created
     type: object
     required:
-      - id
       - name
       - api
       - credential
     properties:
-      id:
-        description: "Unique identifier"
-        type: string
       name:
         description: "Human-readable name"
         type: string
@@ -330,6 +326,10 @@ definitions:
         $ref: '#/definitions/Api'
       credential:
         $ref: '#/definitions/CloudCredential'
+      endpoint:
+        type: string
+        description: "URI where the api of this platform provider can be accessed."
+        example: "https://endpoint.example.com"
         
   PlatformEnvironment:
     description: |
@@ -351,6 +351,10 @@ definitions:
         $ref: '#/definitions/PlatformHardware'
       platformRuntime:
         $ref: '#/definitions/PlatformRuntime'
+      platformService:
+        type: array
+        items:
+          $ref: '#/definitions/PlatformService'
         
         
   PlatformHardware:
