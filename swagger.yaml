@@ -768,9 +768,15 @@ definitions:
       logincredential:
         $ref: '#/definitions/LoginCredential'
   LoginCredential:
-    type: string
-    description: Platzhalter
-    example: here to be here
+    type: object
+    description: temporary definition to create a node
+    properties:
+      user:
+        type: string
+      password:
+        type: string
+      key:
+        type: string
   VirtualMachineRequest:
     type: object
     description: |
@@ -846,7 +852,7 @@ definitions:
       - RUNNING
       - COMPLETED
       - FAILED
-  InstallRequest:
+  InstallationRequest:
     description: |
       Represents an Cloudiator tools installation request
     type: object
@@ -876,14 +882,52 @@ definitions:
     properties:
       nodeId:
         type: string
-      user:
+      loginCredential:
+        $ref: '#/definitions/LoginCredential'
+      nodeType:
         type: string
-      password:
-        type: string
-      ipAddress:
-        type: string
-      os:
+        enum:
+          - UNKNOWN_TYPE
+          - VM
+          - BYON
+          - CONTAINER
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+      nodeProperties:
+        $ref: '#/definitions/NodeProperties'
+  NodeProperties:
+    description: attributes defining a node
+    type: object
+    properties:
+      numberOfCores:
+        type: integer
+        format: int32
+      memory:
+        type: integer
+        format: int64
+      disk:
+        type: number
+        format: float
+      operatingSystem:
         $ref: '#/definitions/OperatingSystem'
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
+  GeoLocation:
+    description: geographical location of a node
+    type: object
+    properties:
+      country:
+        type: string
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
+      city:
+        type: string
 responses:
   400BadRequestResponse:
     description: Bad Request
@@ -1366,7 +1410,7 @@ paths:
           description: a request to install the cloudiator tools on a provided node
           required: true
           schema:
-            $ref: '#/definitions/InstallRequest'
+            $ref: '#/definitions/InstallationRequest'
       responses:
         '200':
           description: OK
