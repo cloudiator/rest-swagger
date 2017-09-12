@@ -737,14 +737,11 @@ definitions:
     type: object
     properties:
       image:
-        type: string
-        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+        $ref: '#/definitions/Image'
       hardware:
-        type: string
-        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+        $ref: '#/definitions/Hardware'
       location:
-        type: string
-        example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+        $ref: '#/definitions/Location'
       id:
         type: string
         example: "1a79a4d60de6718e8e5b326e338ae5vm"
