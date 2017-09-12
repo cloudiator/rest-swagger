@@ -860,9 +860,7 @@ definitions:
         items:
           $ref: '#/definitions/Tool'
       node:
-        type: object
-        description: Human-readable name
-        example: Ubuntu 16.04 LTS AMD 64
+        $ref: '#/definitions/Node'
   Tool:
     description: a Cloudiator tool to be installed on a node
     type: string
