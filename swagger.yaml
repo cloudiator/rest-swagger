@@ -398,6 +398,7 @@ definitions:
     type: object
     required:
       - id
+      - name
       - language
       - runtimeType
       - version
@@ -405,20 +406,27 @@ definitions:
       id:
         description: "Unique identifier for the hardware"
         type: string
+      name:
+        description: "human readable name"
+        type: string
       language:
         description: "the specific runtime language"
         type: string
         enum: ['PHP','JAVA','RUBY','PYTHON']
+      languageVersion:
+        description: "language version number"
+        type: number
+        format: double
+        example: 11.0
       runtimeType:
         description: "specifies the runtime type"
         type: string
-        enum:
-          - standalone
-          - server
+        enum: ['standalone','server']
       version:
         description: "the version of the specified type"
         type: number
         format: double
+        example: 2.0
 
   PlatformService:
     description: |
