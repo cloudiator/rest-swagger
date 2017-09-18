@@ -1513,7 +1513,7 @@ paths:
             PlatformHardware to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformHardware'
+            $ref: '#/definitions/NewPlatformHardware'
       responses:
         200:
           description: |
@@ -1595,7 +1595,7 @@ paths:
             PlatformEnvironment to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformEnvironment'
+            $ref: '#/definitions/NewPlatformEnvironment'
       responses:
         200:
           description: |
@@ -1678,7 +1678,7 @@ paths:
             PlatformRuntime to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformRuntime'
+            $ref: '#/definitions/NewPlatformRuntime'
       responses:
         200:
           description: |
