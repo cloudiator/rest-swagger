@@ -337,16 +337,27 @@ definitions:
     type: object
     required:
       - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformEnvironment'
+      - properties:
+          id:
+            description: "Unique identifier"
+            type: string
+
+  NewPlatformEnvironment:
+    description: |
+        Repesents a PaaS environemnt to run an component
+    type: object
+    required:
       - name
       - platformHardware
       - platformRuntime
     properties:
-      id:
-        description: "Unique identifier"
-        type: string
       name:
         description: "Human-readable name"
         type: string
+      platform:
+        $ref: '#/definitions/Platform'
       platformHardware:
         $ref: '#/definitions/PlatformHardware'
       platformRuntime:
@@ -356,22 +367,30 @@ definitions:
         items:
           $ref: '#/definitions/PlatformService'
         
-        
   PlatformHardware:
+    description: |
+      Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformHardware'
+      - properties:
+          id:
+            description: "Unique identifier for the hardware"
+            type: string
+            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  NewPlatformHardware:
     description: |  
       Represents a hardware configuration for a Platform (not all attributes might be supported for all PaaS providers)
     type: object
     required:
-      - id
       - name
       - cores
       - ram
       - disk
     properties:
-      id:
-        description: "Unique identifier for the hardware"
-        type: string
-        example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
       name:
         description: "Human-readable name for the hardware"
         type: string
@@ -392,20 +411,29 @@ definitions:
         format: float
         example: 100
       
-        
   PlatformRuntime:
+      description: |
+        Repesents a PaaS environemnt to run an component
+      type: object
+      required:
+        - id
+      allOf:
+        - $ref: '#/definitions/NewPlatformRuntime'
+        - properties:
+            id:
+              description: "Unique identifier for the hardwareRuntime"
+              type: string
+              example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  NewPlatformRuntime:
     description: "Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat" 
     type: object
     required:
-      - id
       - name
       - language
       - runtimeType
       - version
     properties:
-      id:
-        description: "Unique identifier for the hardware"
-        type: string
       name:
         description: "human readable name"
         type: string
