@@ -499,8 +499,11 @@ definitions:
         items:
           $ref: '#/definitions/Requirement'
       type:
-        type: string
-        enum: ['BATCH','LONG_RUNNING']
+        $ref: '#/definitions/JobType'
+
+  JobType:
+    type: string
+    enum: ['BATCH','SERVICE']
 
   ExecutionEnvironment:
     type: string
