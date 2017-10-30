@@ -292,6 +292,19 @@ definitions:
         # see https://github.com/swagger-api/swagger-editor/issues/1005
         $ref: '#/definitions/Location'
         
+  NodeCandidate:
+    description: A node creatable by the system
+    type: object
+    properties:
+      cloud:
+        $ref: '#/definitions/Cloud'
+      image:
+        $ref: '#/definitions/Image'
+      hardware:
+        $ref: '#/definitions/Hardware'
+      location:
+        $ref: '#/definitions/Location'
+
   # Platform related definitions:
     
   Platform:
@@ -623,7 +636,6 @@ definitions:
       type:
         type: string
 
-
   OclRequirement:
     type: object
     required:
@@ -901,6 +913,24 @@ responses:
   
 # Paths
 paths:
+
+  # Node Candidate
+  /nodeCandidates:
+    get:
+      consumes: []
+      operationId: findNodeCandidates
+      tags:
+        - cloud
+      description: |
+        Returns possible node candidates.
+      responses:
+        200:
+          description: |
+            All possible node candidates.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NodeCandidate'
 
   # Cloud related paths:
   /clouds:
