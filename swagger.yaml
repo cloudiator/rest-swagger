@@ -529,6 +529,7 @@ definitions:
       - type
     properties:
       type:
+        type: string
         description: |
           Discriminator for polymorphism.
 
