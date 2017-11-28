@@ -269,10 +269,12 @@ definitions:
         type: string
       latitude:
         description: "Latitude of the location in decimal degrees"
-        type: float
+        type: number
+        format: float
       longitude:
         description: "Longitude of the location in decimal degrees"
-        type: float
+        type: number
+        format: float
 
   Location:
     description: |
