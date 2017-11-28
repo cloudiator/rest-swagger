@@ -254,7 +254,26 @@ definitions:
         example: 100
       location:
         $ref: '#/definitions/Location'
-    
+
+
+  GeoLocation:
+    description:
+      Represents a geographical location
+    type: object
+    properties:
+      city:
+        description: "City of the location"
+        type: string
+      country:
+        description: "An ISO 3166-1 alpha-2 country code"
+        type: string
+      latitude:
+        description: "Latitude of the location in decimal degrees"
+        type: float
+      longitude:
+        description: "Longitude of the location in decimal degrees"
+        type: float
+
   Location:
     description: |
       Repesents a (virtual) location offers by a cloud
@@ -287,6 +306,8 @@ definitions:
         description: "True of the location can be used to start virtual machines, false if not"
         type: boolean
         example: true
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
       parent:
         # self reference is broken in editor and UI
         # see https://github.com/swagger-api/swagger-editor/issues/1005
@@ -512,9 +533,9 @@ definitions:
         items:
           $ref: '#/definitions/Requirement'
       type:
-        $ref: '#/definitions/JobType'
+        $ref: '#/definitions/TaskType'
 
-  JobType:
+  TaskType:
     type: string
     enum: ['BATCH','SERVICE']
 
