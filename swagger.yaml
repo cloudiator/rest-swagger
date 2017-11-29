@@ -319,6 +319,9 @@ definitions:
     description: A node creatable by the system
     type: object
     properties:
+      price:
+        type: number
+        format: double
       cloud:
         $ref: '#/definitions/Cloud'
       image:
