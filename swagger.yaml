@@ -51,7 +51,29 @@ definitions:
         format: int32
       message:
         type: string
-        
+
+  NewCloud:
+      description: |
+        Represents a new cloud that is to be created
+      type: object
+      required:
+        - api
+        - credential
+        - cloudType
+      properties:
+        endpoint:
+          type: string
+          description: "URI where the api of this cloud provider can be accessed."
+          example: "https://endpoint.example.com"
+        cloudType:
+          $ref: '#/definitions/CloudType'
+        api:
+          $ref: '#/definitions/Api'
+        credential:
+          $ref: '#/definitions/CloudCredential'
+        cloudConfiguration:
+          $ref: '#/definitions/CloudConfiguration'
+
   Cloud:
     description: |
       Representation of a cloud used by Cloudiator
@@ -127,28 +149,6 @@ definitions:
         type: string
         description: "Value of the property"
         example: "RegionOne, RegionTwo"
-      
-  NewCloud:
-    description: |
-      Represents a new cloud that is to be created
-    type: object
-    required:
-      - api 
-      - credential
-      - cloudType
-    properties:
-      endpoint:
-        type: string
-        description: "URI where the api of this cloud provider can be accessed."
-        example: "https://endpoint.example.com"
-      cloudType:
-        $ref: '#/definitions/CloudType'
-      api:
-        $ref: '#/definitions/Api'
-      credential:
-        $ref: '#/definitions/CloudCredential'
-      cloudConfiguration:
-        $ref: '#/definitions/CloudConfiguration'
         
   Image:
     description:  |
@@ -269,10 +269,10 @@ definitions:
         type: string
       latitude:
         description: "Latitude of the location in decimal degrees"
-        type: float
+        type: double
       longitude:
         description: "Longitude of the location in decimal degrees"
-        type: float
+        type: double
 
   Location:
     description: |
