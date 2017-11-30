@@ -258,7 +258,7 @@ definitions:
 
   GeoLocation:
     description:
-      Represents a geographical location
+      Represents a geographical locationgit
     type: object
     properties:
       city:
@@ -514,7 +514,7 @@ definitions:
     required:
       - name
       - executionEnvironment
-      - type
+      - taskType
     properties:
       name:
         description: "Human-readable name. Uniquely identifies a task."
@@ -534,7 +534,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-      type:
+      taskType:
         $ref: '#/definitions/TaskType'
         example: |
           {"name":"TaskTest","ports":[{"type":"PortProvided","name":"PortProvidedTest","port":12345}
