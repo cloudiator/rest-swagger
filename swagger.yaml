@@ -258,7 +258,7 @@ definitions:
 
   GeoLocation:
     description:
-      Represents a geographical locationgit
+      Represents a geographical location
     type: object
     properties:
       city:
