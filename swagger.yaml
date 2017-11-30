@@ -327,6 +327,9 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
+      price:
+        type: number
+        format: double
 
   # Platform related definitions:
     
