@@ -270,11 +270,11 @@ definitions:
       latitude:
         description: "Latitude of the location in decimal degrees"
         type: number
-        format: float
+        format: double
       longitude:
         description: "Longitude of the location in decimal degrees"
         type: number
-        format: float
+        format: double
 
   Location:
     description: |
