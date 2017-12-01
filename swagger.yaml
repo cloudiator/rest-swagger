@@ -330,6 +330,9 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
+      price:
+        type: number
+        format: double
 
   # Platform related definitions:
     
@@ -517,7 +520,7 @@ definitions:
     required:
       - name
       - executionEnvironment
-      - type
+      - taskType
     properties:
       name:
         description: "Human-readable name. Uniquely identifies a task."
@@ -537,7 +540,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-      type:
+      taskType:
         $ref: '#/definitions/TaskType'
         example: |
           {"name":"TaskTest","ports":[{"type":"PortProvided","name":"PortProvidedTest","port":12345}
