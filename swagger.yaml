@@ -985,7 +985,9 @@ paths:
         202:
           description: ACCEPTED
           schema:
-            $ref: '#/definitions/NodeCandidate'
+            type: array
+            items:
+              $ref: '#/definitions/NodeCandidate'
 
   # Cloud related paths:
   /clouds:
