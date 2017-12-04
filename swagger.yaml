@@ -330,9 +330,6 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
-      price:
-        type: number
-        format: double
 
   # Platform related definitions:
     
@@ -711,6 +708,24 @@ definitions:
       imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
       type: "IdentifierRequirement"
 
+  RequirementOperator:
+    type: string
+    enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
+
+  AttributeRequirement:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+        requirementClass:
+          type: string
+        requirementAttribute:
+          type: string
+        requirementOperator:
+          $ref: '#/definitions/RequirementOperator'
+        value:
+          type: string
+
   Job:
     description: |
       Represents an job. An job is a logical group of tasks.
@@ -864,7 +879,7 @@ definitions:
           type: string
           example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
 
-  NodeRequest:
+  NodeRequirements:
     type: object
     description: |
       Represents a request to create a new node fullfilling the given requirements
@@ -924,7 +939,6 @@ definitions:
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
 
-
 responses:
   400BadRequestResponse:
     description: Bad Request
@@ -951,27 +965,28 @@ responses:
     schema:
       $ref: '#/definitions/Error'
 
-  
 # Paths
 paths:
-
-  # Node Candidate
   /nodeCandidates:
-    get:
-      consumes: []
+    post:
       operationId: findNodeCandidates
       tags:
         - cloud
       description: |
         Returns possible node candidates.
+      parameters:
+        - name: nodeRequirements
+          in: body
+          description: 'Node Request'
+          required: false
+          schema:
+            $ref: '#/definitions/NodeRequirements'
       responses:
-        200:
-          description: |
-            All possible node candidates.
+        202:
+          description: ACCEPTED
           schema:
             type: array
-            items:
-              $ref: '#/definitions/NodeCandidate'
+            $ref: '#/definitions/NodeCandidate'
 
   # Cloud related paths:
   /clouds:
@@ -1367,12 +1382,12 @@ paths:
         - node
       description: 'Create a new node request'
       parameters:
-        - name: nodeRequest
+        - name: nodeRequirements
           in: body
           description: 'Node Request'
           required: true
           schema:
-            $ref: '#/definitions/NodeRequest'
+            $ref: '#/definitions/NodeRequirements'
       responses:
         202:
           description: ACCEPTED
