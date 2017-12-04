@@ -539,17 +539,17 @@ definitions:
           $ref: '#/definitions/Requirement'
       taskType:
         $ref: '#/definitions/TaskType'
-        example: |
-          {"name":"TaskTest","ports":[{"type":"PortProvided","name":"PortProvidedTest","port":12345}
-          ,{"type":"PortRequired","name":"PortRequiredTest","updateAction":"UpdateActionTest"
-          ,"isMandatory":true}],"interfaces":[{"type":"DockerInterface","dockerImage":"DockerImage"}
-          ,{"type":"LanceInterface","init":"init","preInstall":"preInstall","install":"install"
-          ,"postInstall":"postInstall","preStart":"preStart","start":"start","startDetection"
-          :"startDetection","stopDetection":"stopDetection","postStart":"postStart","preStop":"preStop"
-          ,"stop":"stop","postStop":"postStop","shutdown":"shutdown"}],"executionEnvironment":"LANCE"
-          ,"requirements":[{"type":"OclRequirement","constraint":"oclRequirement"},{"type"
-          :"IdentifierRequirement","hardwareId":"hardwareId","locationId":"locationId","imageId"
-          :"imageId"}],"type":"BATCH"}
+    example: |
+      {"name":"TaskTest","ports":[{"type":"PortProvided","name":"PortProvidedTest","port":12345}
+      ,{"type":"PortRequired","name":"PortRequiredTest","updateAction":"UpdateActionTest"
+      ,"isMandatory":true}],"interfaces":[{"type":"DockerInterface","dockerImage":"DockerImage"}
+      ,{"type":"LanceInterface","init":"init","preInstall":"preInstall","install":"install"
+      ,"postInstall":"postInstall","preStart":"preStart","start":"start","startDetection"
+      :"startDetection","stopDetection":"stopDetection","postStart":"postStart","preStop":"preStop"
+      ,"stop":"stop","postStop":"postStop","shutdown":"shutdown"}],"executionEnvironment":"LANCE"
+      ,"requirements":[{"type":"OclRequirement","constraint":"oclRequirement"},{"type"
+      :"IdentifierRequirement","hardwareId":"hardwareId","locationId":"locationId","imageId"
+      :"imageId"}],"type":"BATCH"}
 
   TaskType:
     type: string
@@ -717,14 +717,14 @@ definitions:
     allOf:
       - $ref: '#/definitions/Requirement'
       - properties:
-        requirementClass:
-          type: string
-        requirementAttribute:
-          type: string
-        requirementOperator:
-          $ref: '#/definitions/RequirementOperator'
-        value:
-          type: string
+          requirementClass:
+            type: string
+          requirementAttribute:
+            type: string
+          requirementOperator:
+            $ref: '#/definitions/RequirementOperator'
+          value:
+            type: string
 
   Job:
     description: |
@@ -985,7 +985,6 @@ paths:
         202:
           description: ACCEPTED
           schema:
-            type: array
             $ref: '#/definitions/NodeCandidate'
 
   # Cloud related paths:
