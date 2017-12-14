@@ -250,7 +250,7 @@ definitions:
       disk:
         description: "Amount of disk space"
         type: number
-        format: float
+        format: double
         example: 100
       location:
         $ref: '#/definitions/Location'
