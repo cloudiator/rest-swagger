@@ -977,7 +977,8 @@ paths:
       parameters:
         - name: nodeRequirements
           in: body
-          description: 'Node Request'
+          description: |
+            Node Request
           required: false
           schema:
             $ref: '#/definitions/NodeRequirements'
