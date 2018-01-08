@@ -549,7 +549,7 @@ definitions:
       ,"stop":"stop","postStop":"postStop","shutdown":"shutdown"}],"executionEnvironment":"LANCE"
       ,"requirements":[{"type":"OclRequirement","constraint":"oclRequirement"},{"type"
       :"IdentifierRequirement","hardwareId":"hardwareId","locationId":"locationId","imageId"
-      :"imageId"}],"type":"BATCH"}
+      :"imageId"}],"taskType":"BATCH"}
 
   TaskType:
     type: string
