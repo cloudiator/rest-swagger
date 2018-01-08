@@ -21,10 +21,13 @@ consumes:
 produces:
   - application/json
 
-
 host: localhost:9000
 
-# Parameters
+################################################################################
+#####                                                                       ####
+#####                              Parameters                               ####
+#####                                                                       ####
+################################################################################
 parameters:
   id:
     name: id
@@ -33,61 +36,14 @@ parameters:
     required: true
     type: string
 
-# Definitions
+
+################################################################################
+####                                                                        ####
+####                                Definitions                             ####
+####                                                                        ####
+################################################################################
 definitions:
 
-  CloudType:
-    type: string
-    description: type of the cloud
-    enum: ['PRIVATE','PUBLIC']
-
-  Error:
-    required:
-      - code
-      - message
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-
-  NewCloud:
-      description: |
-        Represents a new cloud that is to be created
-      type: object
-      required:
-        - api
-        - credential
-        - cloudType
-      properties:
-        endpoint:
-          type: string
-          description: "URI where the api of this cloud provider can be accessed."
-          example: "https://endpoint.example.com"
-        cloudType:
-          $ref: '#/definitions/CloudType'
-        api:
-          $ref: '#/definitions/Api'
-        credential:
-          $ref: '#/definitions/CloudCredential'
-        cloudConfiguration:
-          $ref: '#/definitions/CloudConfiguration'
-
-  Cloud:
-    description: |
-      Representation of a cloud used by Cloudiator
-    type: object
-    required:
-      - id
-    allOf: 
-    - $ref: '#/definitions/NewCloud'
-    - properties:
-        id:
-          example: "1a79a4d60de6718e8e5b326e338ae533"
-          type: string
-          description: Unique identifier for the cloud
-          
   Api:
     description: |
       Represents an API used by a cloud
@@ -99,26 +55,44 @@ definitions:
         type: string
         description: Name of the API provider, maps to a driver
         example: "openstack-nova"
-  
-  CloudCredential:
+
+  AttributeRequirement:
+    type: object
     description: |
-      Represents the credentials used to authenticate with a cloud
+          Subtype of Requirement
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          requirementClass:
+            type: string
+          requirementAttribute:
+            type: string
+          requirementOperator:
+            $ref: '#/definitions/RequirementOperator'
+          value:
+            type: string
+    example:
+      type: 'AttributeRequirement'
+      requirementClass: 'requirementClassExample'
+      requirementAttribute: 'requirementAttriuteExample'
+      requirementOperator: 'EQ'
+      value: 'valueExample'
+
+
+  Cloud:
+    description: |
+      Representation of a cloud used by Cloudiator
     type: object
     required:
-      - user
-      - secret
-    properties:
-      user:
-        type: string
-        description: Username for authentication at the cloud provider's API
-        minLength: 1
-        example: "tenant:username"
-      secret:
-        type: string
-        description: Secret (e.g. Password) for authentication at the cloud provider's API
-        minLength: 1
-        example: "MySuperSecurePassword"
-        
+      - id
+    allOf:
+      - $ref: '#/definitions/NewCloud'
+      - properties:
+          id:
+            example: "1a79a4d60de6718e8e5b326e338ae533"
+            type: string
+            description: Unique identifier for the cloud
+
   CloudConfiguration:
     description: |
       Repesents the configuration of a cloud.
@@ -133,87 +107,105 @@ definitions:
         description: Array of configuration properties.
         items:
           $ref: '#/definitions/Property'
-        
-  Property:
-    type: object
-    description: "A key-value pair"
-    required:
-      - key
-      - value
-    properties:
-      key:
-        type: string
-        description: "Key of the property"
-        example: "sword.regions"
-      value:
-        type: string
-        description: "Value of the property"
-        example: "RegionOne, RegionTwo"
-        
-  Image:
-    description:  |
-      Represents an image offer by a cloud
-    type: object
-    required:
-      - id
-      - name
-      - providerId
-      - operatingSystem
-    properties:
-      id:
-        type: string
-        description: "Unique identifier for this image"
-        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
-      name:
-        type: string
-        description: "Human-readable name"
-        example: "Ubuntu 16.04 LTS AMD 64"
-      providerId:
-        type: string
-        description: "Original id issued by provider"
-        example: "1"
-      operatingSystem:
-        $ref: '#/definitions/OperatingSystem'
-      location:
-        $ref: '#/definitions/Location'
-        
-  OperatingSystem:
+
+  CloudCredential:
+      description: |
+        Represents the credentials used to authenticate with a cloud
+      type: object
+      required:
+        - user
+        - secret
+      properties:
+        user:
+          type: string
+          description: Username for authentication at the cloud provider's API
+          minLength: 1
+          example: "tenant:username"
+        secret:
+          type: string
+          description: Secret (e.g. Password) for authentication at the cloud provider's API
+          minLength: 1
+          example: "MySuperSecurePassword"
+
+  CloudType:
+    type: string
+    description: type of the cloud
+    enum: ['PRIVATE','PUBLIC']
+
+  Communication:
+      type: object
+      description: |
+        Part of a job
+        Represents a communication requirement between two tasks by mapping a required port of a
+        task to a provided port of another task.
+      properties:
+        portRequired:
+          type: string
+          description: |
+            The name of the required port this communication refers to.
+          example: "Re10375"
+        portProvided:
+          type: string
+          description: |
+            The name of the provided port this communication refers to.
+          example: "Pro11745"
+
+
+  DockerInterface:
+     type: object
+     allOf:
+     - $ref: '#/definitions/TaskInterface'
+     - properties:
+        dockerImage:
+          description: |
+            Name of the docker image
+          type: string
+
+
+  Error:
     description: |
-      Represents the operating system of an image
-    type: object 
+      Basic errorClass
+    required:
+      - code
+      - message
     properties:
-      operatingSystemType:
-        $ref: '#/definitions/OperatingSystemType'
-      operatingSystemFamily:
-        $ref: '#/definitions/OperatingSystemFamily'
-      operatingSystemArchitecture:
-        $ref: '#/definitions/OperatingSystemArchitecture'
-      operatingSystemVersion:
+      code:
+        type: integer
+        format: int32
+        example: 404
+      message:
         type: string
-        description: "Version of the OS"
-        example: "16.04 LTS"
+        example: 'Not found'
 
-  OperatingSystemFamily:
-    description: "Type of OS Family"
-    type: string
-    enum: ['UBUNTU','UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
-    'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
-    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','WINDOWS']
+  ExecutionEnvironment:
+     description: |
+            ExecutionEnvironment of a Task
+     type: string
+     enum: ['SPARK','NATIVE','CONTAINER','LANCE']
 
 
-  OperatingSystemType:
-    description: "OS Type"
-    type: string
-    enum: ['LINUX','UNKOWN','UNIX','WINDOWS_OS','BSD','MAC']
+  GeoLocation:
+    description: |
+      Part of Location
+      Represents a geographical location
+    type: object
+    properties:
+      city:
+        description: "City of the location"
+        type: string
+      country:
+        description: "An ISO 3166-1 alpha-2 country code"
+        type: string
+      latitude:
+        description: "Latitude of the location in decimal degrees"
+        type: number
+        format: double
+      longitude:
+        description: "Longitude of the location in decimal degrees"
+        type: number
+        format: double
 
 
-  OperatingSystemArchitecture:
-    description: "Type of OS Architecture"
-    type: string
-    enum: ['AMD64','UNKOWN','I386']
-
-
-  
   Hardware:
     description: |
       Represents a hardware offer by a cloud
@@ -256,345 +248,105 @@ definitions:
         $ref: '#/definitions/Location'
 
 
-  GeoLocation:
-    description:
-      Represents a geographical location
+  IdentifierRequirement:
     type: object
-    properties:
-      city:
-        description: "City of the location"
-        type: string
-      country:
-        description: "An ISO 3166-1 alpha-2 country code"
-        type: string
-      latitude:
-        description: "Latitude of the location in decimal degrees"
-        type: number
-        format: double
-      longitude:
-        description: "Longitude of the location in decimal degrees"
-        type: number
-        format: double
+    required:
+      - hardwareId
+      - locationId
+      - imageId
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          hardwareId:
+            type: string
+          locationId:
+            type: string
+          imageId:
+            type: string
+    example:
+      hardwareId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+      locationId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+      imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+      type: "IdentifierRequirement"
 
-  Location:
-    description: |
-      Repesents a (virtual) location offers by a cloud
+  Image:
+    description:  |
+      Represents an image offer by a cloud
     type: object
     required:
       - id
       - name
       - providerId
-      - locationScope
-      - isAssignable
+      - operatingSystem
     properties:
       id:
-        description: "Unique identifier"
         type: string
-        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne"
+        description: "Unique identifier for this image"
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
       name:
+        type: string
         description: "Human-readable name"
-        type: string
-        example: "RegionOne"
+        example: "Ubuntu 16.04 LTS AMD 64"
       providerId:
-        description: "Original id issued by the provider"
         type: string
-        example: "RegionOne"
-      locationScope:
-        description: "Scope of the location"
-        type: string
-        enum: ['PROVIDER', 'REGION', 'ZONE', 'HOST']
-        example: 'ZONE'
-      isAssignable:
-        description: "True of the location can be used to start virtual machines, false if not"
-        type: boolean
-        example: true
-      geoLocation:
-        $ref: '#/definitions/GeoLocation'
-      parent:
-        # self reference is broken in editor and UI
-        # see https://github.com/swagger-api/swagger-editor/issues/1005
-        $ref: '#/definitions/Location'
-        
-  NodeCandidate:
-    description: A node creatable by the system
-    type: object
-    properties:
-      price:
-        type: number
-        format: double
-      cloud:
-        $ref: '#/definitions/Cloud'
-      image:
-        $ref: '#/definitions/Image'
-      hardware:
-        $ref: '#/definitions/Hardware'
+        description: "Original id issued by provider"
+        example: "1"
+      operatingSystem:
+        $ref: '#/definitions/OperatingSystem'
       location:
         $ref: '#/definitions/Location'
 
-  # Platform related definitions:
-    
-  Platform:
-    description: Representation of a platform used by Cloudiator
+  IpAddress:
     type: object
     required:
-      - id
-    allOf: 
-      - $ref: '#/definitions/NewPlatform'
-      - properties:
-          id:
-            type: string
-            description: Unique identifier for the platform
-        
-  NewPlatform:
-    description: |
-      Repesents a new PaaS provider to be created
-    type: object
-    required:
-      - name
-      - api
-      - credential
+      - IpAddressType
+      - IpVersion
     properties:
-      name:
-        description: "Human-readable name"
-        type: string
-      type:
-        description: "PaaS stack type"
-        type: string
-        enum: ['HEROKU', 'OPENSHIFT', 'CLOUDFOUNDRY']  
-      api:
-        $ref: '#/definitions/Api'
-      credential:
-        $ref: '#/definitions/CloudCredential'
-      endpoint:
-        type: string
-        description: "URI where the api of this platform provider can be accessed."
-        example: "https://endpoint.example.com"
-        
-  PlatformEnvironment:
-    description: |
-      Repesents a PaaS environemnt to run an component
-    type: object
-    required:
-      - id
-    allOf:
-      - $ref: '#/definitions/NewPlatformEnvironment'
-      - properties:
-          id:
-            description: "Unique identifier"
-            type: string
+      IpAddressType:
+        $ref: '#/definitions/IpAddressType'
+      IpVersion:
+        $ref: '#/definitions/IpVersion'
 
-  NewPlatformEnvironment:
+  IpAddressType:
+    type: string
+    enum: ['PUBLIC_IP','PRIVATE_IP']
+
+  IpVersion:
+    type: string
+    enum: ['V4','V6']
+
+
+  Job:
     description: |
-        Repesents a PaaS environemnt to run an component
+      Represents an job. An job is a logical group of tasks.
     type: object
     required:
       - name
-      - platformHardware
-      - platformRuntime
+      - tasks
+      - communications
     properties:
       name:
-        description: "Human-readable name"
         type: string
-      platform:
-        $ref: '#/definitions/Platform'
-      platformHardware:
-        $ref: '#/definitions/PlatformHardware'
-      platformRuntime:
-        $ref: '#/definitions/PlatformRuntime'
-      platformService:
+        example: "MediaWiki Application"
+      tasks:
         type: array
         items:
-          $ref: '#/definitions/PlatformService'
-        
-  PlatformHardware:
-    description: |
-      Repesents a PaaS environemnt to run an component
-    type: object
-    required:
-      - id
-    allOf:
-      - $ref: '#/definitions/NewPlatformHardware'
-      - properties:
-          id:
-            description: "Unique identifier for the hardware"
-            type: string
-            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
-
-  NewPlatformHardware:
-    description: |  
-      Represents a hardware configuration for a Platform (not all attributes might be supported for all PaaS providers)
-    type: object
-    required:
-      - name
-      - cores
-      - ram
-      - disk
-    properties:
-      name:
-        description: "Human-readable name for the hardware"
-        type: string
-        example: "example.p1"
-      cores:
-        description: "Number of cores"
-        type: integer
-        format: int32
-        example: 16
-      ram:
-        description: "Amount of RAM"
-        type: integer
-        format: int64
-        example: 2048
-      disk:
-        description: "Amount of disk space"
-        type: number
-        format: float
-        example: 100
-      
-  PlatformRuntime:
-      description: |
-        Repesents a PaaS environemnt to run an component
-      type: object
-      required:
-        - id
-      allOf:
-        - $ref: '#/definitions/NewPlatformRuntime'
-        - properties:
-            id:
-              description: "Unique identifier for the hardwareRuntime"
-              type: string
-              example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
-
-  NewPlatformRuntime:
-    description: "Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat" 
-    type: object
-    required:
-      - name
-      - language
-      - runtimeType
-      - version
-    properties:
-      name:
-        description: "human readable name"
-        type: string
-      language:
-        description: "the specific runtime language"
-        type: string
-        enum: ['PHP','JAVA','RUBY','PYTHON']
-      languageVersion:
-        description: "language version number"
-        type: number
-        format: double
-        example: 11.0
-      runtimeType:
-        description: "specifies the runtime type"
-        type: string
-        enum: ['standalone','server']
-      version:
-        description: "the version of the specified type"
-        type: number
-        format: double
-        example: 2.0
-
-  PlatformService:
-    description: |
-      Repesents additional PaaS services to component, e.g. a database, TODO!
-    type: object
-    required:
-      - id
-      - name
-    properties:
-      id:
-        description: "Unique identifier"
-        type: string
-      name:
-        description: "Human-readable name"
-        type: string
-      
-  Task:
-    description: |
-      Represents a task of a job.
-    type: object
-    required:
-      - name
-      - executionEnvironment
-      - taskType
-    properties:
-      name:
-        description: "Human-readable name. Uniquely identifies a task."
-        type: string
-      ports:
+          $ref: '#/definitions/Task'
+        description: |
+          An array of tasks that form this application.
+      communications:
         type: array
         items:
-          $ref: '#/definitions/Port'
-      interfaces:
-        description: "Interfaces of this task"
-        type: array
-        items:
-          $ref: '#/definitions/TaskInterface'
-      executionEnvironment:
-        $ref: '#/definitions/ExecutionEnvironment'
+          $ref: '#/definitions/Communication'
       requirements:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-      taskType:
-        $ref: '#/definitions/TaskType'
-    example: #ExampleTask
-      name: "TaskTest"
-      ports:
-        - type: "PortProvided"
-          name: "PortProvidedTest"
-          port: 12345
-        - type: "PortRequired"
-          name: "PortRequiredTest"
-          updateAction: "UpdateActionTest"
-          isMandatory: true
-      interfaces:
-        - type: "DockerInterface"
-          dockerImage: "DockerImage"
-      executionEnvironment: "LANCE"
-      requirements:
-        - type: "OclRequirement"
-          constraint: "oclRequirement"
-        - type: "IdentifierRequirement"
-          hardwareId: "hardwareId"
-          locationId: "locationId"
-          imageId: "imageId"
-      taskType: "BATCH"
 
-  TaskType:
-    type: string
-    enum: ['BATCH','SERVICE']
-
-  ExecutionEnvironment:
-    type: string
-    enum: ['SPARK','NATIVE','CONTAINER','LANCE']
-
-  TaskInterface:
-    description: |
-      Represents an interface
-    type: object
-    discriminator: type
-    required:
-      - type
-    properties:
-      type:
-        type: string
-        description: |
-          Discriminator for polymorphism.
-
-  DockerInterface:
-    type: object
-    allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        dockerImage:
-          description: |
-            Name of the docker image
-          type: string
 
   LanceInterface:
     description: |
+      Part of a task.
       Represents a lance interface.
     type: object
     required:
@@ -662,263 +414,51 @@ definitions:
       install: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
       start: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
 
-  PlatformInterface:
+  Location:
     description: |
-      Represents a PaaS interface
+      Repesents a (virtual) location offers by a cloud
     type: object
     required:
-      - sourceRepository
-    allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        sourceRepository:
-          description: |
-            URL to the source code repository (currently only git is supported)
-          type: string
-
-  Requirement:
-    type: object
-    discriminator: type
-    required:
-      - type
-    properties:
-      type:
-        type: string
-
-  OclRequirement:
-    type: object
-    required:
-      - constraint
-    allOf:
-      - $ref: '#/definitions/Requirement'
-      - properties:
-          constraint:
-            type: string
-    example:
-      constraint: "nodes->forAll(hardware.cores >= 4)"
-      type: "OclRequirement"
-
-  IdentifierRequirement:
-    type: object
-    required:
-      - hardwareId
-      - locationId
-      - imageId
-    allOf:
-      - $ref: '#/definitions/Requirement'
-      - properties:
-          hardwareId:
-            type: string
-          locationId:
-            type: string
-          imageId:
-            type: string
-    example:
-      hardwareId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
-      locationId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
-      imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
-      type: "IdentifierRequirement"
-
-  RequirementOperator:
-    type: string
-    enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
-
-  AttributeRequirement:
-    type: object
-    allOf:
-      - $ref: '#/definitions/Requirement'
-      - properties:
-          requirementClass:
-            type: string
-          requirementAttribute:
-            type: string
-          requirementOperator:
-            $ref: '#/definitions/RequirementOperator'
-          value:
-            type: string
-
-  Job:
-    description: |
-      Represents an job. An job is a logical group of tasks.
-    type: object
-    required:
+      - id
       - name
-      - tasks
-      - communications
+      - providerId
+      - locationScope
+      - isAssignable
     properties:
-      name:
-        type: string
-        example: "MediaWiki Application"
-      tasks:
-        type: array
-        items:
-          $ref: '#/definitions/Task'
-        description: |
-          An array of tasks that form this application.
-      communications:
-        type: array
-        items:
-          $ref: '#/definitions/Communication'
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
-
-  Port:
-    type: object
-    discriminator: type
-    description: |
-      Represents a communication port of a task
-    required:
-      - name
-    properties:
-      type:
-        description: |
-          Discriminator for polymorphism.
-        type: string
-      name:
-        type: string
-        description: |
-          Uniquely identifies a port. Defines the name of the environment variables holding
-          IP addresses of remote tasks.
-        example: "LOADBALANCERREQWIKI"
-
-  PortProvided:
-    type: object
-    description: |
-      Represents a communication port that the tasks provides for other tasks
-      or the end user.
-    allOf:
-      - $ref: '#/definitions/Port'
-      - properties:
-          port:
-            type: integer
-            format: int32
-            example: 80
-
-  PortRequired:
-    type: object
-    description: |
-      Represents a communication port that the task requires from other (downstream) tasks.
-    allOf:
-      - $ref: '#/definitions/Port'
-      - properties:
-          updateAction:
-            type: string
-            description: |
-              A script that is executed if a new instance of a downstream task is available.
-            example: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
-          isMandatory:
-            type: boolean
-            description: |
-              States if an instance of a downstream tasks needs to be already started (true), or
-              if the task can start without a downstream task (false).
-            example: true
-
-  Communication:
-    type: object
-    description: |
-      Represents a communication requirement between two tasks by mapping a required port of a
-      task to a provided port of another task.
-    properties:
-      portRequired:
-        type: string
-        description: |
-          The name of the required port this communication refers to.
-        example: "Re10375"
-      portProvided:
-        type: string
-        description: |
-          The name of the provided port this communication refers to.
-        example: "Pro11745"
-
-  IpAddress:
-    type: object
-    required:
-      - IpAddressType
-      - IpVersion
-    properties:
-      IpAddressType:
-        $ref: '#/definitions/IpAddressType'
-      IpVersion:
-        $ref: '#/definitions/IpVersion'
-
-  IpAddressType:
-    type: string
-    enum: ['PUBLIC_IP','PRIVATE_IP']
-
-  IpVersion:
-    type: string
-    enum: ['V4','V6']
-
-  VirtualMachine:
-    type: object
-    properties:
-      image:
-        $ref: '#/definitions/Image'
-      hardware:
-        $ref: '#/definitions/Hardware'
-      location:
-        $ref: '#/definitions/Location'
       id:
+        description: "Unique identifier"
         type: string
-        example: "1a79a4d60de6718e8e5b326e338ae5vm"
-      ipaddresses:
-        type: array
-        items:
-          $ref: '#/definitions/IpAddress'
-      logincredential:
-        $ref: '#/definitions/LoginCredential'
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne"
+      name:
+        description: "Human-readable name"
+        type: string
+        example: "RegionOne"
+      providerId:
+        description: "Original id issued by the provider"
+        type: string
+        example: "RegionOne"
+      locationScope:
+        description: "Scope of the location"
+        type: string
+        enum: ['PROVIDER', 'REGION', 'ZONE', 'HOST']
+        example: 'ZONE'
+      isAssignable:
+        description: "True of the location can be used to start virtual machines, false if not"
+        type: boolean
+        example: true
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
+      parent:
+        # self reference is broken in editor and UI
+        # see https://github.com/swagger-api/swagger-editor/issues/1005
+        $ref: '#/definitions/Location'
 
   LoginCredential:
     type: string
-    description: "Platzhalter"
+    description: |
+      Part of a VirtualMachine.
+      Platzhalter
     example: "here to be here"
-
-  VirtualMachineRequest:
-      type: object
-      description: |
-        Represents a request to create a new virtual machine.
-      properties:
-        image:
-          type: string
-          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
-        hardware:
-          type: string
-          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
-        location:
-          type: string
-          example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
-
-  NodeRequirements:
-    type: object
-    description: |
-      Represents a request to create a new node fullfilling the given requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
-
-  OclProblem:
-    type: object
-    description: |
-      Represents a request to create a new node fullfilling the given requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/OclRequirement'
-
-  OclSolution:
-    type: object
-    description: |
-      Represents a solution to an ocl problem
-    properties:
-      nodes:
-        type: array
-        items:
-          $ref: '#/definitions/VirtualMachineRequest'
 
   LongRunningRequest:
     description: |
@@ -950,6 +490,511 @@ definitions:
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
 
+  NewCloud:
+      description: |
+        Represents a new cloud that is to be created
+      type: object
+      required:
+        - api
+        - credential
+        - cloudType
+      properties:
+        endpoint:
+          type: string
+          description: "URI where the api of this cloud provider can be accessed."
+          example: "https://endpoint.example.com"
+        cloudType:
+          $ref: '#/definitions/CloudType'
+        api:
+          $ref: '#/definitions/Api'
+        credential:
+          $ref: '#/definitions/CloudCredential'
+        cloudConfiguration:
+          $ref: '#/definitions/CloudConfiguration'
+
+  NewPlatform:
+    description: |
+      Repesents a new PaaS provider to be created
+    type: object
+    required:
+      - name
+      - api
+      - credential
+    properties:
+      name:
+        description: "Human-readable name"
+        type: string
+      type:
+        description: "PaaS stack type"
+        type: string
+        enum: ['HEROKU', 'OPENSHIFT', 'CLOUDFOUNDRY']
+      api:
+        $ref: '#/definitions/Api'
+      credential:
+        $ref: '#/definitions/CloudCredential'
+      endpoint:
+        type: string
+        description: "URI where the api of this platform provider can be accessed."
+        example: "https://endpoint.example.com"
+
+  NewPlatformEnvironment:
+    description: |
+        Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - name
+      - platformHardware
+      - platformRuntime
+    properties:
+      name:
+        description: "Human-readable name"
+        type: string
+      platform:
+        $ref: '#/definitions/Platform'
+      platformHardware:
+        $ref: '#/definitions/PlatformHardware'
+      platformRuntime:
+        $ref: '#/definitions/PlatformRuntime'
+      platformService:
+        type: array
+        items:
+          $ref: '#/definitions/PlatformService'
+
+  NewPlatformHardware:
+    description: |
+      Represents a hardware configuration for a Platform (not all attributes might be supported for all PaaS providers)
+    type: object
+    required:
+      - name
+      - cores
+      - ram
+      - disk
+    properties:
+      name:
+        description: "Human-readable name for the hardware"
+        type: string
+        example: "example.p1"
+      cores:
+        description: "Number of cores"
+        type: integer
+        format: int32
+        example: 16
+      ram:
+        description: "Amount of RAM"
+        type: integer
+        format: int64
+        example: 2048
+      disk:
+        description: "Amount of disk space"
+        type: number
+        format: float
+        example: 100
+
+  NewPlatformRuntime:
+    description: "Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat"
+    type: object
+    required:
+      - name
+      - language
+      - runtimeType
+      - version
+    properties:
+      name:
+        description: "human readable name"
+        type: string
+      language:
+        description: "the specific runtime language"
+        type: string
+        enum: ['PHP','JAVA','RUBY','PYTHON']
+      languageVersion:
+        description: "language version number"
+        type: number
+        format: double
+        example: 11.0
+      runtimeType:
+        description: "specifies the runtime type"
+        type: string
+        enum: ['standalone','server']
+      version:
+        description: "the version of the specified type"
+        type: number
+        format: double
+        example: 2.0
+
+  NodeCandidate:
+    description: A node creatable by the system
+    type: object
+    properties:
+      price:
+        type: number
+        format: double
+      cloud:
+        $ref: '#/definitions/Cloud'
+      image:
+        $ref: '#/definitions/Image'
+      hardware:
+        $ref: '#/definitions/Hardware'
+      location:
+        $ref: '#/definitions/Location'
+
+  NodeRequirements:
+    type: object
+    description: |
+      Array of Requirements.
+      Represents a request to create a new node fullfilling the given requirements
+    properties:
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+
+
+  OclRequirement:
+    type: object
+    description: |
+      Subytpe of Requirement
+    required:
+      - constraint
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          constraint:
+            type: string
+    example:
+      constraint: "nodes->forAll(hardware.cores >= 4)"
+      type: "OclRequirement"
+
+  OclProblem:
+    type: object
+    description: |
+      Represents a request to create a new node fullfilling the given requirements
+    properties:
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/OclRequirement'
+
+  OclSolution:
+    type: object
+    description: |
+      Represents a solution to an ocl problem
+    properties:
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/VirtualMachineRequest'
+
+  OperatingSystem:
+    description: |
+      Represents the operating system of an image
+    type: object
+    properties:
+      operatingSystemType:
+        $ref: '#/definitions/OperatingSystemType'
+      operatingSystemFamily:
+        $ref: '#/definitions/OperatingSystemFamily'
+      operatingSystemArchitecture:
+        $ref: '#/definitions/OperatingSystemArchitecture'
+      operatingSystemVersion:
+        type: string
+        description: "Version of the OS"
+        example: "16.04 LTS"
+
+  OperatingSystemArchitecture:
+    description: "Type of OS Architecture"
+    type: string
+    enum: ['AMD64','UNKOWN','I386']
+
+  OperatingSystemFamily:
+    description: "Type of OS Family"
+    type: string
+    enum: ['UBUNTU','UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
+    'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
+    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','WINDOWS']
+
+  OperatingSystemType:
+    description: "OS Type"
+    type: string
+    enum: ['LINUX','UNKOWN','UNIX','WINDOWS_OS','BSD','MAC']
+
+
+  Platform:
+    description: Representation of a platform used by Cloudiator
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatform'
+      - properties:
+          id:
+            type: string
+            description: Unique identifier for the platform
+
+  PlatformEnvironment:
+    description: |
+      Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformEnvironment'
+      - properties:
+          id:
+            description: "Unique identifier"
+            type: string
+
+  PlatformHardware:
+    description: |
+      Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformHardware'
+      - properties:
+          id:
+            description: "Unique identifier for the hardware"
+            type: string
+            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  PlatformInterface:
+   description: |
+     Subtype of TaskInterface
+     Represents a PaaS interface
+   type: object
+   required:
+     - sourceRepository
+   allOf:
+   - $ref: '#/definitions/TaskInterface'
+   - properties:
+       sourceRepository:
+         description: |
+           URL to the source code repository (currently only git is supported)
+         type: string
+
+  PlatformRuntime:
+     description: |
+       Repesents a PaaS environemnt to run an component
+     type: object
+     required:
+       - id
+     allOf:
+       - $ref: '#/definitions/NewPlatformRuntime'
+       - properties:
+           id:
+             description: "Unique identifier for the hardwareRuntime"
+             type: string
+             example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  PlatformService:
+   description: |
+     Repesents additional PaaS services to component, e.g. a database, TODO!
+   type: object
+   required:
+     - id
+     - name
+   properties:
+     id:
+       description: "Unique identifier"
+       type: string
+     name:
+       description: "Human-readable name"
+       type: string
+
+  Port:
+    type: object
+    discriminator: type
+    description: |
+      Represents a communication port of a task
+    required:
+      - name
+    properties:
+      type:
+        description: |
+          Discriminator for polymorphism.
+          Only subtypes are allowed.
+        type: string
+      name:
+        type: string
+        description: |
+          Uniquely identifies a port. Defines the name of the environment variables holding
+          IP addresses of remote tasks.
+
+  PortProvided:
+     type: object
+     description: |
+       Subtype of port.
+       Represents a communication port that the tasks provides for other tasks
+       or the end user.
+     allOf:
+       - $ref: '#/definitions/Port'
+       - properties:
+           port:
+             type: integer
+             format: int32
+     example:
+       type: 'PortProvided'
+       name: 'PortProvidedExample'
+       port: 8090
+
+  PortRequired:
+    type: object
+    description: |
+      Subtype of port.
+      Represents a communication port that the task requires from other (downstream) tasks.
+    allOf:
+      - $ref: '#/definitions/Port'
+      - properties:
+          updateAction:
+            type: string
+            description: |
+              A script that is executed if a new instance of a downstream task is available.
+          isMandatory:
+            type: boolean
+            description: |
+              States if an instance of a downstream tasks needs to be already started (true), or
+              if the task can start without a downstream task (false).
+    example:
+      type: 'PortProvided'
+      name: 'PortProvidedExample'
+      updateAction: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
+      isMandatory: true
+
+  Property:
+   type: object
+   description: "A key-value pair"
+   required:
+     - key
+     - value
+   properties:
+     key:
+       type: string
+       description: "Key of the property"
+       example: "sword.regions"
+     value:
+       type: string
+       description: "Value of the property"
+       example: "RegionOne, RegionTwo"
+
+  Requirement:
+   type: object
+   discriminator: type
+   required:
+     - type
+   properties:
+     type:
+       type: string
+
+  RequirementOperator:
+   type: string
+   enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
+
+
+  Task:
+    description: |
+      Represents a task of a job.
+    type: object
+    required:
+      - name
+      - executionEnvironment
+      - taskType
+    properties:
+      name:
+        description: "Human-readable name. Uniquely identifies a task."
+        type: string
+      ports:
+        type: array
+        items:
+          $ref: '#/definitions/Port'
+      interfaces:
+        description: "Interfaces of this task"
+        type: array
+        items:
+          $ref: '#/definitions/TaskInterface'
+      executionEnvironment:
+        $ref: '#/definitions/ExecutionEnvironment'
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+      taskType:
+        $ref: '#/definitions/TaskType'
+    example: #ExampleTask
+      name: "TaskTest"
+      ports:
+        - type: "PortProvided"
+          name: "PortProvidedTest"
+          port: 12345
+        - type: "PortRequired"
+          name: "PortRequiredTest"
+          updateAction: "UpdateActionTest"
+          isMandatory: true
+      interfaces:
+        - type: "DockerInterface"
+          dockerImage: "DockerImage"
+      executionEnvironment: "LANCE"
+      requirements:
+        - type: "OclRequirement"
+          constraint: "oclRequirement"
+        - type: "IdentifierRequirement"
+          hardwareId: "hardwareId"
+          locationId: "locationId"
+          imageId: "imageId"
+      taskType: "BATCH"
+
+  TaskType:
+   type: string
+   enum: ['BATCH','SERVICE']
+
+  TaskInterface:
+   description: |
+     Represents an interface
+   type: object
+   discriminator: type
+   required:
+     - type
+   properties:
+     type:
+       type: string
+       description: |
+         Discriminator for polymorphism.
+
+
+  VirtualMachine:
+   type: object
+   properties:
+     image:
+       $ref: '#/definitions/Image'
+     hardware:
+       $ref: '#/definitions/Hardware'
+     location:
+       $ref: '#/definitions/Location'
+     id:
+       type: string
+       example: "1a79a4d60de6718e8e5b326e338ae5vm"
+     ipaddresses:
+       type: array
+       items:
+         $ref: '#/definitions/IpAddress'
+     logincredential:
+       $ref: '#/definitions/LoginCredential'
+
+  VirtualMachineRequest:
+     type: object
+     description: |
+       Represents a request to create a new virtual machine.
+     properties:
+       image:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+       hardware:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+       location:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+
+
 responses:
   400BadRequestResponse:
     description: Bad Request
@@ -976,7 +1021,12 @@ responses:
     schema:
       $ref: '#/definitions/Error'
 
-# Paths
+################################################################################
+####                                                                        ####
+####                              Path structure                            ####
+####                                                                        ####
+################################################################################
+
 paths:
   /nodeCandidates:
     post:
