@@ -153,6 +153,8 @@ definitions:
 
   DockerInterface:
      type: object
+     description: |
+      Subtype of TaskInterface
      allOf:
      - $ref: '#/definitions/TaskInterface'
      - properties:
@@ -250,6 +252,8 @@ definitions:
 
   IdentifierRequirement:
     type: object
+    description: |
+      Subtype of Requirement
     required:
       - hardwareId
       - locationId
@@ -318,7 +322,8 @@ definitions:
 
   Job:
     description: |
-      Represents an job. An job is a logical group of tasks.
+      Represents an job.
+      An job is a logical group of tasks.
     type: object
     required:
       - name
@@ -347,7 +352,7 @@ definitions:
   LanceInterface:
     description: |
       Part of a task.
-      Represents a lance interface.
+      Subtype of TaskInterface.
     type: object
     required:
       - start
@@ -805,6 +810,7 @@ definitions:
     type: object
     discriminator: type
     description: |
+      polymorphic superclass, only subtypes are allowed.
       Represents a communication port of a task
     required:
       - name
