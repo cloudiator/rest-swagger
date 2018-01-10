@@ -125,7 +125,7 @@ definitions:
           type: string
           description: Secret (e.g. Password) for authentication at the cloud provider's API
           minLength: 1
-          example: "MySuperSecurePassword"
+          example: "MeltdownVictim"
 
   CloudType:
     type: string
@@ -206,6 +206,11 @@ definitions:
         description: "Longitude of the location in decimal degrees"
         type: number
         format: double
+    example:
+      city: "Ulm"
+      country: "DE"
+      latitude: 48.4010822
+      longitude: 9.9876076
 
 
   Hardware:
@@ -825,6 +830,10 @@ definitions:
         description: |
           Uniquely identifies a port. Defines the name of the environment variables holding
           IP addresses of remote tasks.
+    example:
+      type: 'PortProvided'
+      name: 'PortProvidedExample'
+      port: 8090
 
   PortProvided:
      type: object
@@ -884,15 +893,22 @@ definitions:
 
   Requirement:
    type: object
+   description: "polymorphic Superclass, only subtypes are allowed"
    discriminator: type
    required:
      - type
    properties:
      type:
        type: string
+   example:
+    type: "IdentifierRequirement"
+    hardwareId: "hardwareId"
+    locationId: "locationId"
+    imageId: "imageId"
 
   RequirementOperator:
    type: string
+   description: "Part of AttributeRequirement"
    enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
 
 
@@ -1006,26 +1022,45 @@ responses:
     description: Bad Request
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 400
+      message: "Bad Request"
   401UnauthorizedResponse:
     description: Authorization for this action is missing
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 401
+      message: "Authorization for this action is missing"
   403ForbiddenResponse:
     description: Forbidden action
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 403
+      message: "Forbidden action"
   404NotFoundResponse:
     description: Item not found
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 404
+      message: "Item not found"
   500ErrorResponse:
     description: An unexpected Error occured
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 500
+      message: "An unexpected Error occured"
   504GatewayTimeout:
     description: Server temporary not available
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 504
+      message: "Server temporary not available"
+
 
 ################################################################################
 ####                                                                        ####
