@@ -514,6 +514,23 @@ definitions:
     type: string
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
+  MatchmakingRequest:
+    type: object
+    description: |
+      Issues a request to the matchmaking component
+    properties:
+      requirements:
+        $ref: '#/definitions/NodeRequirements'
+
+  MatchmakingResponse:
+    type: object
+    description: |
+      Represents a response to a matchmaking request
+    properties:
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/VirtualMachineRequest'
 
   NewCloud:
       description: |
@@ -688,26 +705,6 @@ definitions:
     example:
       constraint: "nodes->forAll(hardware.cores >= 4)"
       type: "OclRequirement"
-
-  OclProblem:
-    type: object
-    description: |
-      Represents a request to create a new node fullfilling the given requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/OclRequirement'
-
-  OclSolution:
-    type: object
-    description: |
-      Represents a solution to an ocl problem
-    properties:
-      nodes:
-        type: array
-        items:
-          $ref: '#/definitions/VirtualMachineRequest'
 
   OperatingSystem:
     description: |
@@ -1084,11 +1081,13 @@ responses:
 ################################################################################
 
 paths:
+
+  # Matchmaking related paths
   /nodeCandidates:
     post:
       operationId: findNodeCandidates
       tags:
-        - cloud
+        - matchmaking
       description: |
         Returns possible node candidates.
       parameters:
@@ -1106,6 +1105,26 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NodeCandidate'
+
+  # MISC
+  /matchmaking:
+    put:
+      operationId: solveMatchmaking
+      tags:
+        - matchmaking
+      description: 'Solves a matchmaking problem'
+      parameters:
+        - name: matchmakingRequest
+          in: body
+          description: 'The matchmaking request to solve'
+          required: true
+          schema:
+            $ref: '#/definitions/MatchmakingRequest'
+      responses:
+        200:
+          description: OK
+          schema:
+              $ref: '#/definitions/MatchmakingResponse'
 
   # Cloud related paths:
   /clouds:
@@ -1556,26 +1575,6 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
-
-  # MISC
-  /ocl:
-    put:
-      operationId: solveOCL
-      tags:
-        - misc
-      description: 'Solves an Ocl Problem'
-      parameters:
-        - name: oclProblem
-          in: body
-          description: 'OCL Problem to solve'
-          required: true
-          schema:
-            $ref: '#/definitions/OclProblem'
-      responses:
-        200:
-          description: OK
-          schema:
-              $ref: '#/definitions/OclSolution'
 
   # Platform related paths:
   
