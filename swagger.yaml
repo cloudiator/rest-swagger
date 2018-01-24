@@ -478,6 +478,28 @@ definitions:
         # see https://github.com/swagger-api/swagger-editor/issues/1005
         $ref: '#/definitions/Location'
 
+  Login:
+    type: object
+    description: |
+      Login information provided by the user to be authorized
+    required:
+      - email
+      - tenant
+      - password
+    properties:
+      email:
+        description: "EMail address of the user"
+        type: string
+        example: "john.doe@example.com"
+      tenant:
+        description: "Tenant the user wants to authenticate"
+        type: string
+        example: "admin"
+      password:
+        description: "Password of the user"
+        type: string
+        example: "SecretPassword"
+
   LoginCredential:
     type: string
     description: |
@@ -689,7 +711,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-
 
   OclRequirement:
     type: object
@@ -993,6 +1014,60 @@ definitions:
        description: |
          Discriminator for polymorphism.
 
+  Tenant:
+    type: object
+    description: |
+      Represents a tenant of the system.
+    required:
+      - tenant
+    properties:
+      tenant:
+        type: string
+        description: "The tenant"
+
+  Token:
+    type: object
+    description: |
+      Represents an API Token, that is used to represent a successful authentication of a user
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: "The token"
+
+  User:
+    type: object
+    description: |
+      A user of the system.
+    properties:
+      email:
+        type: string
+        description: "EMail address of the user"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  UserNew:
+    type: object
+    description: |
+      Represents a user that should be create in the system
+    required:
+      - email
+      - password
+      - passwordRepeat
+      - tenant
+    properties:
+      email:
+        type: string
+        description: "EMail address of the user"
+      password:
+        type: string
+        description: "Password of the user"
+      passwordRepeat:
+        type: string
+        description: "Repetition of the user's password"
+      tenant:
+        $ref: "#/definitions/Tenant"
 
   VirtualMachine:
    type: object
@@ -1081,6 +1156,66 @@ responses:
 ################################################################################
 
 paths:
+
+  # User Related paths
+  /login:
+    post:
+      operationId: login
+      tags:
+        - user
+      description: |
+        Authenticates a user
+      parameters:
+        - name: login
+          in: body
+          description: |
+            User login request
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Token'
+  /users:
+    post:
+      operationId: createUser
+      tags:
+        - user
+      description: |
+        Creates a new user
+      parameters:
+        - name: user
+          in: body
+          description: |
+            User creation request
+          schema:
+            $ref: '#/definitions/UserNew'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+
+  /tenants:
+    post:
+      operationId: createTenant
+      tags:
+        - user
+      description: |
+        Creates a new tenant
+      parameters:
+        - name: tenant
+          in: body
+          description: |
+            Tenant creation request
+          schema:
+            $ref: '#/definitions/Tenant'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Tenant'
 
   # Matchmaking related paths
   /nodeCandidates:
