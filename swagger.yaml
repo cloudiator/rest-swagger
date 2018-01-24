@@ -492,9 +492,7 @@ definitions:
         type: string
         example: "john.doe@example.com"
       tenant:
-        description: "Tenant the user wants to authenticate"
-        type: string
-        example: "admin"
+        $ref: '#/definitions/Tenant'
       password:
         description: "Password of the user"
         type: string
@@ -1024,6 +1022,7 @@ definitions:
       tenant:
         type: string
         description: "The tenant"
+        example: "admin"
 
   Token:
     type: object
@@ -1035,6 +1034,7 @@ definitions:
       token:
         type: string
         description: "The token"
+        example: "theToken"
 
   User:
     type: object
