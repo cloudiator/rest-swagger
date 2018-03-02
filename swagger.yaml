@@ -350,8 +350,6 @@ definitions:
     type: object
     required:
       - name
-      - tasks
-      - communications
     properties:
       name:
         type: string
