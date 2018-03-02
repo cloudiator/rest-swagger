@@ -34,8 +34,7 @@ securityDefinitions:
     type: "apiKey"
     name: "X-API-Key"
     in: header
-  TestAuth:
-    type: basic
+
 
 security:
   - ApiKeyAuth: []
