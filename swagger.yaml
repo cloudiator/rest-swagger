@@ -1,21 +1,48 @@
+#
+# Documentation of the Cloudiator REST Api
+#
 swagger: '2.0'
+
+# Document Metadata
 info:
-  version: 0.2.0
+  version: "0.2.0"
   title: Cloudiator REST Api
   contact:
     name: Daniel Baur
     email: daniel.baur@uni-ulm.de
-    url: 'http://cloudiator.org'
+    url: http://cloudiator.org
   license:
     name: Apache License 2.0
-    url: 'https://raw.githubusercontent.com/cloudiator/rest/master/LICENSE'
+    url: https://raw.githubusercontent.com/cloudiator/rest/master/LICENSE
 schemes:
   - http
 consumes:
   - application/json
 produces:
   - application/json
-host: 'localhost:9000'
+
+host: localhost:9000
+
+################################################################################
+#####                                                                       ####
+#####                              Security                                 ####
+#####                                                                       ####
+################################################################################
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-API-Key
+
+security:
+  - ApiKeyAuth: []
+
+################################################################################
+#####                                                                       ####
+#####                              Parameters                               ####
+#####                                                                       ####
+################################################################################
 parameters:
   id:
     name: id
@@ -23,23 +50,50 @@ parameters:
     description: Unique identifier of the resource
     required: true
     type: string
+
+
+################################################################################
+####                                                                        ####
+####                                Definitions                             ####
+####                                                                        ####
+################################################################################
 definitions:
-  CloudType:
-    type: string
-    description: type of the cloud
-    enum:
-      - PRIVATE
-      - PUBLIC
-  Error:
+
+  Api:
+    description: |
+      Represents an API used by a cloud
+    type: object
     required:
-      - code
-      - message
+      - providerName
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
+      providerName:
         type: string
+        description: Name of the API provider, maps to a driver
+        example: "openstack-nova"
+
+  AttributeRequirement:
+    type: object
+    description: |
+          Subtype of Requirement
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          requirementClass:
+            type: string
+          requirementAttribute:
+            type: string
+          requirementOperator:
+            $ref: '#/definitions/RequirementOperator'
+          value:
+            type: string
+    example:
+      type: 'AttributeRequirement'
+      requirementClass: 'requirementClassExample'
+      requirementAttribute: 'requirementAttriuteExample'
+      requirementOperator: 'EQ'
+      value: 'valueExample'
+
+
   Cloud:
     description: |
       Representation of a cloud used by Cloudiator
@@ -50,38 +104,10 @@ definitions:
       - $ref: '#/definitions/NewCloud'
       - properties:
           id:
-            example: 1a79a4d60de6718e8e5b326e338ae533
+            example: "1a79a4d60de6718e8e5b326e338ae533"
             type: string
             description: Unique identifier for the cloud
-  Api:
-    description: |
-      Represents an API used by a cloud
-    type: object
-    required:
-      - providerName
-    properties:
-      providerName:
-        type: string
-        description: 'Name of the API provider, maps to a driver'
-        example: openstack-nova
-  CloudCredential:
-    description: |
-      Represents the credentials used to authenticate with a cloud
-    type: object
-    required:
-      - user
-      - secret
-    properties:
-      user:
-        type: string
-        description: Username for authentication at the cloud provider's API
-        minLength: 1
-        example: 'tenant:username'
-      secret:
-        type: string
-        description: Secret (e.g. Password) for authentication at the cloud provider's API
-        minLength: 1
-        example: MySuperSecurePassword
+
   CloudConfiguration:
     description: |
       Repesents the configuration of a cloud.
@@ -90,137 +116,118 @@ definitions:
       nodeGroup:
         type: string
         description: A prefix all Cloudiator managed entities will belong to.
-        example: cloudiator
+        example: "cloudiator"
       properties:
         type: array
         description: Array of configuration properties.
         items:
           $ref: '#/definitions/Property'
-  Property:
-    type: object
-    description: A key-value pair
-    required:
-      - key
-      - value
-    properties:
-      key:
-        type: string
-        description: Key of the property
-        example: sword.regions
-      value:
-        type: string
-        description: Value of the property
-        example: 'RegionOne, RegionTwo'
-  NewCloud:
-    description: |
-      Represents a new cloud that is to be created
-    type: object
-    required:
-      - api
-      - credential
-      - cloudType
-    properties:
-      endpoint:
-        type: string
-        description: URI where the api of this cloud provider can be accessed.
-        example: 'https://endpoint.example.com'
-      cloudType:
-        $ref: '#/definitions/CloudType'
-      api:
-        $ref: '#/definitions/Api'
-      credential:
-        $ref: '#/definitions/CloudCredential'
-      cloudConfiguration:
-        $ref: '#/definitions/CloudConfiguration'
-  Image:
-    description: |
-      Represents an image offer by a cloud
-    type: object
-    required:
-      - id
-      - name
-      - providerId
-      - operatingSystem
-    properties:
-      id:
-        type: string
-        description: Unique identifier for this image
-        example: 1a79a4d60de6718e8e5b326e338ae533/RegionOne/1
-      name:
-        type: string
-        description: Human-readable name
-        example: Ubuntu 16.04 LTS AMD 64
-      providerId:
-        type: string
-        description: Original id issued by provider
-        example: '1'
-      operatingSystem:
-        $ref: '#/definitions/OperatingSystem'
-      location:
-        $ref: '#/definitions/Location'
-  OperatingSystem:
-    description: |
-      Represents the operating system of an image
-    type: object
-    properties:
-      operatingSystemType:
-        $ref: '#/definitions/OperatingSystemType'
-      operatingSystemFamily:
-        $ref: '#/definitions/OperatingSystemFamily'
-      operatingSystemArchitecture:
-        $ref: '#/definitions/OperatingSystemArchitecture'
-      operatingSystemVersion:
-        type: string
-        description: Version of the OS
-        example: 16.04 LTS
-  OperatingSystemFamily:
-    description: Type of OS Family
+
+  CloudCredential:
+      description: |
+        Represents the credentials used to authenticate with a cloud
+      type: object
+      required:
+        - user
+        - secret
+      properties:
+        user:
+          type: string
+          description: Username for authentication at the cloud provider's API
+          minLength: 1
+          example: "tenant:username"
+        secret:
+          type: string
+          description: Secret (e.g. Password) for authentication at the cloud provider's API
+          minLength: 1
+          example: "MeltdownVictim"
+
+  CloudType:
     type: string
-    enum:
-      - UBUNTU
-      - UNKOWN_OS_FAMILY
-      - AIX
-      - ARCH
-      - CENTOS
-      - DARWIN
-      - DEBIAN
-      - ESX
-      - FEDORA
-      - FREEBSD
-      - GENTOO
-      - HPUX
-      - COREOS
-      - AMZN_LINUX
-      - MANDRIVA
-      - NETBSD
-      - OEL
-      - OPENBSD
-      - RHEL
-      - SCIENTIFIC
-      - CEL
-      - SLACKWARE
-      - SOLARIS
-      - SUSE
-      - TURBOLINUX
-      - CLOUD_LINUX
-      - WINDOWS
-  OperatingSystemType:
-    description: OS Type
-    type: string
-    enum:
-      - LINUX
-      - UNKOWN
-      - UNIX
-      - WINDOWS_OS
-      - BSD
-      - MAC
-  OperatingSystemArchitecture:
-    description: Type of OS Architecture
-    type: string
-    enum:
-      - AMD64
-      - UNKOWN
-      - I386
+    description: type of the cloud
+    enum: ['PRIVATE','PUBLIC']
+
+  Communication:
+      type: object
+      description: |
+        Part of a job
+        Represents a communication requirement between two tasks by mapping a required port of a
+        task to a provided port of another task.
+      properties:
+        portRequired:
+          type: string
+          description: |
+            The name of the required port this communication refers to.
+          example: "Re10375"
+        portProvided:
+          type: string
+          description: |
+            The name of the provided port this communication refers to.
+          example: "Pro11745"
+
+
+  DockerInterface:
+     type: object
+     description: |
+      Subtype of TaskInterface
+     allOf:
+     - $ref: '#/definitions/TaskInterface'
+     - properties:
+        dockerImage:
+          description: |
+            Name of the docker image
+          type: string
+
+
+  Error:
+    description: |
+      Basic errorClass
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 404
+      message:
+        type: string
+        example: 'Not found'
+
+  ExecutionEnvironment:
+     description: |
+            ExecutionEnvironment of a Task
+     type: string
+     enum: ['SPARK','NATIVE','CONTAINER','LANCE']
+
+
+  GeoLocation:
+    description: |
+      Part of Location
+      Represents a geographical location
+    type: object
+    properties:
+      city:
+        description: "City of the location"
+        type: string
+      country:
+        description: "An ISO 3166-1 alpha-2 country code"
+        type: string
+      latitude:
+        description: "Latitude of the location in decimal degrees"
+        type: number
+        format: double
+      longitude:
+        description: "Longitude of the location in decimal degrees"
+        type: number
+        format: double
+    example:
+      city: "Ulm"
+      country: "DE"
+      latitude: 48.4010822
+      longitude: 9.9876076
+
+
   Hardware:
     description: |
       Represents a hardware offer by a cloud
@@ -233,381 +240,40 @@ definitions:
       - ram
     properties:
       id:
-        description: Unique identifier for the hardware
+        description: "Unique identifier for the hardware"
         type: string
-        example: 1a79a4d60de6718e8e5b326e338ae533/RegionOne/1
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
       name:
-        description: Human-readable name for the hardware
+        description: "Human-readable name for the hardware"
         type: string
-        example: m1.medium
+        example: "m1.medium"
       providerId:
-        description: Original id issued by the provider
+        description: "Original id issued by the provider"
         type: string
-        example: '1'
+        example: "1"
       cores:
-        description: Number of cores
+        description: "Number of cores"
         type: integer
         format: int32
         example: 4
       ram:
-        description: Amount of RAM
+        description: "Amount of RAM"
         type: integer
         format: int64
         example: 2048
       disk:
-        description: Amount of disk space
+        description: "Amount of disk space"
         type: number
-        format: float
+        format: double
         example: 100
       location:
         $ref: '#/definitions/Location'
-  Location:
-    description: |
-      Repesents a (virtual) location offers by a cloud
-    type: object
-    required:
-      - id
-      - name
-      - providerId
-      - locationScope
-      - isAssignable
-    properties:
-      id:
-        description: Unique identifier
-        type: string
-        example: 1a79a4d60de6718e8e5b326e338ae533/RegionOne
-      name:
-        description: Human-readable name
-        type: string
-        example: RegionOne
-      providerId:
-        description: Original id issued by the provider
-        type: string
-        example: RegionOne
-      locationScope:
-        description: Scope of the location
-        type: string
-        enum:
-          - PROVIDER
-          - REGION
-          - ZONE
-          - HOST
-        example: ZONE
-      isAssignable:
-        description: >-
-          True of the location can be used to start virtual machines, false if
-          not
-        type: boolean
-        example: true
-      parent:
-        $ref: '#/definitions/Location'
-  Platform:
-    description: Representation of a platform used by Cloudiator
-    type: object
-    required:
-      - id
-    allOf:
-      - $ref: '#/definitions/NewPlatform'
-      - properties:
-          id:
-            type: string
-            description: Unique identifier for the platform
-  NewPlatform:
-    description: |
-      Repesents a new PaaS provider to be created
-    type: object
-    required:
-      - id
-      - name
-      - api
-      - credential
-    properties:
-      id:
-        description: Unique identifier
-        type: string
-      name:
-        description: Human-readable name
-        type: string
-      type:
-        description: PaaS stack type
-        type: string
-        enum:
-          - HEROKU
-          - OPENSHIFT
-          - CLOUDFOUNDRY
-      api:
-        $ref: '#/definitions/Api'
-      credential:
-        $ref: '#/definitions/CloudCredential'
-  PlatformEnvironment:
-    description: |
-      Repesents a PaaS environemnt to run an component
-    type: object
-    required:
-      - id
-      - name
-      - platformHardware
-      - platformRuntime
-    properties:
-      id:
-        description: Unique identifier
-        type: string
-      name:
-        description: Human-readable name
-        type: string
-      platformHardware:
-        $ref: '#/definitions/PlatformHardware'
-      platformRuntime:
-        $ref: '#/definitions/PlatformRuntime'
-  PlatformHardware:
-    description: >
-      Represents a hardware configuration for a Platform (not all attributes
-      might be supported for all PaaS providers)
-    type: object
-    required:
-      - id
-      - name
-      - cores
-      - ram
-      - disk
-    properties:
-      id:
-        description: Unique identifier for the hardware
-        type: string
-        example: 1a79a4d60de6718e8e5b326e33812345/example.p1
-      name:
-        description: Human-readable name for the hardware
-        type: string
-        example: example.p1
-      cores:
-        description: Number of cores
-        type: integer
-        format: int32
-        example: 16
-      ram:
-        description: Amount of RAM
-        type: integer
-        format: int64
-        example: 2048
-      disk:
-        description: Amount of disk space
-        type: number
-        format: float
-        example: 100
-  PlatformRuntime:
-    description: 'Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat'
-    type: object
-    required:
-      - id
-      - language
-      - runtimeType
-      - version
-    properties:
-      id:
-        description: Unique identifier for the hardware
-        type: string
-      language:
-        description: the specific runtime language
-        type: string
-        enum:
-          - PHP
-          - JAVA
-          - RUBY
-          - PYTHON
-      runtimeType:
-        description: specifies the runtime type
-        type: string
-        enum:
-          - standalone
-          - server
-      version:
-        description: the version of the specified type
-        type: number
-        format: double
-  PlatformService:
-    description: |
-      Repesents additional PaaS services to component, e.g. a database, TODO!
-    type: object
-    required:
-      - id
-      - name
-    properties:
-      id:
-        description: Unique identifier
-        type: string
-      name:
-        description: Human-readable name
-        type: string
-  Task:
-    description: |
-      Represents a task of a job.
-    type: object
-    required:
-      - name
-      - executionEnvironment
-      - type
-    properties:
-      name:
-        description: Human-readable name. Uniquely identifies a task.
-        type: string
-      ports:
-        type: array
-        items:
-          $ref: '#/definitions/Port'
-      interfaces:
-        description: Interfaces of this task
-        type: array
-        items:
-          $ref: '#/definitions/TaskInterface'
-      executionEnvironment:
-        $ref: '#/definitions/ExecutionEnvironment'
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
-      type:
-        type: string
-        enum:
-          - BATCH
-          - LONG_RUNNING
-  ExecutionEnvironment:
-    type: string
-    enum:
-      - SPARK
-      - NATIVE
-      - CONTAINER
-      - LANCE
-  TaskInterface:
-    description: |
-      Represents an interface
-    type: object
-    discriminator: type
-    required:
-      - type
-    properties:
-      type:
-        description: |
-          Discriminator for polymorphism.
-  DockerInterface:
-    type: object
-    allOf:
-      - $ref: '#/definitions/TaskInterface'
-      - properties:
-          dockerImage:
-            description: |
-              Name of the docker image
-            type: string
-  LanceInterface:
-    description: |
-      Represents a lance interface.
-    type: object
-    required:
-      - start
-    allOf:
-      - $ref: '#/definitions/TaskInterface'
-      - properties:
-          init:
-            description: |
-              Initialization action.
-            type: string
-          preInstall:
-            description: >
-              Executed before installation action. Can be e.g. used for
-              downloading binaries.
-            type: string
-          install:
-            description: |
-              Used for installing the application.
-            type: string
-          postInstall:
-            description: >
-              Used for configuration of the application component. First action
-              where Lance environment variables are set.
-            type: string
-          preStart:
-            description: >
-              Called before starting the application. Can be e.g. used for
-              configuration an environment.
-            type: string
-          start:
-            description: >
-              Starts the component. Needs to return for PlainContainer and not
-              return for Docker.
-            type: string
-          startDetection:
-            description: >
-              Detects the start of the application. Required if the application
-              does not start instantianous.
-            type: string
-          stopDetection:
-            description: >
-              Checks if the application has stopped. Is periodically checked to
-              detect a crash of the application.
-            type: string
-          postStart:
-            description: |
-              Executed after the application has successfully started.
-            type: string
-          preStop:
-            description: |
-              Called before the application is stopped.
-            type: string
-          stop:
-            description: |
-              Stops the application.
-            type: string
-          postStop:
-            description: |
-              Executed after the application is successfully stopped.
-            type: string
-          shutdown:
-            description: >
-              Executed before the container is shutdown. Can be used to backup
-              state.
-            type: string
-    example:
-      name: haproxy
-      preInstall: |
-        sudo apt-get -y update && sudo apt-get -y install git &&
-        git clone https://github.com/dbaur/mediawiki-tutorial.git
-      install: ./mediawiki-tutorial/scripts/lance/haproxy.sh install
-      start: ./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking
-  PlatformInterface:
-    description: |
-      Represents a PaaS interface
-    type: object
-    required:
-      - sourceRepository
-    allOf:
-      - $ref: '#/definitions/TaskInterface'
-      - properties:
-          sourceRepository:
-            description: >
-              URL to the source code repository (currently only git is
-              supported)
-            type: string
-  Requirement:
-    type: object
-    discriminator: type
-    required:
-      - type
-    properties:
-      type:
-        type: string
-  OclRequirement:
-    type: object
-    required:
-      - constraint
-    allOf:
-      - $ref: '#/definitions/Requirement'
-      - properties:
-          constraint:
-            type: string
-    example:
-      constraint: nodes->forAll(hardware.cores >= 4)
-      type: OclRequirement
+
+
   IdentifierRequirement:
     type: object
+    description: |
+      Subtype of Requirement
     required:
       - hardwareId
       - locationId
@@ -622,109 +288,40 @@ definitions:
           imageId:
             type: string
     example:
-      hardwareId: '01101b2075b7046fff5eaa9beae14ccd:RegionOne/3'
-      locationId: '01101b2075b7046fff5eaa9beae14ccd:RegionOne'
-      imageId: >-
-        01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3
-      type: IdentifierRequirement
-  Job:
-    description: |
-      Represents an job. An job is a logical group of tasks.
+      hardwareId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+      locationId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+      imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+      type: "IdentifierRequirement"
+
+  Image:
+    description:  |
+      Represents an image offer by a cloud
     type: object
     required:
+      - id
       - name
-      - tasks
-      - communications
+      - providerId
+      - operatingSystem
     properties:
+      id:
+        type: string
+        description: "Unique identifier for this image"
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne/1"
       name:
         type: string
-        example: MediaWiki Application
-      tasks:
-        type: array
-        items:
-          $ref: '#/definitions/Task'
-        description: |
-          An array of tasks that form this application.
-      communications:
-        type: array
-        items:
-          $ref: '#/definitions/Communication'
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
-  Port:
-    type: object
-    discriminator: type
-    description: |
-      Represents a communication port of a task
-    required:
-      - name
-    properties:
-      type:
-        description: |
-          Discriminator for polymorphism.
+        description: "Human-readable name"
+        example: "Ubuntu 16.04 LTS AMD 64"
+      providerId:
         type: string
-      name:
-        type: string
-        description: >
-          Uniquely identifies a port. Defines the name of the environment
-          variables holding
+        description: "Original id issued by provider"
+        example: "1"
+      operatingSystem:
+        $ref: '#/definitions/OperatingSystem'
+      location:
+        $ref: '#/definitions/Location'
+        
+  
 
-          IP addresses of remote tasks.
-        example: LOADBALANCERREQWIKI
-  PortProvided:
-    type: object
-    description: |
-      Represents a communication port that the tasks provides for other tasks
-      or the end user.
-    allOf:
-      - $ref: '#/definitions/Port'
-      - properties:
-          port:
-            type: integer
-            format: int32
-            example: 80
-  PortRequired:
-    type: object
-    description: >
-      Represents a communication port that the task requires from other
-      (downstream) tasks.
-    allOf:
-      - $ref: '#/definitions/Port'
-      - properties:
-          updateAction:
-            type: string
-            description: >
-              A script that is executed if a new instance of a downstream task
-              is available.
-            example: ./mediawiki-tutorial/scripts/lance/haproxy.sh configure
-          isMandatory:
-            type: boolean
-            description: >
-              States if an instance of a downstream tasks needs to be already
-              started (true), or
-
-              if the task can start without a downstream task (false).
-            example: true
-  Communication:
-    type: object
-    description: >
-      Represents a communication requirement between two tasks by mapping a
-      required port of a
-
-      task to a provided port of another task.
-    properties:
-      portRequired:
-        type: string
-        description: |
-          The name of the required port this communication refers to.
-        example: Re10375
-      portProvided:
-        type: string
-        description: |
-          The name of the provided port this communication refers to.
-        example: Pro11745
   IpAddress:
     type: object
     required:
@@ -735,138 +332,27 @@ definitions:
         $ref: '#/definitions/IpAddressType'
       IpVersion:
         $ref: '#/definitions/IpVersion'
+
   IpAddressType:
     type: string
-    enum:
-      - PUBLIC_IP
-      - PRIVATE_IP
+    enum: ['PUBLIC_IP','PRIVATE_IP']
+
   IpVersion:
     type: string
-    enum:
-      - V4
-      - V6
-  VirtualMachine:
-    type: object
-    properties:
-      image:
-        type: string
-        example: >-
-          01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3
-      hardware:
-        type: string
-        example: '01101b2075b7046fff5eaa9beae14ccd:RegionOne/3'
-      location:
-        type: string
-        example: '01101b2075b7046fff5eaa9beae14ccd:RegionOne'
-      id:
-        type: string
-        example: 1a79a4d60de6718e8e5b326e338ae5vm
-      ipaddresses:
-        type: array
-        items:
-          $ref: '#/definitions/IpAddress'
-      logincredential:
-        $ref: '#/definitions/LoginCredential'
-  LoginCredential:
-    type: object
-    description: temporary definition to create a node
-    properties:
-      user:
-        type: string
-      password:
-        type: string
-      key:
-        type: string
-  VirtualMachineRequest:
-    type: object
-    description: |
-      Represents a request to create a new virtual machine.
-    properties:
-      image:
-        type: string
-        example: >-
-          01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3
-      hardware:
-        type: string
-        example: '01101b2075b7046fff5eaa9beae14ccd:RegionOne/3'
-      location:
-        type: string
-        example: '01101b2075b7046fff5eaa9beae14ccd:RegionOne'
-  NodeRequest:
-    type: object
-    description: >
-      Represents a request to create a new node fullfilling the given
-      requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
-  OclProblem:
-    type: object
-    description: >
-      Represents a request to create a new node fullfilling the given
-      requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/OclRequirement'
-  OclSolution:
-    type: object
-    description: |
-      Represents a solution to an ocl problem
-    properties:
-      nodes:
-        type: array
-        items:
-          $ref: '#/definitions/VirtualMachineRequest'
-  LongRunningRequest:
-    description: |
-      Represents a long-running request (LRR) within the system
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique identifier for the LRR
-      taskType:
-        $ref: '#/definitions/LRRType'
-      taskStatus:
-        $ref: '#/definitions/LRRStatus'
-      lrrData:
-        type: string
-      lrrDiagnostic:
-        type: string
-      referenceId:
-        type: string
-  LRRType:
-    description: The type of this LRR
-    type: string
-    enum:
-      - VirtualMachineRequest
-  LRRStatus:
-    description: The status of the running LRR
-    type: string
-    enum:
-      - SCHEDULED
-      - RUNNING
-      - COMPLETED
-      - FAILED
+    enum: ['V4','V6']
+
+######### installation start ##################    
   InstallationRequest:
-    description: |
-      Represents an Cloudiator tools installation request
+    description: todo
     type: object
-    required:
-      - tools
-      - node
-    properties:
+    properties: 
       tools:
         type: array
-        description: Unique identifier for this image
         items:
           $ref: '#/definitions/Tool'
       node:
-        $ref: '#/definitions/Node'
+        $ref: '#/definitions/Node'  
+
   Tool:
     description: a Cloudiator tool to be installed on a node
     type: string
@@ -876,10 +362,10 @@ definitions:
       - LANCE
       - VISOR
       - AXE
+      
   Node:
-    description: a (minimal) node to debug the Cloudiator tool installation
     type: object
-    properties:
+    properties: 
       nodeId:
         type: string
       loginCredential:
@@ -896,7 +382,8 @@ definitions:
         items:
           $ref: '#/definitions/IpAddress'
       nodeProperties:
-        $ref: '#/definitions/NodeProperties'
+        $ref: '#/definitions/NodeProperties'  
+   
   NodeProperties:
     description: attributes defining a node
     type: object
@@ -913,491 +400,929 @@ definitions:
       operatingSystem:
         $ref: '#/definitions/OperatingSystem'
       geoLocation:
+        $ref: '#/definitions/GeoLocation'  
+        
+######### installation end ##################        
+
+  Job:
+    description: |
+      Represents an job.
+      An job is a logical group of tasks.
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: "MediaWiki Application"
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+        description: |
+          An array of tasks that form this application.
+      communications:
+        type: array
+        items:
+          $ref: '#/definitions/Communication'
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+
+
+  LanceInterface:
+    description: |
+      Part of a task.
+      Subtype of TaskInterface.
+    type: object
+    required:
+      - start
+    allOf:
+    - $ref: '#/definitions/TaskInterface'
+    - properties:
+        init:
+          description: |
+            Initialization action.
+          type: string
+        preInstall:
+          description: |
+            Executed before installation action. Can be e.g. used for downloading binaries.
+          type: string
+        install:
+          description: |
+            Used for installing the application.
+          type: string
+        postInstall:
+          description: |
+            Used for configuration of the application component. First action where Lance environment variables are set.
+          type: string
+        preStart:
+          description: |
+            Called before starting the application. Can be e.g. used for configuration an environment.
+          type: string
+        start:
+          description: |
+            Starts the component. Needs to return for PlainContainer and not return for Docker.
+          type: string
+        startDetection:
+          description: |
+            Detects the start of the application. Required if the application does not start instantianous.
+          type: string
+        stopDetection:
+          description: |
+            Checks if the application has stopped. Is periodically checked to detect a crash of the application.
+          type: string
+        postStart:
+          description: |
+            Executed after the application has successfully started.
+          type: string
+        preStop:
+          description: |
+            Called before the application is stopped.
+          type: string
+        stop:
+          description: |
+            Stops the application.
+          type: string
+        postStop:
+          description: |
+            Executed after the application is successfully stopped.
+          type: string
+        shutdown:
+          description: |
+            Executed before the container is shutdown. Can be used to backup state.
+          type: string
+    example:
+      name: haproxy
+      preInstall: |
+        sudo apt-get -y update && sudo apt-get -y install git &&
+        git clone https://github.com/dbaur/mediawiki-tutorial.git
+      install: "./mediawiki-tutorial/scripts/lance/haproxy.sh install"
+      start: "./mediawiki-tutorial/scripts/lance/haproxy.sh startBlocking"
+
+  Location:
+    description: |
+      Repesents a (virtual) location offers by a cloud
+    type: object
+    required:
+      - id
+      - name
+      - providerId
+      - locationScope
+      - isAssignable
+    properties:
+      id:
+        description: "Unique identifier"
+        type: string
+        example: "1a79a4d60de6718e8e5b326e338ae533/RegionOne"
+      name:
+        description: "Human-readable name"
+        type: string
+        example: "RegionOne"
+      providerId:
+        description: "Original id issued by the provider"
+        type: string
+        example: "RegionOne"
+      locationScope:
+        description: "Scope of the location"
+        type: string
+        enum: ['PROVIDER', 'REGION', 'ZONE', 'HOST']
+        example: 'ZONE'
+      isAssignable:
+        description: "True of the location can be used to start virtual machines, false if not"
+        type: boolean
+        example: true
+      geoLocation:
         $ref: '#/definitions/GeoLocation'
-  GeoLocation:
-    description: geographical location of a node
+      parent:
+        # self reference is broken in editor and UI
+        # see https://github.com/swagger-api/swagger-editor/issues/1005
+        $ref: '#/definitions/Location'
+
+  Login:
+    type: object
+    description: |
+      Login information provided by the user to be authorized
+    required:
+      - email
+      - tenant
+      - password
+    properties:
+      email:
+        description: "EMail address of the user"
+        type: string
+        example: "john.doe@example.com"
+      tenant:
+        $ref: '#/definitions/Tenant'
+      password:
+        description: "Password of the user"
+        type: string
+        example: "SecretPassword"
+
+  LoginCredential:
+    type: string
+    description: |
+      Part of a VirtualMachine.
+      Platzhalter
+    example: "here to be here"
+
+  LongRunningRequest:
+    description: |
+      Represents a long-running request (LRR) within the system
     type: object
     properties:
-      country:
+      id:
         type: string
-      latitude:
+        description: "Unique identifier for the LRR"
+      taskType:
+        $ref: '#/definitions/LRRType'
+      taskStatus:
+        $ref: '#/definitions/LRRStatus'
+      lrrData:
+        type: string
+      lrrDiagnostic:
+        type: string
+      referenceId:
+        type: string
+
+  LRRType:
+    description: "The type of this LRR"
+    type: string
+    enum: ['VirtualMachineRequest']
+
+  LRRStatus:
+    description: "The status of the running LRR"
+    type: string
+    enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
+
+  MatchmakingRequest:
+    type: object
+    description: |
+      Issues a request to the matchmaking component
+    properties:
+      requirements:
+        $ref: '#/definitions/NodeRequirements'
+
+  MatchmakingResponse:
+    type: object
+    description: |
+      Represents a response to a matchmaking request
+    properties:
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/VirtualMachineRequest'
+
+  NewCloud:
+      description: |
+        Represents a new cloud that is to be created
+      type: object
+      required:
+        - api
+        - credential
+        - cloudType
+      properties:
+        endpoint:
+          type: string
+          description: "URI where the api of this cloud provider can be accessed."
+          example: "https://endpoint.example.com"
+        cloudType:
+          $ref: '#/definitions/CloudType'
+        api:
+          $ref: '#/definitions/Api'
+        credential:
+          $ref: '#/definitions/CloudCredential'
+        cloudConfiguration:
+          $ref: '#/definitions/CloudConfiguration'
+
+  NewPlatform:
+    description: |
+      Repesents a new PaaS provider to be created
+    type: object
+    required:
+      - name
+      - api
+      - credential
+    properties:
+      name:
+        description: "Human-readable name"
+        type: string
+      type:
+        description: "PaaS stack type"
+        type: string
+        enum: ['HEROKU', 'OPENSHIFT', 'CLOUDFOUNDRY']
+      api:
+        $ref: '#/definitions/Api'
+      credential:
+        $ref: '#/definitions/CloudCredential'
+      endpoint:
+        type: string
+        description: "URI where the api of this platform provider can be accessed."
+        example: "https://endpoint.example.com"
+
+  NewPlatformEnvironment:
+    description: |
+        Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - name
+      - platformHardware
+      - platformRuntime
+    properties:
+      name:
+        description: "Human-readable name"
+        type: string
+      platform:
+        $ref: '#/definitions/Platform'
+      platformHardware:
+        $ref: '#/definitions/PlatformHardware'
+      platformRuntime:
+        $ref: '#/definitions/PlatformRuntime'
+      platformService:
+        type: array
+        items:
+          $ref: '#/definitions/PlatformService'
+
+  NewPlatformHardware:
+    description: |
+      Represents a hardware configuration for a Platform (not all attributes might be supported for all PaaS providers)
+    type: object
+    required:
+      - name
+      - cores
+      - ram
+      - disk
+    properties:
+      name:
+        description: "Human-readable name for the hardware"
+        type: string
+        example: "example.p1"
+      cores:
+        description: "Number of cores"
+        type: integer
+        format: int32
+        example: 16
+      ram:
+        description: "Amount of RAM"
+        type: integer
+        format: int64
+        example: 2048
+      disk:
+        description: "Amount of disk space"
+        type: number
+        format: float
+        example: 100
+
+  NewPlatformRuntime:
+    description: "Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat"
+    type: object
+    required:
+      - name
+      - language
+      - runtimeType
+      - version
+    properties:
+      name:
+        description: "human readable name"
+        type: string
+      language:
+        description: "the specific runtime language"
+        type: string
+        enum: ['PHP','JAVA','RUBY','PYTHON']
+      languageVersion:
+        description: "language version number"
         type: number
         format: double
-      longitude:
+        example: 11.0
+      runtimeType:
+        description: "specifies the runtime type"
+        type: string
+        enum: ['standalone','server']
+      version:
+        description: "the version of the specified type"
         type: number
         format: double
-      city:
+        example: 2.0
+
+  NodeCandidate:
+    description: A node creatable by the system
+    type: object
+    properties:
+      price:
+        type: number
+        format: double
+      cloud:
+        $ref: '#/definitions/Cloud'
+      image:
+        $ref: '#/definitions/Image'
+      hardware:
+        $ref: '#/definitions/Hardware'
+      location:
+        $ref: '#/definitions/Location'
+
+  NodeRequirements:
+    type: object
+    description: |
+      Array of Requirements.
+      Represents a request to create a new node fullfilling the given requirements
+    properties:
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+
+  OclRequirement:
+    type: object
+    description: |
+      Subytpe of Requirement
+    required:
+      - constraint
+    allOf:
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          constraint:
+            type: string
+    example:
+      constraint: "nodes->forAll(hardware.cores >= 4)"
+      type: "OclRequirement"
+
+  OperatingSystem:
+    description: |
+      Represents the operating system of an image
+    type: object
+    properties:
+      operatingSystemType:
+        $ref: '#/definitions/OperatingSystemType'
+      operatingSystemFamily:
+        $ref: '#/definitions/OperatingSystemFamily'
+      operatingSystemArchitecture:
+        $ref: '#/definitions/OperatingSystemArchitecture'
+      operatingSystemVersion:
         type: string
+        description: "Version of the OS"
+        example: "16.04 LTS"
+
+  OperatingSystemArchitecture:
+    description: "Type of OS Architecture"
+    type: string
+    enum: ['AMD64','UNKOWN','I386']
+
+  OperatingSystemFamily:
+    description: "Type of OS Family"
+    type: string
+    enum: ['UBUNTU','UNKOWN_OS_FAMILY','AIX','ARCH','CENTOS','DARWIN','DEBIAN','ESX','FEDORA','FREEBSD','GENTOO','HPUX',
+    'COREOS','AMZN_LINUX','MANDRIVA','NETBSD','OEL','OPENBSD','RHEL','SCIENTIFIC','CEL',
+    'SLACKWARE','SOLARIS','SUSE','TURBOLINUX','CLOUD_LINUX','WINDOWS']
+
+  OperatingSystemType:
+    description: "OS Type"
+    type: string
+    enum: ['LINUX','UNKOWN','UNIX','WINDOWS_OS','BSD','MAC']
+
+
+  Platform:
+    description: Representation of a platform used by Cloudiator
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatform'
+      - properties:
+          id:
+            type: string
+            description: Unique identifier for the platform
+
+  PlatformEnvironment:
+    description: |
+      Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformEnvironment'
+      - properties:
+          id:
+            description: "Unique identifier"
+            type: string
+
+  PlatformHardware:
+    description: |
+      Repesents a PaaS environemnt to run an component
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/NewPlatformHardware'
+      - properties:
+          id:
+            description: "Unique identifier for the hardware"
+            type: string
+            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  PlatformInterface:
+   description: |
+     Subtype of TaskInterface
+     Represents a PaaS interface
+   type: object
+   required:
+     - sourceRepository
+   allOf:
+   - $ref: '#/definitions/TaskInterface'
+   - properties:
+       sourceRepository:
+         description: |
+           URL to the source code repository (currently only git is supported)
+         type: string
+
+  PlatformRuntime:
+     description: |
+       Repesents a PaaS environemnt to run an component
+     type: object
+     required:
+       - id
+     allOf:
+       - $ref: '#/definitions/NewPlatformRuntime'
+       - properties:
+           id:
+             description: "Unique identifier for the hardwareRuntime"
+             type: string
+             example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+
+  PlatformService:
+   description: |
+     Repesents additional PaaS services to component, e.g. a database, TODO!
+   type: object
+   required:
+     - id
+     - name
+   properties:
+     id:
+       description: "Unique identifier"
+       type: string
+     name:
+       description: "Human-readable name"
+       type: string
+
+  Port:
+    type: object
+    discriminator: type
+    description: |
+      polymorphic superclass, only subtypes are allowed.
+      Represents a communication port of a task
+    required:
+      - name
+    properties:
+      type:
+        description: |
+          Discriminator for polymorphism.
+          Only subtypes are allowed.
+        type: string
+      name:
+        type: string
+        description: |
+          Uniquely identifies a port. Defines the name of the environment variables holding
+          IP addresses of remote tasks.
+    example:
+      type: 'PortProvided'
+      name: 'PortProvidedExample'
+      port: 8090
+
+  PortProvided:
+     type: object
+     description: |
+       Subtype of port.
+       Represents a communication port that the tasks provides for other tasks
+       or the end user.
+     allOf:
+       - $ref: '#/definitions/Port'
+       - properties:
+           port:
+             type: integer
+             format: int32
+     example:
+       type: 'PortProvided'
+       name: 'PortProvidedExample'
+       port: 8090
+
+  PortRequired:
+    type: object
+    description: |
+      Subtype of port.
+      Represents a communication port that the task requires from other (downstream) tasks.
+    allOf:
+      - $ref: '#/definitions/Port'
+      - properties:
+          updateAction:
+            type: string
+            description: |
+              A script that is executed if a new instance of a downstream task is available.
+          isMandatory:
+            type: boolean
+            description: |
+              States if an instance of a downstream tasks needs to be already started (true), or
+              if the task can start without a downstream task (false).
+    example:
+      type: 'PortProvided'
+      name: 'PortProvidedExample'
+      updateAction: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
+      isMandatory: true
+
+  Property:
+   type: object
+   description: "A key-value pair"
+   required:
+     - key
+     - value
+   properties:
+     key:
+       type: string
+       description: "Key of the property"
+       example: "sword.regions"
+     value:
+       type: string
+       description: "Value of the property"
+       example: "RegionOne, RegionTwo"
+
+  Requirement:
+   type: object
+   description: "polymorphic Superclass, only subtypes are allowed"
+   discriminator: type
+   required:
+     - type
+   properties:
+     type:
+       type: string
+   example:
+    type: "IdentifierRequirement"
+    hardwareId: "hardwareId"
+    locationId: "locationId"
+    imageId: "imageId"
+
+  RequirementOperator:
+   type: string
+   description: "Part of AttributeRequirement"
+   enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
+
+
+  Task:
+    description: |
+      Represents a task of a job.
+    type: object
+    required:
+      - name
+      - executionEnvironment
+      - taskType
+    properties:
+      name:
+        description: "Human-readable name. Uniquely identifies a task."
+        type: string
+      ports:
+        type: array
+        items:
+          $ref: '#/definitions/Port'
+      interfaces:
+        description: "Interfaces of this task"
+        type: array
+        items:
+          $ref: '#/definitions/TaskInterface'
+      executionEnvironment:
+        $ref: '#/definitions/ExecutionEnvironment'
+      requirements:
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
+      taskType:
+        $ref: '#/definitions/TaskType'
+    example: #ExampleTask
+      name: "TaskTest"
+      ports:
+        - type: "PortProvided"
+          name: "PortProvidedTest"
+          port: 12345
+        - type: "PortRequired"
+          name: "PortRequiredTest"
+          updateAction: "UpdateActionTest"
+          isMandatory: true
+      interfaces:
+        - type: "DockerInterface"
+          dockerImage: "DockerImage"
+      executionEnvironment: "LANCE"
+      requirements:
+        - type: "OclRequirement"
+          constraint: "oclRequirement"
+        - type: "IdentifierRequirement"
+          hardwareId: "hardwareId"
+          locationId: "locationId"
+          imageId: "imageId"
+      taskType: "BATCH"
+
+  TaskType:
+   type: string
+   enum: ['BATCH','SERVICE']
+
+  TaskInterface:
+   description: |
+     Represents an interface
+   type: object
+   discriminator: type
+   required:
+     - type
+   properties:
+     type:
+       type: string
+       description: |
+         Discriminator for polymorphism.
+
+  Tenant:
+    type: object
+    description: |
+      Represents a tenant of the system.
+    required:
+      - tenant
+    properties:
+      tenant:
+        type: string
+        description: "The tenant"
+        example: "admin"
+
+  Token:
+    type: object
+    description: |
+      Represents an API Token, that is used to represent a successful authentication of a user
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: "The token"
+        example: "theToken"
+
+  User:
+    type: object
+    description: |
+      A user of the system.
+    properties:
+      email:
+        type: string
+        description: "EMail address of the user"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  UserNew:
+    type: object
+    description: |
+      Represents a user that should be create in the system
+    required:
+      - email
+      - password
+      - passwordRepeat
+      - tenant
+    properties:
+      email:
+        type: string
+        description: "EMail address of the user"
+      password:
+        type: string
+        description: "Password of the user"
+      passwordRepeat:
+        type: string
+        description: "Repetition of the user's password"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  VirtualMachine:
+   type: object
+   properties:
+     image:
+       $ref: '#/definitions/Image'
+     hardware:
+       $ref: '#/definitions/Hardware'
+     location:
+       $ref: '#/definitions/Location'
+     id:
+       type: string
+       example: "1a79a4d60de6718e8e5b326e338ae5vm"
+     ipaddresses:
+       type: array
+       items:
+         $ref: '#/definitions/IpAddress'
+     logincredential:
+       $ref: '#/definitions/LoginCredential'
+
+  VirtualMachineRequest:
+     type: object
+     description: |
+       Represents a request to create a new virtual machine.
+     properties:
+       image:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
+       hardware:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
+       location:
+         type: string
+         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
+
+
 responses:
   400BadRequestResponse:
     description: Bad Request
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 400
+      message: "Bad Request"
   401UnauthorizedResponse:
     description: Authorization for this action is missing
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 401
+      message: "Authorization for this action is missing"
   403ForbiddenResponse:
     description: Forbidden action
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 403
+      message: "Forbidden action"
   404NotFoundResponse:
     description: Item not found
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 404
+      message: "Item not found"
   500ErrorResponse:
     description: An unexpected Error occured
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 500
+      message: "An unexpected Error occured"
   504GatewayTimeout:
     description: Server temporary not available
     schema:
       $ref: '#/definitions/Error'
+    examples:
+      code: 504
+      message: "Server temporary not available"
+
+
+################################################################################
+####                                                                        ####
+####                              Path structure                            ####
+####                                                                        ####
+################################################################################
+
 paths:
-  /clouds:
-    get:
-      consumes: []
-      operationId: findClouds
-      tags:
-        - cloud
-      description: |
-        Returns all clouds from the system that the user has access to
-      responses:
-        '200':
-          description: |
-            All clouds
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Cloud'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
+
+  # User Related paths
+  /login:
     post:
-      operationId: addCloud
+      operationId: login
       tags:
-        - cloud
-      description: Creates a new cloud.
-      parameters:
-        - name: cloud
-          in: body
-          description: Cloud to add
-          required: true
-          schema:
-            $ref: '#/definitions/NewCloud'
-      responses:
-        '201':
-          description: Created
-          schema:
-            $ref: '#/definitions/Cloud'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          description: Service temporary unavailable
-          schema:
-            $ref: '#/definitions/Error'
-  '/clouds/{id}':
-    get:
-      consumes: []
-      operationId: findCloud
-      tags:
-        - cloud
+        - user
       description: |
-        Returns the cloud identified by the given id parameter
+        Authenticates a user
       parameters:
-        - $ref: '#/parameters/id'
-      responses:
-        '200':
-          description: |
-            The cloud identified by the id
-          schema:
-            $ref: '#/definitions/Cloud'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-    delete:
-      consumes: []
-      operationId: deleteCloud
-      tags:
-        - cloud
-      description: |
-        Deletes the cloud identified by the given id paramater.
-      parameters:
-        - $ref: '#/parameters/id'
-      responses:
-        '200':
-          description: OK
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /images:
-    get:
-      consumes: []
-      operationId: findImages
-      tags:
-        - cloud
-      description: |
-        Returns all images visable to the user
-      responses:
-        '200':
-          description: |
-            All images
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Image'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  '/images/{id}':
-    put:
-      tags:
-        - cloud
-      operationId: editImage
-      description: |
-        Updates a specific image
-      parameters:
-        - $ref: '#/parameters/id'
-        - name: image
+        - name: login
           in: body
           description: |
-            Image to update
-          required: true
+            User login request
           schema:
-            $ref: '#/definitions/Image'
+            $ref: '#/definitions/Login'
       responses:
-        '200':
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /hardware:
-    get:
-      consumes: []
-      operationId: findHardware
-      tags:
-        - cloud
-      description: |
-        Returns all hardware visible to the user
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Hardware'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /locations:
-    get:
-      consumes: []
-      operationId: findLocations
-      tags:
-        - cloud
-      description: |
-        Returns all locations visible to the user
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Location'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /jobs:
-    get:
-      consumes: []
-      operationId: findJobs
-      tags:
-        - job
-      description: |
-        Returns all jobs visible to the user
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Job'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-    post:
-      operationId: addJob
-      tags:
-        - job
-      description: Creates a new job
-      parameters:
-        - name: job
-          in: body
-          description: |
-            Job to be created.
-          required: true
-          schema:
-            $ref: '#/definitions/Job'
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/Job'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /tasks:
-    get:
-      consumes: []
-      operationId: findTasks
-      tags:
-        - job
-      description: |
-        Returns all tasks visible to the user
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Task'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-    post:
-      operationId: addTask
-      tags:
-        - job
-      description: |
-        Creates a new task
-      parameters:
-        - name: task
-          in: body
-          description: |
-            Task to be created
-          required: true
-          schema:
-            $ref: '#/definitions/Task'
-      responses:
-        '200':
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/Task'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /longRunningRequests:
-    get:
-      consumes: []
-      operationId: findAllLongRunningRequest
-      tags:
-        - longRunningRequest
-      description: |
-        Returns all running LLRs visible to the user
-      responses:
-        '200':
+        200:
           description: OK
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/LongRunningRequest'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  '/longRunningRequests/{id}':
-    get:
-      consumes: []
-      operationId: findLongRunningRequest
+            $ref: '#/definitions/Token'
+  /users:
+    post:
+      operationId: createUser
       tags:
-        - longRunningRequest
+        - user
       description: |
-        Returns the LRR identified by the id parameter.
+        Creates a new user
       parameters:
-        - $ref: '#/parameters/id'
+        - name: user
+          in: body
+          description: |
+            User creation request
+          schema:
+            $ref: '#/definitions/UserNew'
       responses:
-        '200':
+        200:
           description: OK
           schema:
-            $ref: '#/definitions/LongRunningRequest'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /node:
+            $ref: '#/definitions/User'
+
+  /tenants:
     post:
-      operationId: addNode
+      operationId: createTenant
       tags:
-        - node
-      description: Create a new node request
+        - user
+      description: |
+        Creates a new tenant
       parameters:
-        - name: nodeRequest
+        - name: tenant
           in: body
-          description: Node Request
-          required: true
+          description: |
+            Tenant creation request
           schema:
-            $ref: '#/definitions/NodeRequest'
+            $ref: '#/definitions/Tenant'
       responses:
-        '202':
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Tenant'
+
+  # Matchmaking related paths
+  /nodeCandidates:
+    post:
+      operationId: findNodeCandidates
+      tags:
+        - matchmaking
+      description: |
+        Returns possible node candidates.
+      parameters:
+        - name: nodeRequirements
+          in: body
+          description: |
+            Node Request
+          required: false
+          schema:
+            $ref: '#/definitions/NodeRequirements'
+      responses:
+        202:
           description: ACCEPTED
           schema:
-            $ref: '#/definitions/LongRunningRequest'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /vm:
-    post:
-      operationId: addVM
-      tags:
-        - cloud
-      description: Creates a new virtual machine request
-      parameters:
-        - name: virtualMachineRequest
-          in: body
-          description: VirtualMachine Request
-          required: true
-          schema:
-            $ref: '#/definitions/VirtualMachineRequest'
-      responses:
-        '202':
-          description: ACCEPTED
-          schema:
-            $ref: '#/definitions/LongRunningRequest'
-        '400':
-          $ref: '#/responses/400BadRequestResponse'
-        '401':
-          $ref: '#/responses/401UnauthorizedResponse'
-        '403':
-          $ref: '#/responses/403ForbiddenResponse'
-        '404':
-          $ref: '#/responses/404NotFoundResponse'
-        '500':
-          $ref: '#/responses/500ErrorResponse'
-        '504':
-          $ref: '#/responses/504GatewayTimeout'
-  /ocl:
+            type: array
+            items:
+              $ref: '#/definitions/NodeCandidate'
+
+  # MISC
+  /matchmaking:
     put:
-      operationId: solveOCL
+      operationId: solveMatchmaking
       tags:
-        - misc
-      description: Solves an Ocl Problem
+        - matchmaking
+      description: 'Solves a matchmaking problem'
       parameters:
-        - name: oclProblem
+        - name: matchmakingRequest
           in: body
-          description: OCL Problem to solve
+          description: 'The matchmaking request to solve'
           required: true
           schema:
-            $ref: '#/definitions/OclProblem'
+            $ref: '#/definitions/MatchmakingRequest'
       responses:
-        '200':
+        200:
           description: OK
           schema:
-            $ref: '#/definitions/OclSolution'
+              $ref: '#/definitions/MatchmakingResponse'
+  
   /installer:
     put:
       operationId: installTools
@@ -1415,7 +1340,462 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/OclSolution'
+              $ref: '#/definitions/MatchmakingResponse'
+                     
+
+  # Cloud related paths:
+  /clouds:
+    get:
+      consumes: []
+      operationId: findClouds
+      tags:
+        - cloud
+      description: |
+          Returns all clouds from the system that the user has access to
+      responses:
+        200:
+          description: |
+            All clouds
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cloud'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+    post:
+      operationId: addCloud
+      tags:
+        - cloud
+      description: Creates a new cloud.
+      parameters:
+        - name: cloud
+          in: body
+          description: Cloud to add
+          required: true
+          schema:
+            $ref: '#/definitions/NewCloud'
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Cloud"
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          description: 'Service temporary unavailable'
+          schema:
+            $ref: '#/definitions/Error'
+
+
+  /clouds/{id}:
+    get:
+      consumes: []
+      operationId: findCloud
+      tags:
+        - cloud
+      description: |
+        Returns the cloud identified by the given id parameter
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+         description: |
+          The cloud identified by the id
+         schema:
+          $ref: '#/definitions/Cloud'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+    delete:
+      consumes: []
+      operationId: deleteCloud
+      tags:
+        - cloud
+      description: |
+        Deletes the cloud identified by the given id paramater.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Image related paths
+  /images:
+    get:
+      consumes: []
+      operationId: findImages
+      tags:
+        - cloud
+      description: |
+        Returns all images visable to the user
+      responses:
+        200:
+          description: |
+            All images
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Image'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  /images/{id}:
+    put:
+      tags:
+        - cloud
+      operationId: editImage
+      description: |
+        Updates a specific image
+      parameters:
+        - $ref: '#/parameters/id'
+        - name: image
+          in: body
+          description: |
+            Image to update
+          required: true
+          schema:
+            $ref: '#/definitions/Image'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Image'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Hardware related paths
+  /hardware:
+    get:
+      consumes: []
+      operationId: findHardware
+      tags:
+        - cloud
+      description: |
+        Returns all hardware visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Hardware'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Location related paths
+  /locations:
+    get:
+      consumes: []
+      operationId: findLocations
+      tags:
+        - cloud
+      description: |
+        Returns all locations visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Jobs related paths
+
+  /jobs:
+    get:
+      consumes: []
+      operationId: findJobs
+      tags:
+        - job
+      description: |
+        Returns all jobs visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Job'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+    post:
+      operationId: addJob
+      tags:
+        - job
+      description:
+        Creates a new job
+      parameters:
+        - name: job
+          in: body
+          description: |
+            Job to be created.
+          required: true
+          schema:
+            $ref: '#/definitions/Job'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Job'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Task related paths
+  /tasks:
+    get:
+      consumes: []
+      operationId: findTasks
+      tags:
+        - job
+      description: |
+        Returns all tasks visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Task'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+    post:
+      operationId: addTask
+      tags:
+        - job
+      description: |
+        Creates a new task
+      parameters:
+        - name: task
+          in: body
+          description: |
+            Task to be created
+          required: true
+          schema:
+            $ref: '#/definitions/Task'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Task'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Long Running Request related paths
+  /longRunningRequests:
+    get:
+      consumes: []
+      operationId: findAllLongRunningRequest
+      tags:
+        - longRunningRequest
+      description: |
+        Returns all running LLRs visible to the user
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LongRunningRequest'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  /longRunningRequests/{id}:
+    get:
+      consumes: []
+      operationId: findLongRunningRequest
+      tags:
+        - longRunningRequest
+      description: |
+        Returns the LRR identified by the id parameter.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/LongRunningRequest'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Node related tasks
+  /node:
+    post:
+      operationId: addNode
+      tags:
+        - node
+      description: 'Create a new node request'
+      parameters:
+        - name: nodeRequirements
+          in: body
+          description: 'Node Request'
+          required: true
+          schema:
+            $ref: '#/definitions/NodeRequirements'
+      responses:
+        202:
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/LongRunningRequest'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Virtual machine related tasks
+  /vm:
+    post:
+      operationId: addVM
+      tags:
+        - cloud
+      description: 'Creates a new virtual machine request'
+      parameters:
+        - name: virtualMachineRequest
+          in: body
+          description: 'VirtualMachine Request'
+          required: true
+          schema:
+            $ref: '#/definitions/VirtualMachineRequest'
+      responses:
+        202:
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/LongRunningRequest'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  # Platform related paths:
+
+  # Platform paths:
   /platform:
     get:
       consumes: []
@@ -1423,22 +1803,22 @@ paths:
       tags:
         - platform
       description: |
-        Returns all platform from the system that the user has access to
+          Returns all platform from the system that the user has access to
       responses:
-        '200':
+        200:
           description: |
             All platforms
           schema:
             type: array
             items:
               $ref: '#/definitions/Platform'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addPlatform
@@ -1453,23 +1833,24 @@ paths:
           schema:
             $ref: '#/definitions/NewPlatform'
       responses:
-        '200':
-          description: OK
+        200:
+          description: "OK"
           schema:
-            $ref: '#/definitions/Platform'
-        '400':
+            $ref: "#/definitions/Platform"
+        400:
           $ref: '#/responses/400BadRequestResponse'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '404':
+        404:
           $ref: '#/responses/404NotFoundResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
-  '/platform/{id}':
+
+  /platform/{id}:
     get:
       consumes: []
       operationId: findPlatform
@@ -1480,18 +1861,18 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        '200':
-          description: |
-            The platform identified by the id
-          schema:
-            $ref: '#/definitions/Platform'
-        '401':
+        200:
+         description: |
+          The platform identified by the id
+         schema:
+          $ref: '#/definitions/Platform'
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
     delete:
       operationId: deletePlatform
@@ -1502,20 +1883,22 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        '200':
-          description: OK
-        '400':
+        200:
+          description: "OK"
+        400:
           $ref: '#/responses/400BadRequestResponse'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '404':
+        404:
           $ref: '#/responses/404NotFoundResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
+
+  # PlatformHardware related paths
   /platformHardware:
     get:
       consumes: []
@@ -1525,21 +1908,22 @@ paths:
       description: |
         Returns all platform hardware visible to the user
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             type: array
             items:
               $ref: '#/definitions/PlatformHardware'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
+
     post:
       operationId: addPlatformHardware
       tags:
@@ -1553,26 +1937,27 @@ paths:
             PlatformHardware to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformHardware'
+            $ref: '#/definitions/NewPlatformHardware'
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             $ref: '#/definitions/PlatformHardware'
-        '400':
+        400:
           $ref: '#/responses/400BadRequestResponse'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '404':
+        404:
           $ref: '#/responses/404NotFoundResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
-  '/platformHardware/{id}':
+
+  /platformHardware/{id}:
     get:
       consumes: []
       operationId: findPlatformHardware
@@ -1583,18 +1968,20 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        '200':
-          description: OK
+        200:
+          description: 'OK'
           schema:
             $ref: '#/definitions/PlatformHardware'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
+
+  # PlatformEnvironment related paths
   /platformEnvironment:
     get:
       consumes: []
@@ -1604,20 +1991,20 @@ paths:
       description: |
         Returns all platform environment  visible to the user
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             type: array
             items:
               $ref: '#/definitions/PlatformEnvironment'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
     post:
       operationId: addPlatformEnvironment
@@ -1632,26 +2019,27 @@ paths:
             PlatformEnvironment to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformEnvironment'
+            $ref: '#/definitions/NewPlatformEnvironment'
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             $ref: '#/definitions/PlatformEnvironment'
-        '400':
+        400:
           $ref: '#/responses/400BadRequestResponse'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '404':
+        404:
           $ref: '#/responses/404NotFoundResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
-  '/platformEnvironment/{id}':
+
+  /platformEnvironment/{id}:
     get:
       consumes: []
       operationId: findPlatformEnvironment
@@ -1662,18 +2050,20 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        '200':
-          description: OK
+        200:
+          description: 'OK'
           schema:
             $ref: '#/definitions/PlatformEnvironment'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
+
+  # PlatformRuntime related paths
   /platformRuntime:
     get:
       consumes: []
@@ -1683,21 +2073,22 @@ paths:
       description: |
         Returns all platform runtime  visible to the user
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             type: array
             items:
               $ref: '#/definitions/PlatformRuntime'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
+
     post:
       operationId: addPlatformRuntime
       tags:
@@ -1711,26 +2102,27 @@ paths:
             PlatformRuntime to be created
           required: true
           schema:
-            $ref: '#/definitions/PlatformRuntime'
+            $ref: '#/definitions/NewPlatformRuntime'
       responses:
-        '200':
+        200:
           description: |
             OK
           schema:
             $ref: '#/definitions/PlatformRuntime'
-        '400':
+        400:
           $ref: '#/responses/400BadRequestResponse'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '404':
+        404:
           $ref: '#/responses/404NotFoundResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
-  '/platformRuntime/{id}':
+
+  /platformRuntime/{id}:
     get:
       consumes: []
       operationId: findPlatformRuntime
@@ -1741,15 +2133,15 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        '200':
-          description: OK
+        200:
+          description: 'OK'
           schema:
             $ref: '#/definitions/PlatformRuntime'
-        '401':
+        401:
           $ref: '#/responses/401UnauthorizedResponse'
-        '403':
+        403:
           $ref: '#/responses/403ForbiddenResponse'
-        '500':
+        500:
           $ref: '#/responses/500ErrorResponse'
-        '504':
+        504:
           $ref: '#/responses/504GatewayTimeout'
