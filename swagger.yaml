@@ -1039,14 +1039,14 @@ definitions:
         type: string
         description: "owner of the token"
         example: "owner@home.office"
-      issuedAt:
+      issuedTime:
         type: integer
-        format: long
+        format: int64
         description: "SystemMillis Token was issued"
         example: 1273222647313
-      expiredAt:
+      expireTime:
         type: integer
-        format: long
+        format: int64
         description: "SystemMillis the Token expires"
         example: 1273827447313
 
