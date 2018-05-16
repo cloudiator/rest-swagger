@@ -596,6 +596,7 @@ definitions:
 
   Sensor:
     type: object
+    discriminator: type
     description: |
       Represents a sensor used for collecting monitoring data
     required:
