@@ -599,8 +599,6 @@ definitions:
     discriminator: type
     description: |
       Represents a sensor used for collecting monitoring data
-    required:
-      - type
     properties:
       type:
         description: "discriminator"
