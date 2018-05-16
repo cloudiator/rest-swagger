@@ -550,6 +550,95 @@ definitions:
         items:
           $ref: '#/definitions/VirtualMachineRequest'
 
+  MonitorNew:
+    type: object
+    properties:
+      target:
+        $ref: '#/definitions/MonitoringTarget'
+      sensor:
+        $ref: '#/definitions/Sensor'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/MonitoringTag'
+
+  Monitor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/MonitorNew'
+      - properties:
+          id:
+            type: string
+
+  MonitoringTarget:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        description: "target to be monitored"
+        type: string
+        enum: ['JOB','TASK','PROCESS','NODE']
+      identifier:
+        description: "(optional) identifier of a specific instance of the above type"
+        type: string
+
+  MonitoringTag:
+    type: object
+    description: "Tagging for monitoring"
+    properties:
+      key:
+        description: "Key of the tag"
+        type: string
+      value:
+        description: "Value of the tag"
+        type: string
+
+  Sensor:
+    type: object
+    description: |
+      Represents a sensor used for collecting monitoring data
+    required:
+      - type
+    properties:
+      type:
+        description: "discriminator"
+        type: string
+      metric:
+        description: "name of the collected metric"
+        type: string
+      configuration:
+        description: "configuration of the sensor"
+        $ref: '#/definitions/SensorConfiguration'
+
+  SensorConfiguration:
+    type: object
+    description: "Key-Value configuration of the sensor"
+    properties:
+      properties:
+        type: array
+        description: "array of configuration properties"
+        items:
+          $ref: '#/definitions/Property'
+
+  PushSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          port:
+            type: integer
+            format: int32
+
+  PullSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          className:
+            description: "ClassName of the sensor"
+            type: string
+
   NewCloud:
       description: |
         Represents a new cloud that is to be created
@@ -1478,6 +1567,58 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  # Monitoring related paths
+
+  /monitors:
+    get:
+      consumes: []
+      operationId: findMonitors
+      tags:
+        - monitoring
+      description: |
+        Returns all monitors visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Monitor'
+    post:
+      operationId: addMonitor
+      tags:
+        - monitoring
+      description: |
+        Creates a monitor
+      parameters:
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be created
+          required: true
+          schema:
+            $ref: '#/definitions/MonitorNew'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Monitor'
+    delete:
+      consumes: []
+      operationId: deleteMonitor
+      tags:
+        - monitoring
+      description: |
+        Deletes the monitor identified by the given id paramater.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+
 
   # Jobs related paths
 
