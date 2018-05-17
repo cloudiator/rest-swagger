@@ -330,6 +330,9 @@ definitions:
         $ref: '#/definitions/IpAddressType'
       IpVersion:
         $ref: '#/definitions/IpVersion'
+      value:
+        type: string
+        description: the ip address value  
 
   IpAddressType:
     type: string
@@ -338,7 +341,66 @@ definitions:
   IpVersion:
     type: string
     enum: ['V4','V6']
+    
+  InstallationRequest:
+    description: todo
+    type: object
+    properties:
+      tools:
+        type: array
+        items:
+          $ref: '#/definitions/Tool'
+      node:
+        $ref: '#/definitions/Node'
+        
+        
+  Tool:
+    description: a Cloudiator tool to be installed on a node
+    type: string
+    enum:
+      - DOCKER
+      - KAIROSDB
+      - LANCE
+      - VISOR
+      - AXE  
 
+  Node:
+    type: object
+    properties:
+      nodeId:
+        type: string
+      loginCredential:
+        $ref: '#/definitions/LoginCredential'
+      nodeType:
+        type: string
+        enum:
+          - UNKNOWN_TYPE
+          - VM
+          - BYON
+          - CONTAINER
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+      nodeProperties:
+        $ref: '#/definitions/NodeProperties'
+  NodeProperties:
+    description: attributes defining a node
+    type: object
+    properties:
+      numberOfCores:
+        type: integer
+        format: int32
+      memory:
+        type: integer
+        format: int64
+      disk:
+        type: number
+        format: float
+      operatingSystem:
+        $ref: '#/definitions/OperatingSystem'
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
 
   Job:
     description: |
@@ -1346,6 +1408,23 @@ paths:
           description: OK
           schema:
               $ref: '#/definitions/MatchmakingResponse'
+              
+  /installer:
+    post:
+      operationId: installTools
+      tags:
+        - misc
+      description: Installs Cloudiator tools on provided node
+      parameters:
+        - name: installRequest
+          in: body
+          description: a request to install the cloudiator tools on a provided node
+          required: true
+          schema:
+            $ref: '#/definitions/InstallationRequest'
+      responses:
+        '200':
+          description: OK              
 
   # Cloud related paths:
   /clouds:
