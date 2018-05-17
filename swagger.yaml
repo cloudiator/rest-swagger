@@ -292,6 +292,9 @@ definitions:
         $ref: '#/definitions/IpAddressType'
       IpVersion:
         $ref: '#/definitions/IpVersion'
+      value:
+        type: string
+        description: the ip address value
   IpAddressType:
     type: string
     enum:
@@ -521,11 +524,21 @@ definitions:
         type: string
         example: SecretPassword
   LoginCredential:
-    type: string
-    description: |
-      Part of a VirtualMachine.
-      Platzhalter
-    example: here to be here
+    type: object
+    properties:
+      username:
+        type: string
+        description: |
+          username for VM
+        example: ubuntu
+      password: 
+        type: string
+        description: |
+          password for VM (either password or key need to be set)
+      privateKey: 
+        type: string
+        description: |
+          private SSH key for VM (either password or key need to be set)    
   LongRunningRequest:
     description: |
       Represents a long-running request (LRR) within the system
