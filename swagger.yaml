@@ -668,9 +668,6 @@ definitions:
       metric:
         description: "name of the collected metric"
         type: string
-      configuration:
-        description: "configuration of the sensor"
-        $ref: '#/definitions/SensorConfiguration'
 
   SensorConfiguration:
     type: object
@@ -681,6 +678,19 @@ definitions:
         description: "array of configuration properties"
         items:
           $ref: '#/definitions/Property'
+
+  Interval:
+    type: object
+    description: "A time interval consisting of unit and period"
+    properties:
+      unit:
+       description: "The unit of the interval"
+       type: string
+       enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
+      period:
+        description: "The period of the interval"
+        type: integer
+        format: int64
 
   PushSensor:
     type: object
@@ -699,6 +709,12 @@ definitions:
           className:
             description: "ClassName of the sensor"
             type: string
+          configuration:
+            description: "configuration of the sensor"
+            $ref: '#/definitions/SensorConfiguration'
+          interval:
+           description: "the interval with which the sensor is executed"
+           $ref: '#/definitions/Interval'
 
   NewCloud:
       description: |
@@ -1684,6 +1700,7 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Monitor'
+  /monitors/{id}:
     delete:
       consumes: []
       operationId: deleteMonitor
