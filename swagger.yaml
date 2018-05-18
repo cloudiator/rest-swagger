@@ -663,10 +663,10 @@ definitions:
       Represents a sensor used for collecting monitoring data
     properties:
       type:
-        description: "discriminator"
+        description: "Discriminator used for sensor polymorphism"
         type: string
       metric:
-        description: "name of the collected metric"
+        description: "Name of the collected metric"
         type: string
 
   SensorConfiguration:
@@ -675,7 +675,7 @@ definitions:
     properties:
       properties:
         type: array
-        description: "array of configuration properties"
+        description: "Array of configuration properties"
         items:
           $ref: '#/definitions/Property'
 
@@ -698,6 +698,7 @@ definitions:
       - $ref: '#/definitions/Sensor'
       - properties:
           port:
+            description: "(optional) port for starting the push sensor"
             type: integer
             format: int32
 
@@ -710,10 +711,10 @@ definitions:
             description: "ClassName of the sensor"
             type: string
           configuration:
-            description: "configuration of the sensor"
+            description: "Configuration of the sensor"
             $ref: '#/definitions/SensorConfiguration'
           interval:
-           description: "the interval with which the sensor is executed"
+           description: "The interval at which the sensor is executed"
            $ref: '#/definitions/Interval'
 
   NewCloud:
