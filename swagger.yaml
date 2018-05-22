@@ -257,12 +257,12 @@ definitions:
         format: int32
         example: 4
       ram:
-        description: "Amount of RAM"
+        description: "Amount of RAM (in MB)"
         type: integer
         format: int64
         example: 2048
       disk:
-        description: "Amount of disk space"
+        description: "Amount of disk space (in GB)"
         type: number
         format: double
         example: 100
