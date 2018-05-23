@@ -576,32 +576,19 @@ definitions:
         type: string
         description: "The private key for login"
 
-  LongRunningRequest:
+  Queue:
     description: |
-      Represents a long-running request (LRR) within the system
+      Represents a queued task within the system. Used to execute long running requests.
     type: object
     properties:
       id:
         type: string
-        description: "Unique identifier for the LRR"
-      taskType:
-        $ref: '#/definitions/LRRType'
-      taskStatus:
-        $ref: '#/definitions/LRRStatus'
-      lrrData:
-        type: string
-      lrrDiagnostic:
-        type: string
-      referenceId:
-        type: string
+        description: "Unique identifier for the queued task"
+        $ref: '#/definitions/QueueStatus'
 
-  LRRType:
-    description: "The type of this LRR"
-    type: string
-    enum: ['VirtualMachineRequest']
-
-  LRRStatus:
-    description: "The status of the running LRR"
+  QueueStatus:
+    description: |
+      Status of the running task
     type: string
     enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
 
@@ -1859,21 +1846,21 @@ paths:
           $ref: '#/responses/504GatewayTimeout'
             
   # Long Running Request related paths
-  /longRunningRequests:
+  /queue:
     get:
       consumes: []
-      operationId: findAllLongRunningRequest
+      operationId: getQueuedTasks
       tags:
-        - longRunningRequest
+        - queue
       description: |
-        Returns all running LLRs visible to the user
+        Returns all running queued tasks visible to the user
       responses:
         200:
           description: 'OK'
           schema:
             type: array
             items:
-              $ref: '#/definitions/LongRunningRequest'
+              $ref: '#/definitions/Queue'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -1883,21 +1870,21 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
               
-  /longRunningRequests/{id}:
+  /queue/{id}:
     get:
       consumes: []
-      operationId: findLongRunningRequest
+      operationId: findQueuedTask
       tags:
-        - longRunningRequest
+        - queue
       description: |
-        Returns the LRR identified by the id parameter.
+        Returns the queued task with the given id.
       parameters:
         - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/LongRunningRequest'
+            $ref: '#/definitions/Queue'
         401:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
@@ -1925,7 +1912,7 @@ paths:
         202:
           description: ACCEPTED
           schema:
-            $ref: '#/definitions/LongRunningRequest'
+            $ref: '#/definitions/Queue'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
@@ -1957,7 +1944,7 @@ paths:
         202:
           description: ACCEPTED
           schema:
-            $ref: '#/definitions/LongRunningRequest'
+            $ref: '#/definitions/Queue'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
