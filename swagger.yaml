@@ -627,6 +627,9 @@ definitions:
   MonitorNew:
     type: object
     properties:
+      metric:
+        description: "Name of the collected metric"
+        type: string
       targets:
         type: array
         items:
@@ -644,9 +647,6 @@ definitions:
       - $ref: '#/definitions/MonitorNew'
       - properties:
           id:
-            type: string
-          metric:
-            description: "Name of the collected metric"
             type: string
 
   MonitoringTarget:
