@@ -636,6 +636,8 @@ definitions:
           $ref: '#/definitions/MonitoringTarget'
       sensor:
         $ref: '#/definitions/Sensor'
+      sinks:
+        $ref: '#/definitions/DataSink'
       tags:
         type: array
         items:
@@ -693,6 +695,25 @@ definitions:
         items:
           $ref: '#/definitions/Property'
 
+  DataSink:
+    type: object
+    description: |
+      Data Sink where the monitoring data will be reported to.
+    properties:
+      type:
+        type: string
+        enum: ["KAIROS_DB","INFLUX"]
+      configuration:
+        $ref: '#/definitions/DataSinkConfiguration'
+
+  DataSinkConfiguration:
+    type: object
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+
   Interval:
     type: object
     description: "A time interval consisting of unit and period"
@@ -712,7 +733,9 @@ definitions:
       - $ref: '#/definitions/Sensor'
       - properties:
           port:
-            description: "(optional) port for starting the push sensor"
+            description: |
+              (optional) port recommendation for starting the push sensor. API does not guarantee
+              that this port will be used.
             type: integer
             format: int32
 
