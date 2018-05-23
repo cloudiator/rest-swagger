@@ -584,6 +584,7 @@ definitions:
       id:
         type: string
         description: "Unique identifier for the queued task"
+      status:
         $ref: '#/definitions/QueueStatus'
 
   QueueStatus:
