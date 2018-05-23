@@ -561,11 +561,20 @@ definitions:
         example: "SecretPassword"
 
   LoginCredential:
-    type: string
+    type: object
     description: |
-      Part of a VirtualMachine.
-      Platzhalter
-    example: "here to be here"
+      Credentials for remote access to the virtual machine. Typically, one of password or privateKey
+      is set.
+    properties:
+      username:
+        type: string
+        description: "The username for login"
+      password:
+        type: string
+        description: "The password for login"
+      privateKey:
+        type: string
+        description: "The private key for login"
 
   LongRunningRequest:
     description: |
