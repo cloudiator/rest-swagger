@@ -1753,6 +1753,22 @@ paths:
           schema:
             $ref: '#/definitions/Monitor'
   /monitors/{id}:
+    get:
+      consumes: []
+      operationId: getMonitor
+      tags:
+        - monitoring
+      description: |
+        Retrieves the monitor with the given id parameter
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Monitor'
     delete:
       consumes: []
       operationId: deleteMonitor
