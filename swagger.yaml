@@ -645,6 +645,9 @@ definitions:
       - properties:
           id:
             type: string
+          metric:
+            description: "Name of the collected metric"
+            type: string
 
   MonitoringTarget:
     type: object
@@ -678,9 +681,6 @@ definitions:
     properties:
       type:
         description: "Discriminator used for sensor polymorphism"
-        type: string
-      metric:
-        description: "Name of the collected metric"
         type: string
 
   SensorConfiguration:
