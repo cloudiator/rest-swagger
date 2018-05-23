@@ -596,6 +596,9 @@ definitions:
         description: "Unique identifier for the queued task"
       status:
         $ref: '#/definitions/QueueStatus'
+      location:
+        type: string
+        description: "Location of the original entity"
 
   QueueStatus:
     description: |
