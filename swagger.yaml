@@ -259,12 +259,12 @@ definitions:
         format: int32
         example: 4
       ram:
-        description: "Amount of RAM"
+        description: "Amount of RAM (in MB)"
         type: integer
         format: int64
         example: 2048
       disk:
-        description: "Amount of disk space"
+        description: "Amount of disk space (in GB)"
         type: number
         format: double
         example: 100
@@ -332,6 +332,9 @@ definitions:
         $ref: '#/definitions/IpAddressType'
       IpVersion:
         $ref: '#/definitions/IpVersion'
+      value:
+        type: string
+        description: the ip address value  
 
   IpAddressType:
     type: string
@@ -340,7 +343,66 @@ definitions:
   IpVersion:
     type: string
     enum: ['V4','V6']
+    
+  InstallationRequest:
+    description: todo
+    type: object
+    properties:
+      tools:
+        type: array
+        items:
+          $ref: '#/definitions/Tool'
+      node:
+        $ref: '#/definitions/Node'
+        
+        
+  Tool:
+    description: a Cloudiator tool to be installed on a node
+    type: string
+    enum:
+      - DOCKER
+      - KAIROSDB
+      - LANCE
+      - VISOR
+      - AXE  
 
+  Node:
+    type: object
+    properties:
+      nodeId:
+        type: string
+      loginCredential:
+        $ref: '#/definitions/LoginCredential'
+      nodeType:
+        type: string
+        enum:
+          - UNKNOWN_TYPE
+          - VM
+          - BYON
+          - CONTAINER
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+      nodeProperties:
+        $ref: '#/definitions/NodeProperties'
+  NodeProperties:
+    description: attributes defining a node
+    type: object
+    properties:
+      numberOfCores:
+        type: integer
+        format: int32
+      memory:
+        type: integer
+        format: int64
+      disk:
+        type: number
+        format: float
+      operatingSystem:
+        $ref: '#/definitions/OperatingSystem'
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
 
   Job:
     description: |
@@ -551,6 +613,111 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/VirtualMachineRequest'
+
+  MonitorNew:
+    type: object
+    properties:
+      target:
+        $ref: '#/definitions/MonitoringTarget'
+      sensor:
+        $ref: '#/definitions/Sensor'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/MonitoringTag'
+
+  Monitor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/MonitorNew'
+      - properties:
+          id:
+            type: string
+
+  MonitoringTarget:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        description: "target to be monitored"
+        type: string
+        enum: ['JOB','TASK','PROCESS','NODE']
+      identifier:
+        description: "(optional) identifier of a specific instance of the above type"
+        type: string
+
+  MonitoringTag:
+    type: object
+    description: "Tagging for monitoring"
+    properties:
+      key:
+        description: "Key of the tag"
+        type: string
+      value:
+        description: "Value of the tag"
+        type: string
+
+  Sensor:
+    type: object
+    discriminator: type
+    description: |
+      Represents a sensor used for collecting monitoring data
+    properties:
+      type:
+        description: "Discriminator used for sensor polymorphism"
+        type: string
+      metric:
+        description: "Name of the collected metric"
+        type: string
+
+  SensorConfiguration:
+    type: object
+    description: "Key-Value configuration of the sensor"
+    properties:
+      properties:
+        type: array
+        description: "Array of configuration properties"
+        items:
+          $ref: '#/definitions/Property'
+
+  Interval:
+    type: object
+    description: "A time interval consisting of unit and period"
+    properties:
+      unit:
+       description: "The unit of the interval"
+       type: string
+       enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
+      period:
+        description: "The period of the interval"
+        type: integer
+        format: int64
+
+  PushSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          port:
+            description: "(optional) port for starting the push sensor"
+            type: integer
+            format: int32
+
+  PullSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          className:
+            description: "ClassName of the sensor"
+            type: string
+          configuration:
+            description: "Configuration of the sensor"
+            $ref: '#/definitions/SensorConfiguration'
+          interval:
+           description: "The interval at which the sensor is executed"
+           $ref: '#/definitions/Interval'
 
   NewCloud:
       description: |
@@ -1274,6 +1441,23 @@ paths:
           description: OK
           schema:
               $ref: '#/definitions/MatchmakingResponse'
+              
+  /installer:
+    post:
+      operationId: installTools
+      tags:
+        - misc
+      description: Installs Cloudiator tools on provided node
+      parameters:
+        - name: installRequest
+          in: body
+          description: a request to install the cloudiator tools on a provided node
+          required: true
+          schema:
+            $ref: '#/definitions/InstallationRequest'
+      responses:
+        '200':
+          description: OK              
 
   # Cloud related paths:
   /clouds:
@@ -1494,6 +1678,59 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  # Monitoring related paths
+
+  /monitors:
+    get:
+      consumes: []
+      operationId: findMonitors
+      tags:
+        - monitoring
+      description: |
+        Returns all monitors visible to the user
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Monitor'
+    post:
+      operationId: addMonitor
+      tags:
+        - monitoring
+      description: |
+        Creates a monitor
+      parameters:
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be created
+          required: true
+          schema:
+            $ref: '#/definitions/MonitorNew'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Monitor'
+  /monitors/{id}:
+    delete:
+      consumes: []
+      operationId: deleteMonitor
+      tags:
+        - monitoring
+      description: |
+        Deletes the monitor identified by the given id paramater.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+
 
   # Jobs related paths
 
