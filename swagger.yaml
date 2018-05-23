@@ -31,12 +31,14 @@ host: localhost:9000
 
 securityDefinitions:
   ApiKeyAuth:
-    type: apiKey
+    type: "apiKey"
+    name: "X-API-Key"
     in: header
-    name: X-API-Key
+
 
 security:
   - ApiKeyAuth: []
+
 
 ################################################################################
 #####                                                                       ####
@@ -1200,6 +1202,20 @@ definitions:
         type: string
         description: "The token"
         example: "theToken"
+      owner:
+        type: string
+        description: "owner of the token"
+        example: "owner@home.office"
+      issuedTime:
+        type: integer
+        format: int64
+        description: "SystemMillis Token was issued"
+        example: 1273222647313
+      expireTime:
+        type: integer
+        format: int64
+        description: "SystemMillis the Token expires"
+        example: 1273827447313
 
   User:
     type: object
