@@ -627,8 +627,10 @@ definitions:
   MonitorNew:
     type: object
     properties:
-      target:
-        $ref: '#/definitions/MonitoringTarget'
+      targets:
+        type: array
+        items:
+          $ref: '#/definitions/MonitoringTarget'
       sensor:
         $ref: '#/definitions/Sensor'
       tags:
@@ -652,9 +654,9 @@ definitions:
       type:
         description: "target to be monitored"
         type: string
-        enum: ['JOB','TASK','PROCESS','NODE']
+        enum: ['JOB','TASK','PROCESS','CLOUD','NODE']
       identifier:
-        description: "(optional) identifier of a specific instance of the above type"
+        description: "identifier of a specific instance of the above type"
         type: string
 
   MonitoringTag:
