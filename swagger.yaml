@@ -627,10 +627,17 @@ definitions:
   MonitorNew:
     type: object
     properties:
-      target:
-        $ref: '#/definitions/MonitoringTarget'
+      metric:
+        description: "Name of the collected metric"
+        type: string
+      targets:
+        type: array
+        items:
+          $ref: '#/definitions/MonitoringTarget'
       sensor:
         $ref: '#/definitions/Sensor'
+      sinks:
+        $ref: '#/definitions/DataSink'
       tags:
         type: array
         items:
@@ -652,9 +659,9 @@ definitions:
       type:
         description: "target to be monitored"
         type: string
-        enum: ['JOB','TASK','PROCESS','NODE']
+        enum: ['JOB','TASK','PROCESS','CLOUD','NODE']
       identifier:
-        description: "(optional) identifier of a specific instance of the above type"
+        description: "identifier of a specific instance of the above type"
         type: string
 
   MonitoringTag:
@@ -677,9 +684,6 @@ definitions:
       type:
         description: "Discriminator used for sensor polymorphism"
         type: string
-      metric:
-        description: "Name of the collected metric"
-        type: string
 
   SensorConfiguration:
     type: object
@@ -690,6 +694,25 @@ definitions:
         description: "Array of configuration properties"
         items:
           $ref: '#/definitions/Property'
+
+  DataSink:
+    type: object
+    description: |
+      Data Sink where the monitoring data will be reported to.
+    properties:
+      type:
+        type: string
+        enum: ["KAIROS_DB","INFLUX"]
+      configuration:
+        $ref: '#/definitions/DataSinkConfiguration'
+
+  DataSinkConfiguration:
+    type: object
+    properties:
+      key:
+        type: string
+      value:
+        type: string
 
   Interval:
     type: object
@@ -710,7 +733,9 @@ definitions:
       - $ref: '#/definitions/Sensor'
       - properties:
           port:
-            description: "(optional) port for starting the push sensor"
+            description: |
+              (optional) port recommendation for starting the push sensor. API does not guarantee
+              that this port will be used.
             type: integer
             format: int32
 
@@ -1728,6 +1753,22 @@ paths:
           schema:
             $ref: '#/definitions/Monitor'
   /monitors/{id}:
+    get:
+      consumes: []
+      operationId: getMonitor
+      tags:
+        - monitoring
+      description: |
+        Retrieves the monitor with the given id parameter
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Monitor'
     delete:
       consumes: []
       operationId: deleteMonitor
