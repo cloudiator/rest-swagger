@@ -1910,6 +1910,19 @@ paths:
 
   # Node related tasks
   /node:
+    get:
+      consumes: []
+      operationId: findNodes
+      tags:
+        - node
+      description: "Retrieve all nodes the current user has access to"
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Node'
     post:
       operationId: addNode
       tags:
@@ -1939,6 +1952,38 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  /node/{id}:
+    get:
+      operationId: getNode
+      tags:
+        - node
+      description: "Retrieves the node with the given id."
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Node'
+
+  /nodeGroup:
+    get:
+      consumes: []
+      operationId: findNodeGroups
+      tags:
+        - node
+      description: "Returns all node groups for the current user"
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NodeGroup'
+
 
   /nodeGroup/{id}:
     get:
