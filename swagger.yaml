@@ -1996,6 +1996,7 @@ paths:
 
   /node/{id}:
     get:
+      consumes: []
       operationId: getNode
       tags:
         - node
@@ -2028,6 +2029,7 @@ paths:
 
   /nodeGroup/{id}:
     get:
+      consumes: []
       operationId: getNodeGroup
       tags:
         - node
