@@ -52,6 +52,12 @@ parameters:
     description: Unique identifier of the resource
     required: true
     type: string
+  cloudId:
+    name: cloudId
+    in: query
+    description: (Optional) Unique identifier to filter a specific cloud
+    required: false
+    type: string
 
 
 ################################################################################
@@ -1656,6 +1662,8 @@ paths:
         - cloud
       description: |
         Returns all images visable to the user
+      parameters:
+        - $ref: '#/parameters/cloudId'
       responses:
         200:
           description: |
@@ -1731,6 +1739,8 @@ paths:
         - cloud
       description: |
         Returns all hardware visible to the user
+      parameters:
+        - $ref: '#/parameters/cloudId'
       responses:
         200:
           description: |
@@ -1802,6 +1812,8 @@ paths:
     get:
       consumes: []
       operationId: findLocations
+      parameters:
+        - $ref: '#/parameters/cloudId'
       tags:
         - cloud
       description: |
