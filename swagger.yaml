@@ -613,6 +613,8 @@ definitions:
     properties:
       requirements:
         $ref: '#/definitions/NodeRequirements'
+      optimization:
+        $ref: '#/definitions/Optimization'
 
   MatchmakingResponse:
     type: object
@@ -1123,6 +1125,50 @@ definitions:
        type: string
        description: "Value of the property"
        example: "RegionOne, RegionTwo"
+
+  Optimization:
+    type: object
+    description: "Superclass for polymorphism, only subtypes are allowed"
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+      objective:
+        type: string
+        enum: ["MAXIMIZE", "MINIMIZE"]
+
+  OCLOptimization:
+    type: object
+    description: "An OCL attribute expression that should be optimized"
+    required:
+      - expression
+    allOf:
+      - $ref: '#/definitions/Optimization'
+      - properties:
+          expression:
+            description: |
+              The expression that is to be opimized.
+            type: string
+
+  AttributeOptimization:
+    type: object
+    description: "Refers to the attribute that should be optimized"
+    required:
+      - objectiveClass
+      - objectiveAttribute
+      - aggregation
+    allOf:
+      - $ref: '#/definitions/Optimization'
+      - properties:
+          objectiveClass:
+            type: string
+          objectiveAttribute:
+            type: string
+          aggregation:
+            type: string
+            enum: ["SUM","AVG"]
 
   Requirement:
    type: object
