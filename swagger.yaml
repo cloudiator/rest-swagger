@@ -1355,7 +1355,7 @@ responses:
       $ref: '#/definitions/Error'
     examples:
       code: 500
-      message: "An unexpected Error occured"
+      message: "An unexpected Error occurred"
   504GatewayTimeout:
     description: Server temporary not available
     schema:
@@ -1628,6 +1628,20 @@ paths:
           $ref: '#/responses/504GatewayTimeout'
               
   /images/{id}:
+    get:
+      tags:
+        - cloud
+      operationId: getImage
+      description: |
+        Retrieves the image with the given id.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Image'
     put:
       tags:
         - cloud
@@ -1687,7 +1701,56 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
-    
+
+  /hardware/{id}:
+    get:
+      tags:
+        - cloud
+      operationId: getHardware
+      description: |
+        Retrieves the hardware with the given id.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Hardware'
+    put:
+      tags:
+        - cloud
+      operationId: editHardware
+      description: |
+        Updates a specific hardware
+      parameters:
+        - $ref: '#/parameters/id'
+        - name: hardware
+          in: body
+          description: |
+            Hardware to update
+          required: true
+          schema:
+            $ref: '#/definitions/Hardware'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Hardware'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
   # Location related paths
   /locations:
     get:
@@ -1709,6 +1772,55 @@ paths:
           $ref: '#/responses/401UnauthorizedResponse'
         403:
           $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
+  /locations/{id}:
+    get:
+      tags:
+        - cloud
+      operationId: getLocation
+      description: |
+        Retrieves the location with the given id.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Location'
+    put:
+      tags:
+        - cloud
+      operationId: editLocation
+      description: |
+        Updates a specific location
+      parameters:
+        - $ref: '#/parameters/id'
+        - name: location
+          in: body
+          description: |
+            Location to update
+          required: true
+          schema:
+            $ref: '#/definitions/Location'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Location'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
