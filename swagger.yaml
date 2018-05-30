@@ -167,6 +167,24 @@ definitions:
             The name of the provided port this communication refers to.
           example: "Pro11745"
 
+  DataSink:
+    type: object
+    description: |
+      Data Sink where the monitoring data will be reported to.
+    properties:
+      type:
+        type: string
+        enum: ["KAIROS_DB","INFLUX"]
+      configuration:
+        $ref: '#/definitions/DataSinkConfiguration'
+
+  DataSinkConfiguration:
+    type: object
+    properties:
+      key:
+        type: string
+      value:
+        type: string
 
   DockerInterface:
      type: object
@@ -322,6 +340,30 @@ definitions:
       location:
         $ref: '#/definitions/Location'
 
+  InstallationRequest:
+    description: todo
+    type: object
+    properties:
+      tools:
+        type: array
+        items:
+          $ref: '#/definitions/Tool'
+      node:
+        $ref: '#/definitions/Node'
+
+  Interval:
+    type: object
+    description: "A time interval consisting of unit and period"
+    properties:
+      unit:
+       description: "The unit of the interval"
+       type: string
+       enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
+      period:
+        description: "The period of the interval"
+        type: integer
+        format: int64
+
   IpAddress:
     type: object
     required:
@@ -343,76 +385,7 @@ definitions:
   IpVersion:
     type: string
     enum: ['V4','V6']
-    
-  InstallationRequest:
-    description: todo
-    type: object
-    properties:
-      tools:
-        type: array
-        items:
-          $ref: '#/definitions/Tool'
-      node:
-        $ref: '#/definitions/Node'
-        
-        
-  Tool:
-    description: a Cloudiator tool to be installed on a node
-    type: string
-    enum:
-      - DOCKER
-      - KAIROSDB
-      - LANCE
-      - VISOR
-      - AXE  
 
-  NodeGroup:
-    type: object
-    properties:
-      id:
-        type: string
-      nodes:
-        type: array
-        items:
-          $ref: '#/definitions/Node'
-
-  Node:
-    type: object
-    properties:
-      nodeId:
-        type: string
-      loginCredential:
-        $ref: '#/definitions/LoginCredential'
-      nodeType:
-        type: string
-        enum:
-          - UNKNOWN_TYPE
-          - VM
-          - BYON
-          - CONTAINER
-      ipAddresses:
-        type: array
-        items:
-          $ref: '#/definitions/IpAddress'
-      nodeProperties:
-        $ref: '#/definitions/NodeProperties'
-  NodeProperties:
-    description: attributes defining a node
-    type: object
-    properties:
-      numberOfCores:
-        type: integer
-        format: int32
-      memory:
-        type: integer
-        format: int64
-      disk:
-        type: number
-        format: float
-      operatingSystem:
-        $ref: '#/definitions/OperatingSystem'
-      geoLocation:
-        $ref: '#/definitions/GeoLocation'
 
   Job:
     description: |
@@ -439,7 +412,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-
 
   LanceInterface:
     description: |
@@ -586,26 +558,6 @@ definitions:
         type: string
         description: "The private key for login"
 
-  Queue:
-    description: |
-      Represents a queued task within the system. Used to execute long running requests.
-    type: object
-    properties:
-      id:
-        type: string
-        description: "Unique identifier for the queued task"
-      status:
-        $ref: '#/definitions/QueueStatus'
-      location:
-        type: string
-        description: "Location of the original entity"
-
-  QueueStatus:
-    description: |
-      Status of the running task
-    type: string
-    enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
-
   MatchmakingRequest:
     type: object
     description: |
@@ -674,85 +626,6 @@ definitions:
       value:
         description: "Value of the tag"
         type: string
-
-  Sensor:
-    type: object
-    discriminator: type
-    description: |
-      Represents a sensor used for collecting monitoring data
-    properties:
-      type:
-        description: "Discriminator used for sensor polymorphism"
-        type: string
-
-  SensorConfiguration:
-    type: object
-    description: "Key-Value configuration of the sensor"
-    properties:
-      properties:
-        type: array
-        description: "Array of configuration properties"
-        items:
-          $ref: '#/definitions/Property'
-
-  DataSink:
-    type: object
-    description: |
-      Data Sink where the monitoring data will be reported to.
-    properties:
-      type:
-        type: string
-        enum: ["KAIROS_DB","INFLUX"]
-      configuration:
-        $ref: '#/definitions/DataSinkConfiguration'
-
-  DataSinkConfiguration:
-    type: object
-    properties:
-      key:
-        type: string
-      value:
-        type: string
-
-  Interval:
-    type: object
-    description: "A time interval consisting of unit and period"
-    properties:
-      unit:
-       description: "The unit of the interval"
-       type: string
-       enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
-      period:
-        description: "The period of the interval"
-        type: integer
-        format: int64
-
-  PushSensor:
-    type: object
-    allOf:
-      - $ref: '#/definitions/Sensor'
-      - properties:
-          port:
-            description: |
-              (optional) port recommendation for starting the push sensor. API does not guarantee
-              that this port will be used.
-            type: integer
-            format: int32
-
-  PullSensor:
-    type: object
-    allOf:
-      - $ref: '#/definitions/Sensor'
-      - properties:
-          className:
-            description: "ClassName of the sensor"
-            type: string
-          configuration:
-            description: "Configuration of the sensor"
-            $ref: '#/definitions/SensorConfiguration'
-          interval:
-           description: "The interval at which the sensor is executed"
-           $ref: '#/definitions/Interval'
 
   NewCloud:
       description: |
@@ -885,6 +758,55 @@ definitions:
         format: double
         example: 2.0
 
+  NodeGroup:
+    type: object
+    properties:
+      id:
+        type: string
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/Node'
+
+  Node:
+    type: object
+    properties:
+      nodeId:
+        type: string
+      loginCredential:
+        $ref: '#/definitions/LoginCredential'
+      nodeType:
+        type: string
+        enum:
+          - UNKNOWN_TYPE
+          - VM
+          - BYON
+          - CONTAINER
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+      nodeProperties:
+        $ref: '#/definitions/NodeProperties'
+
+  NodeProperties:
+    description: attributes defining a node
+    type: object
+    properties:
+      numberOfCores:
+        type: integer
+        format: int32
+      memory:
+        type: integer
+        format: int64
+      disk:
+        type: number
+        format: float
+      operatingSystem:
+        $ref: '#/definitions/OperatingSystem'
+      geoLocation:
+        $ref: '#/definitions/GeoLocation'
+
   NodeCandidate:
     description: A node creatable by the system
     type: object
@@ -959,7 +881,6 @@ definitions:
     description: "OS Type"
     type: string
     enum: ['LINUX','UNKOWN','UNIX','WINDOWS_OS','BSD','MAC']
-
 
   Platform:
     description: Representation of a platform used by Cloudiator
@@ -1124,6 +1045,53 @@ definitions:
        description: "Value of the property"
        example: "RegionOne, RegionTwo"
 
+  PushSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          port:
+            description: |
+              (optional) port recommendation for starting the push sensor. API does not guarantee
+              that this port will be used.
+            type: integer
+            format: int32
+
+  PullSensor:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          className:
+            description: "ClassName of the sensor"
+            type: string
+          configuration:
+            description: "Configuration of the sensor"
+            $ref: '#/definitions/SensorConfiguration'
+          interval:
+           description: "The interval at which the sensor is executed"
+           $ref: '#/definitions/Interval'
+
+  Queue:
+    description: |
+      Represents a queued task within the system. Used to execute long running requests.
+    type: object
+    properties:
+      id:
+        type: string
+        description: "Unique identifier for the queued task"
+      status:
+        $ref: '#/definitions/QueueStatus'
+      location:
+        type: string
+        description: "Location of the original entity"
+
+  QueueStatus:
+    description: |
+      Status of the running task
+    type: string
+    enum: ['SCHEDULED','RUNNING','COMPLETED','FAILED']
+
   Requirement:
    type: object
    description: "polymorphic Superclass, only subtypes are allowed"
@@ -1144,6 +1112,25 @@ definitions:
    description: "Part of AttributeRequirement"
    enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
 
+  Sensor:
+    type: object
+    discriminator: type
+    description: |
+      Represents a sensor used for collecting monitoring data
+    properties:
+      type:
+        description: "Discriminator used for sensor polymorphism"
+        type: string
+
+  SensorConfiguration:
+    type: object
+    description: "Key-Value configuration of the sensor"
+    properties:
+      properties:
+        type: array
+        description: "Array of configuration properties"
+        items:
+          $ref: '#/definitions/Property'
 
   Task:
     description: |
@@ -1251,6 +1238,17 @@ definitions:
         format: int64
         description: "SystemMillis the Token expires"
         example: 1273827447313
+
+
+  Tool:
+    description: a Cloudiator tool to be installed on a node
+    type: string
+    enum:
+      - DOCKER
+      - KAIROSDB
+      - LANCE
+      - VISOR
+      - AXE
 
   User:
     type: object
