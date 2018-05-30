@@ -2217,6 +2217,25 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
 
+  /byon:
+    post:
+      operationId: addBYON
+      tags:
+        - node
+      description: "Registers an already existing node for usage"
+      parameters:
+        - name: node
+          in: body
+          required: true
+          description: 'Node to be registered'
+          schema:
+            $ref: '#/definitions/Node'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Node'
+            
   # Virtual machine related tasks
   /vm:
     get:
