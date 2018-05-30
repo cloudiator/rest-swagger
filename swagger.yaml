@@ -198,7 +198,6 @@ definitions:
             Name of the docker image
           type: string
 
-
   Error:
     description: |
       Basic errorClass
@@ -219,7 +218,6 @@ definitions:
             ExecutionEnvironment of a Task
      type: string
      enum: ['SPARK','NATIVE','CONTAINER','LANCE']
-
 
   GeoLocation:
     description: |
@@ -246,7 +244,6 @@ definitions:
       country: "DE"
       latitude: 48.4010822
       longitude: 9.9876076
-
 
   Hardware:
     description: |
@@ -288,7 +285,6 @@ definitions:
         example: 100
       location:
         $ref: '#/definitions/Location'
-
 
   IdentifierRequirement:
     type: object
@@ -385,7 +381,6 @@ definitions:
   IpVersion:
     type: string
     enum: ['V4','V6']
-
 
   Job:
     description: |
@@ -1238,7 +1233,6 @@ definitions:
         format: int64
         description: "SystemMillis the Token expires"
         example: 1273827447313
-
 
   Tool:
     description: a Cloudiator tool to be installed on a node
