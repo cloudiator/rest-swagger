@@ -2219,6 +2219,20 @@ paths:
 
   # Virtual machine related tasks
   /vm:
+    get:
+      operationId: findVMs
+      tags:
+        - cloud
+      description: "Finds all virtual machines the user has access to"
+      parameters:
+        - $ref: '#/parameters/cloudId'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VirtualMachine'
     post:
       operationId: addVM
       tags:
@@ -2248,6 +2262,20 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  /vm/{id}:
+    get:
+      operationId: getVM
+      tags:
+        - cloud
+      description: "Finds the virtual machine identified by the given id parameter"
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/VirtualMachine'
 
   # Platform related paths:
   
