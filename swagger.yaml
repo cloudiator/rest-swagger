@@ -610,7 +610,9 @@ definitions:
       sensor:
         $ref: '#/definitions/Sensor'
       sinks:
-        $ref: '#/definitions/DataSink'
+        type: array
+        items:
+          $ref: '#/definitions/DataSink'
       tags:
         type: array
         items:
@@ -2235,7 +2237,7 @@ paths:
           description: 'OK'
           schema:
             $ref: '#/definitions/Node'
-            
+
   # Virtual machine related tasks
   /vm:
     get:
