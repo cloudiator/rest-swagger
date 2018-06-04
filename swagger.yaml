@@ -1159,7 +1159,7 @@ definitions:
   RequirementOperator:
    type: string
    description: "Part of AttributeRequirement"
-   enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT']
+   enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT', 'NEQ', 'IN']
 
   Sensor:
     type: object
