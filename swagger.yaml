@@ -200,7 +200,9 @@ definitions:
         type: string
         enum: ["KAIROS_DB","INFLUX"]
       configuration:
-        $ref: '#/definitions/DataSinkConfiguration'
+        type: array
+        items:
+          $ref: '#/definitions/DataSinkConfiguration'
 
   DataSinkConfiguration:
     type: object
