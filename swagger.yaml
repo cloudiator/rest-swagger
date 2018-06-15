@@ -1023,6 +1023,7 @@ definitions:
       polymorphic superclass, only subtypes are allowed.
       Represents a communication port of a task
     required:
+      - type
       - name
     properties:
       type:
@@ -1046,6 +1047,8 @@ definitions:
        Subtype of port.
        Represents a communication port that the tasks provides for other tasks
        or the end user.
+     required:
+       - port
      allOf:
        - $ref: '#/definitions/Port'
        - properties:
@@ -1062,6 +1065,8 @@ definitions:
     description: |
       Subtype of port.
       Represents a communication port that the task requires from other (downstream) tasks.
+    required:
+      - isMandatory
     allOf:
       - $ref: '#/definitions/Port'
       - properties:
