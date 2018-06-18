@@ -1226,6 +1226,8 @@ definitions:
           $ref: '#/definitions/TaskInterface'
       executionEnvironment:
         $ref: '#/definitions/ExecutionEnvironment'
+      optimization:
+        $ref: '#/definitions/Optimization'
       requirements:
         type: array
         items:
