@@ -2358,6 +2358,45 @@ paths:
           schema:
             $ref: '#/definitions/VirtualMachine'
 
+  # encryption related paths
+  /encryption/{text}:
+    get:
+      consumes: []
+      operationId: encrypt
+      tags:
+        - misc
+      description: "Encrypts the given string"
+      parameters:
+        - name: text
+          in: path
+          description: Text to encrypt
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: string
+
+  /decryption/{text}:
+    get:
+      consumes: []
+      operationId: decrypt
+      tags:
+        - misc
+      description: "Decrypts the given string"
+      parameters:
+        - name: text
+          in: path
+          description: "Text to decrypt"
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: string
+
   # Platform related paths:
   
   # Platform paths:
