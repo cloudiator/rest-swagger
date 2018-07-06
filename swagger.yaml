@@ -1286,6 +1286,17 @@ definitions:
         description: "The tenant"
         example: "admin"
 
+  String:
+    type: object
+    description: |
+      Represents a string as valid json object
+    required:
+      - content
+    properties:
+      content:
+        type: string
+        description: "Content of the string"
+
   Token:
     type: object
     description: |
@@ -2376,7 +2387,7 @@ paths:
         200:
           description: "OK"
           schema:
-            type: string
+            $ref: '#/definitions/String'
 
   /decryption/{text}:
     get:
@@ -2395,7 +2406,7 @@ paths:
         200:
           description: "OK"
           schema:
-            type: string
+            $ref: '#/definitions/String'
 
   # Platform related paths:
   
