@@ -1170,7 +1170,7 @@ definitions:
    description: "Part of AttributeRequirement"
    enum: ['EQ', 'LEQ', 'GEQ', 'GT', 'LT', 'NEQ', 'IN']
 
-  Schedule:
+  ScheduleNew:
     type: object
     description: |
       Schedules an already created job within the system.
@@ -1182,6 +1182,16 @@ definitions:
         description: "If the instantiation should be handled AUTOMATIC or MANUAL"
         type: string
         enum: ["AUTOMATIC","MANUAL"]
+
+  Schedule:
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/ScheduleNew'
+      - properties:
+          id:
+            type: string
 
   Sensor:
     type: object
@@ -2127,7 +2137,7 @@ paths:
            Schedule to be created
          required: true
          schema:
-           $ref: '#/definitions/Schedule'
+           $ref: '#/definitions/ScheduleNew'
      responses:
        200:
          description: |
