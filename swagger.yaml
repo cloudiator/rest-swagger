@@ -410,8 +410,18 @@ definitions:
 
   Job:
     description: |
-      Represents an job.
-      An job is a logical group of tasks.
+      Represents a job in the system. A job is a logical
+      group of tasks
+    type: object
+    allOf:
+      - $ref: '#/definitions/JobNew'
+      - properties:
+          id:
+            type: string
+
+  JobNew:
+    description: |
+      Represents a job that should be created in the system.
     type: object
     required:
       - name
@@ -1215,7 +1225,7 @@ definitions:
 
   Task:
     description: |
-      Represents a task of a job.
+      Represents a new task of a job.
     type: object
     required:
       - name
@@ -2031,71 +2041,13 @@ paths:
             Job to be created.
           required: true
           schema:
-            $ref: '#/definitions/Job'
+            $ref: '#/definitions/JobNew'
       responses:
         200:
           description: |
             OK
           schema:
             $ref: '#/definitions/Job'
-        400:
-          $ref: '#/responses/400BadRequestResponse'
-        401:
-          $ref: '#/responses/401UnauthorizedResponse'
-        403:
-          $ref: '#/responses/403ForbiddenResponse'
-        404:
-          $ref: '#/responses/404NotFoundResponse'
-        500:
-          $ref: '#/responses/500ErrorResponse'
-        504:
-          $ref: '#/responses/504GatewayTimeout'
-  
-  # Task related paths
-  /tasks:
-    get:
-      consumes: []
-      operationId: findTasks
-      tags:
-        - job
-      description: | 
-        Returns all tasks visible to the user
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            type: array
-            items: 
-              $ref: '#/definitions/Task'
-        401:
-          $ref: '#/responses/401UnauthorizedResponse'
-        403:
-          $ref: '#/responses/403ForbiddenResponse'
-        500:
-          $ref: '#/responses/500ErrorResponse'
-        504:
-          $ref: '#/responses/504GatewayTimeout'
-    post:
-      operationId: addTask
-      tags:
-        - job
-      description: |
-        Creates a new task
-      parameters:
-        - name: task
-          in: body
-          description: |
-            Task to be created
-          required: true
-          schema:
-            $ref: '#/definitions/Task'
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/Task'
         400:
           $ref: '#/responses/400BadRequestResponse'
         401:
