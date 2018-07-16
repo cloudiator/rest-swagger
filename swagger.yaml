@@ -2061,6 +2061,31 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
 
+  /jobs/{id}:
+    get:
+      consumes: []
+      operationId: findJob
+      tags:
+        - job
+      description: |
+        Returns the job with the given id.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+         description: |
+          The job identified by the id
+         schema:
+          $ref: '#/definitions/Job'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'
+
   /schedule:
     get:
       consumes: []
