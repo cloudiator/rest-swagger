@@ -239,12 +239,6 @@ definitions:
         type: string
         example: 'Not found'
 
-  ExecutionEnvironment:
-     description: |
-            ExecutionEnvironment of a Task
-     type: string
-     enum: ['SPARK','NATIVE','CONTAINER','LANCE']
-
   GeoLocation:
     description: |
       Part of Location
@@ -1236,7 +1230,6 @@ definitions:
     type: object
     required:
       - name
-      - executionEnvironment
       - taskType
     properties:
       name:
@@ -1251,8 +1244,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/TaskInterface'
-      executionEnvironment:
-        $ref: '#/definitions/ExecutionEnvironment'
       optimization:
         $ref: '#/definitions/Optimization'
       requirements:
