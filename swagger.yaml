@@ -454,6 +454,13 @@ definitions:
     allOf:
     - $ref: '#/definitions/TaskInterface'
     - properties:
+        containerType:
+          description: |
+            The container type that lance should use.
+            Can be DOCKER to force a docker deployment, NATIVE to force a plain container
+            deployment or BOTH to let the system derive the container type.
+          type: string
+          enum: ["NATIVE", "DOCKER", "BOTH"]
         init:
           description: |
             Initialization action.
