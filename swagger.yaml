@@ -2159,8 +2159,8 @@ paths:
      responses:
        202:
          description: ACCEPTED
-           schema:
-             $ref: '#/definitions/Queue'
+         schema:
+          $ref: '#/definitions/Queue'
   /process:
     get:
       consumes: []
@@ -2193,8 +2193,8 @@ paths:
       responses:
         202:
           description: ACCEPTED
-            schema:
-              $ref: '#/definitions/Queue'
+          schema:
+            $ref: '#/definitions/Queue'
 
             
   # Long Running Request related paths
