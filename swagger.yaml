@@ -1114,6 +1114,49 @@ definitions:
        description: "Value of the property"
        example: "RegionOne, RegionTwo"
 
+  ProcessNew:
+    type: object
+    description: "A process represents a task running on a node"
+    required:
+      - schedule
+      - task
+      - node
+    properties:
+      schedule:
+        type: string
+        description: "The id of the schedule this process belongs to."
+      task:
+        type: string
+        description: "The id of the task that is instantiated by this process."
+      node:
+        type: string
+        description: "Tne id of the node this process is hosted on."
+
+  Process:
+    type: object
+    required:
+      - id
+    allOf:
+      - $ref: '#/definitions/ProcessNew'
+      - properties:
+          id:
+            type: string
+
+  ProcessGroup:
+    type: object
+    description: "Groups multiple processes."
+    required:
+      - id
+      - processes
+    properties:
+      id:
+        type: string
+      processes:
+        type: array
+        items:
+          $ref: '#/definitions/Process'
+
+
   PushSensor:
     type: object
     allOf:
@@ -2114,11 +2157,45 @@ paths:
          schema:
            $ref: '#/definitions/ScheduleNew'
      responses:
-       200:
-         description: |
-           OK
-         schema:
-           $ref: '#/definitions/Schedule'
+       202:
+         description: ACCEPTED
+           schema:
+             $ref: '#/definitions/Queue'
+  /process:
+    get:
+      consumes: []
+      operationId: getProcesses
+      tags:
+        - job
+      description: |
+        Retrieves all process of the current user.
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Process'
+    post:
+      operationId: createProcess
+      tags:
+        - job
+      description: |
+        Creates a new process
+      parameters:
+        - name: process
+          in: body
+          description: |
+            Process to be created
+          required: true
+          schema:
+            $ref: '#/definitions/ProcessNew'
+      responses:
+        202:
+          description: ACCEPTED
+            schema:
+              $ref: '#/definitions/Queue'
+
             
   # Long Running Request related paths
   /queue:
