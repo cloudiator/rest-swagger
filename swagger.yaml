@@ -608,7 +608,7 @@ definitions:
       nodes:
         type: array
         items:
-          $ref: '#/definitions/VirtualMachineRequest'
+          $ref: '#/definitions/NodeCandidate'
 
   MonitorNew:
     type: object
