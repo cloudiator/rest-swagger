@@ -239,6 +239,66 @@ definitions:
         type: string
         example: 'Not found'
 
+  FaasInterface:
+    description: |
+      Part of a Task.
+      Represents one function.
+    type: object
+    required:
+     - functionName
+     - sourceCodeUrl
+     - handler
+     - runtime
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          funtionName:
+            description: |
+              Unique name of the function.
+            type: string
+          sourceCodeUrl:
+            description: |
+              URL path to ZIP artifact.
+            type: string
+          handler:
+            description: |
+              function in the code to be invoked.
+            type: string
+          runtime:
+            description: |
+              Code language.
+            type: string
+          triggers:
+            description: |
+              Events on which function will be invoked.
+            type: array
+            items:
+              $ref: '#/definitions/Trigger'
+          timeout:
+            description: |
+              Allowed time in seconds for funtion to finish its task.
+            type: integer
+            format: int32
+            default: 6
+            minimum: 1
+            maximum: 600
+          memory:
+            description: |
+              Memory (in megabytes) available to function.
+              CPU is allocated proportionally.
+            type: integer
+            format: int32
+            default: 1024
+            minimum: 128
+            maximum: 3008
+    example:
+      name: "functionName"
+      sourceCodeUrl: "https://www.example.com/sourceCode.zip"
+      handler: "file.functionIdentifier"
+      runtime: "nodejs6.10"
+      timeout: 600
+      memory: 1024
+
   GeoLocation:
     description: |
       Part of Location
@@ -305,6 +365,23 @@ definitions:
         example: 100
       location:
         $ref: '#/definitions/Location'
+
+  HttpTrigger:
+    description: |
+      Subtype of Trigger.
+      Represents a HTTP request which will trigger a function.
+    type: object
+    allOf:
+      - $ref: '#/definitions/Trigger'
+      - properties:
+          httpPath:
+            type: string
+          httpMethod:
+            type: string
+    example:
+      type: "HttpTrigger"
+      httpPath: "path/to/resource"
+      httpMethod: "GET"
 
   IdentifierRequirement:
     type: object
@@ -1393,6 +1470,19 @@ definitions:
     - LANCE
     - VISOR
     - AXE
+
+  Trigger:
+    description: |
+      Represents an event that triggers a function.
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        description: |
+          Discriminator for polymorphism.
 
   User:
     type: object
