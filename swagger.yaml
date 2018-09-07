@@ -252,7 +252,7 @@ definitions:
     allOf:
       - $ref: '#/definitions/TaskInterface'
       - properties:
-          funtionName:
+          functionName:
             description: |
               Unique name of the function.
             type: string
