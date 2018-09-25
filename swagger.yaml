@@ -67,6 +67,13 @@ parameters:
 ################################################################################
 definitions:
 
+  Map:
+    description: |
+      A key - value type of Map using <String, String>.
+    type: object
+    additionalProperties:
+      type: string
+
   Api:
     description: |
       Represents an API used by a cloud
@@ -437,6 +444,37 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
+
+  SparkInterface:
+    description: |
+      Subtype of TaskInterface. Describes how to deploy a Task to Spark.
+    type: object
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          file:
+            description: |
+              An URI where the executable of the Spark Application can be retrieved.
+              Either a URL pointing to a web endpoint, or a locally available file.
+            type: string
+          className:
+            description: |
+              Optional className of the class containing the main method. Only required for Java.
+            type: string
+          arguments:
+            description: |
+              Array of arguments passed to the application.
+            type: array
+            items:
+              type: string
+          sparkArguments:
+            description: |
+              Additional Arguments passed to Spark.
+            $ref: '#/definitions/Map'
+          sparkConfiguration:
+            description: |
+              Spark configuration properties.
+            $ref: '#/definitions/Map'
 
   LanceInterface:
     description: |
