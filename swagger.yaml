@@ -2508,6 +2508,9 @@ paths:
           schema:
             $ref: '#/definitions/Text'
     put:
+      operationId: storeSecure
+      tags:
+        - misc
       parameters:
         - name: key
           in: path
