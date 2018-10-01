@@ -210,14 +210,18 @@ definitions:
   DockerInterface:
     type: object
     description: |
-      Subtype of TaskInterface
+      Subtype of TaskInterface to represent docker containers
     allOf:
     - $ref: '#/definitions/TaskInterface'
     - properties:
         dockerImage:
           description: |
-            Name of the docker image
+            Name of the docker image (should include repository, credentials, tags)
           type: string
+        environment:
+          description: |
+            A key-value map representing the environment of the docker container
+          $ref: '#/definitions/Map'
 
   Error:
     description: |
