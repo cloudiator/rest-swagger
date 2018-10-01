@@ -74,6 +74,23 @@ definitions:
     additionalProperties:
       type: string
 
+  Tuple:
+    description: |
+      A key - value tuple
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        description: |
+          Key of the tuple
+      value:
+        type: string
+        description: |
+          Value of the tuple
+
   Api:
     description: |
       Represents an API used by a cloud
@@ -2468,6 +2485,49 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Text'
+
+  # secure store related paths
+  /secureStore/{key}:
+    get:
+      consumes: []
+      operationId: retrieveSecure
+      tags:
+        - misc
+      description: |
+        Retrieves the stored value.
+      parameters:
+        - name: key
+          in: path
+          description: |
+            Key of the stored variable
+          required: true
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Text'
+    put:
+      parameters:
+        - name: key
+          in: path
+          description: |
+            Key of the stored variable
+          required: true
+          type: string
+        - name: value
+          in: body
+          description: |
+            Value of the stored variable
+          required: true
+          schema:
+            $ref: '#/definitions/Text'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Text'
+
 
   # Platform related paths:
 
