@@ -151,10 +151,8 @@ definitions:
         description: A prefix all Cloudiator managed entities will belong to.
         example: "cloudiator"
       properties:
-        type: array
-        description: Array of configuration properties.
-        items:
-          $ref: '#/definitions/Property'
+        description: Configuration as key-value map.
+        $ref: '#/definitions/Map'
 
   CloudCredential:
     description: |
@@ -1127,22 +1125,6 @@ definitions:
       updateAction: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
       isMandatory: true
 
-  Property:
-    type: object
-    description: "A key-value pair"
-    required:
-    - key
-    - value
-    properties:
-      key:
-        type: string
-        description: "Key of the property"
-        example: "sword.regions"
-      value:
-        type: string
-        description: "Value of the property"
-        example: "RegionOne, RegionTwo"
-
   ProcessNew:
     type: object
     description: "A process represents a task running on a node"
@@ -1207,8 +1189,8 @@ definitions:
           description: "ClassName of the sensor"
           type: string
         configuration:
-          description: "Configuration of the sensor"
-          $ref: '#/definitions/SensorConfiguration'
+          description: "Configuration of the sensor as key-value map"
+          $ref: '#/definitions/Map'
         interval:
           description: "The interval at which the sensor is executed"
           $ref: '#/definitions/Interval'
@@ -1285,16 +1267,6 @@ definitions:
       type:
         description: "Discriminator used for sensor polymorphism"
         type: string
-
-  SensorConfiguration:
-    type: object
-    description: "Key-Value configuration of the sensor"
-    properties:
-      properties:
-        type: array
-        description: "Array of configuration properties"
-        items:
-          $ref: '#/definitions/Property'
 
   Task:
     description: |
