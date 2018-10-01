@@ -596,7 +596,9 @@ definitions:
       Issues a request to the matchmaking component
     properties:
       requirements:
-        $ref: '#/definitions/NodeRequirements'
+        type: array
+        items:
+          $ref: '#/definitions/Requirement'
       optimization:
         $ref: '#/definitions/Optimization'
 
@@ -858,17 +860,6 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
-
-  NodeRequirements:
-    type: object
-    description: |
-      Array of Requirements.
-      Represents a request to create a new node fullfilling the given requirements
-    properties:
-      requirements:
-        type: array
-        items:
-          $ref: '#/definitions/Requirement'
 
   OCLOptimization:
     type: object
@@ -1590,7 +1581,9 @@ paths:
           Node Request
         required: false
         schema:
-          $ref: '#/definitions/NodeRequirements'
+          type: array
+          items:
+            $ref: '#/definitions/Requirement'
       responses:
         202:
           description: ACCEPTED
@@ -2272,7 +2265,9 @@ paths:
         description: 'Node Request'
         required: true
         schema:
-          $ref: '#/definitions/NodeRequirements'
+          type: array
+          items:
+            $ref: '#/definitions/Requirement'
       responses:
         202:
           description: ACCEPTED
