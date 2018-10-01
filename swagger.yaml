@@ -205,17 +205,7 @@ definitions:
         type: string
         enum: ["KAIROS_DB","INFLUX"]
       configuration:
-        type: array
-        items:
-          $ref: '#/definitions/DataSinkConfiguration'
-
-  DataSinkConfiguration:
-    type: object
-    properties:
-      key:
-        type: string
-      value:
-        type: string
+        $ref: '#/definitions/Map'
 
   DockerInterface:
     type: object
