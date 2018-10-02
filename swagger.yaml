@@ -1611,7 +1611,7 @@ paths:
       - matchmaking
       description: 'Solves a matchmaking problem'
       parameters:
-      - name: matchmakingRequest
+      - name: nodeRequirements
         in: body
         description: 'The requirements with respect to nodes'
         required: true
