@@ -2278,9 +2278,7 @@ paths:
         description: 'Node Request'
         required: true
         schema:
-          type: array
-          items:
-            $ref: '#/definitions/NodeRequirements'
+          $ref: '#/definitions/NodeRequirements'
       responses:
         202:
           description: ACCEPTED
