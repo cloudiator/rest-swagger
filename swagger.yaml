@@ -637,7 +637,7 @@ definitions:
         type: string
         description: "The private key for login"
 
-  MatchmakingRequest:
+  NodeRequirements:
     type: object
     description: |
       Issues a request to the matchmaking component
@@ -648,16 +648,6 @@ definitions:
           $ref: '#/definitions/Requirement'
       optimization:
         $ref: '#/definitions/Optimization'
-
-  MatchmakingResponse:
-    type: object
-    description: |
-      Represents a response to a matchmaking request
-    properties:
-      nodes:
-        type: array
-        items:
-          $ref: '#/definitions/NodeCandidate'
 
   MonitorNew:
     type: object
@@ -1623,15 +1613,17 @@ paths:
       parameters:
       - name: matchmakingRequest
         in: body
-        description: 'The matchmaking request to solve'
+        description: 'The requirements with respect to nodes'
         required: true
         schema:
-          $ref: '#/definitions/MatchmakingRequest'
+          $ref: '#/definitions/NodeRequirements'
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/MatchmakingResponse'
+            type: array
+            items:
+              $ref: '#/definitions/NodeCandidate'
 
   /installer:
     post:
@@ -2288,7 +2280,7 @@ paths:
         schema:
           type: array
           items:
-            $ref: '#/definitions/Requirement'
+            $ref: '#/definitions/NodeRequirements'
       responses:
         202:
           description: ACCEPTED
