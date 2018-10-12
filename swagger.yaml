@@ -2171,6 +2171,23 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Queue'
+
+  /schedule/{id}:
+    get:
+      consumes: []
+      operationId: findSchedule
+      tags:
+        - job
+      parameters:
+        - $ref: '#/parameters/id'
+      description: |
+        Retrieves the schedule identified by parameter id.
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Schedule'
+
   /process:
     get:
       consumes: []
