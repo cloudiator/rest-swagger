@@ -1393,12 +1393,7 @@ definitions:
   Tool:
     description: a Cloudiator tool to be installed on a node
     type: string
-    enum:
-    - DOCKER
-    - KAIROSDB
-    - LANCE
-    - VISOR
-    - AXE
+    enum: ["DOCKER","KAIROSDB", "LANCE", "VISOR", "AXE", "SPARK_WORKER"]
 
   User:
     type: object
