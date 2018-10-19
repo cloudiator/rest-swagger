@@ -58,6 +58,12 @@ parameters:
     description: (Optional) Unique identifier to filter a specific cloud
     required: false
     type: string
+  metric:
+    name: metric
+    in: path
+    description: Unique identifier of a monitor
+    required: true
+    type: string
 
 
 ################################################################################
@@ -649,8 +655,10 @@ definitions:
       optimization:
         $ref: '#/definitions/Optimization'
 
-  MonitorNew:
+  Monitor:
     type: object
+    required:
+      - metric
     properties:
       metric:
         description: "Name of the collected metric"
@@ -669,14 +677,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/MonitoringTag'
-
-  Monitor:
-    type: object
-    allOf:
-    - $ref: '#/definitions/MonitorNew'
-    - properties:
-        id:
-          type: string
 
   MonitoringTarget:
     type: object
@@ -2004,29 +2004,29 @@ paths:
       description: |
         Creates a monitor
       parameters:
-      - name: monitor
-        in: body
-        description: |
-          Monitor to be created
-        required: true
-        schema:
-          $ref: '#/definitions/MonitorNew'
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be created
+          required: true
+          schema:
+            $ref: '#/definitions/Monitor'
       responses:
         200:
           description: |
             OK
           schema:
             $ref: '#/definitions/Monitor'
-  /monitors/{id}:
+  /monitors/{metric}:
     get:
       consumes: []
       operationId: getMonitor
       tags:
       - monitoring
       description: |
-        Retrieves the monitor with the given id parameter
+        Retrieves the monitor with the given metric name
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
@@ -2040,9 +2040,9 @@ paths:
       tags:
       - monitoring
       description: |
-        Deletes the monitor identified by the given id paramater.
+        Deletes the monitor identified by the given metric name.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
