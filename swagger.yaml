@@ -655,10 +655,18 @@ definitions:
       optimization:
         $ref: '#/definitions/Optimization'
 
+  NodeRequest:
+    type: object
+    properties:
+      groupName:
+        type: string
+      requirements:
+        $ref: '#/definitions/NodeRequirements'
+
   Monitor:
     type: object
     required:
-      - metric
+    - metric
     properties:
       metric:
         description: "Name of the collected metric"
@@ -2006,13 +2014,13 @@ paths:
       description: |
         Creates a monitor
       parameters:
-        - name: monitor
-          in: body
-          description: |
-            Monitor to be created
-          required: true
-          schema:
-            $ref: '#/definitions/Monitor'
+      - name: monitor
+        in: body
+        description: |
+          Monitor to be created
+        required: true
+        schema:
+          $ref: '#/definitions/Monitor'
       responses:
         200:
           description: |
@@ -2028,7 +2036,7 @@ paths:
       description: |
         Retrieves the monitor with the given metric name
       parameters:
-        - $ref: '#/parameters/metric'
+      - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
@@ -2044,7 +2052,7 @@ paths:
       description: |
         Deletes the monitor identified by the given metric name.
       parameters:
-        - $ref: '#/parameters/metric'
+      - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
@@ -2319,12 +2327,7 @@ paths:
         description: 'Node Request'
         required: true
         schema:
-          type: object
-          properties:
-            groupName:
-              type: string
-            requirements:
-              $ref: '#/definitions/NodeRequirements'
+          $ref: '#/definitions/NodeRequest'
       responses:
         202:
           description: ACCEPTED
