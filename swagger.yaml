@@ -886,6 +886,8 @@ definitions:
     description: A node creatable by the system
     type: object
     properties:
+      id:
+        type: string
       price:
         type: number
         format: double
