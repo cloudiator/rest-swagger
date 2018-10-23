@@ -2319,6 +2319,7 @@ paths:
         description: 'Node Request'
         required: true
         schema:
+          type: object
           properties:
             groupName:
               type: string
