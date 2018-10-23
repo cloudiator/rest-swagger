@@ -2322,7 +2322,7 @@ paths:
       - node
       description: 'Create a new node request'
       parameters:
-      - name: nodeRequirements
+      - name: nodeRequest
         in: body
         description: 'Node Request'
         required: true
