@@ -2319,7 +2319,11 @@ paths:
         description: 'Node Request'
         required: true
         schema:
-          $ref: '#/definitions/NodeRequirements'
+          properties:
+            groupName:
+              type: string
+            requirements:
+              $ref: '#/definitions/NodeRequirements'
       responses:
         202:
           description: ACCEPTED
