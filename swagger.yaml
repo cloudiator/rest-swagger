@@ -657,11 +657,20 @@ definitions:
 
   NodeRequest:
     type: object
+    description: |
+      A request to start a node. May either contain requirements or a candidate. If requirements are
+      passed, the matchmaking logic is used to derive the most suitable node candidate otherwise the
+      given node candidate is used. If a node candidate is given, this one will be always prefered
+      above the requirements.
     properties:
       groupName:
+        description: |
+          An (optional) name for all nodes starting in this group
         type: string
       requirements:
         $ref: '#/definitions/NodeRequirements'
+      nodeCandidate:
+        $ref: '#/definitions/NodeCandidate'
 
   Monitor:
     type: object
