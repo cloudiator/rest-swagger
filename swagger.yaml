@@ -1227,6 +1227,9 @@ definitions:
         description: "Unique identifier for the queued task"
       status:
         $ref: '#/definitions/QueueStatus'
+      diagnosis:
+        type: string
+        description: "Gives human-readable feedback"
       location:
         type: string
         description: "Location of the original entity"
