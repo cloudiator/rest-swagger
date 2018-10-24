@@ -2372,6 +2372,20 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Node'
+    delete:
+      consumes: []
+      description: 'Deletes the node with the given id.'
+      operationId: deleteNode
+      tags:
+      - node
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        202:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Queue'
 
   /nodeGroup:
     get:
