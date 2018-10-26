@@ -298,7 +298,7 @@ definitions:
               $ref: '#/definitions/Trigger'
           timeout:
             description: |
-              Allowed time in seconds for funtion to finish its task.
+              Allowed time in seconds for function to finish its task.
             type: integer
             format: int32
             default: 6
@@ -318,8 +318,27 @@ definitions:
       sourceCodeUrl: "https://www.example.com/sourceCode.zip"
       handler: "file.functionIdentifier"
       runtime: "nodejs6.10"
-      timeout: 600
+      timeout: 900
       memory: 1024
+
+  Function:
+    type: object
+    properties:
+      id:
+        type: string
+      cloudId:
+        type: string
+      locationId:
+        type: string
+      memory:
+        description: |
+          Memory (in megabytes) available to function.
+          CPU is allocated proportionally.
+        type: integer
+        format: int32
+        default: 1024
+        minimum: 128
+        maximum: 3008
 
   GeoLocation:
     description: |
@@ -942,6 +961,7 @@ definitions:
         - VM
         - BYON
         - CONTAINER
+        - FAAS
       ipAddresses:
         type: array
         items:
@@ -973,6 +993,11 @@ definitions:
     properties:
       id:
         type: string
+      nodeCandidateType:
+        type: string
+        enum:
+        - IAAS
+        - FAAS
       price:
         type: number
         format: double
@@ -984,6 +1009,21 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
+      pricePerInvocation:
+        type: number
+        format: double
+      memoryPrice:
+        type: number
+        format: double
+      environment:
+        $ref: '#/definitions/Environment'
+
+  Environment:
+    description: Node candidate environment
+    type: object
+    properties:
+      runtime:
+        $ref: '#/definitions/Runtime'
 
   OCLOptimization:
     type: object
@@ -1283,6 +1323,17 @@ definitions:
           description: "The interval at which the sensor is executed"
           $ref: '#/definitions/Interval'
 
+  Runtime:
+    description: |
+      Represents runtime provided by a FaaS platform.
+    type: string
+    enum:
+      - nodejs
+      - python
+      - java
+      - dotnet
+      - go
+      
   Queue:
     description: |
       Represents a queued task within the system. Used to execute long running requests.
