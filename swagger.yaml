@@ -753,11 +753,20 @@ definitions:
 
   NodeRequest:
     type: object
+    description: |
+      A request to start a node. May either contain requirements or a candidate. If requirements are
+      passed, the matchmaking logic is used to derive the most suitable node candidate otherwise the
+      given node candidate is used. If a node candidate is given, this one will be always prefered
+      above the requirements.
     properties:
       groupName:
+        description: |
+          An (optional) name for all nodes starting in this group
         type: string
       requirements:
         $ref: '#/definitions/NodeRequirements'
+      nodeCandidate:
+        $ref: '#/definitions/NodeCandidate'
 
   Monitor:
     type: object
@@ -951,6 +960,8 @@ definitions:
     type: object
     properties:
       nodeId:
+        type: string
+      name:
         type: string
       loginCredential:
         $ref: '#/definitions/LoginCredential'
@@ -1344,6 +1355,9 @@ definitions:
         description: "Unique identifier for the queued task"
       status:
         $ref: '#/definitions/QueueStatus'
+      diagnosis:
+        type: string
+        description: "Gives human-readable feedback"
       location:
         type: string
         description: "Location of the original entity"
@@ -1531,7 +1545,7 @@ definitions:
   Tool:
     description: a Cloudiator tool to be installed on a node
     type: string
-    enum: ["DOCKER","KAIROSDB", "LANCE", "VISOR", "AXE", "SPARK_WORKER"]
+    enum: ["DOCKER","KAIROSDB", "LANCE", "VISOR", "AXE", "SPARK_WORKER", "DLMS_AGENT", "ALLUXIO_CLIENT"]
 
   Trigger:
     description: |
@@ -2502,6 +2516,20 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Node'
+    delete:
+      consumes: []
+      description: 'Deletes the node with the given id.'
+      operationId: deleteNode
+      tags:
+      - node
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        202:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Queue'
 
   /nodeGroup:
     get:
