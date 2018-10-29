@@ -1009,6 +1009,8 @@ definitions:
         enum:
         - IAAS
         - FAAS
+        - PAAS
+        - BYON
       price:
         type: number
         format: double
