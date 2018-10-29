@@ -2257,7 +2257,7 @@ paths:
       tags:
       - job
       description: |
-        Finds the job corresponding to the given id and parameters.
+        Finds the process corresponding to the given id.
       parameters:
       - $ref: '#/parameters/id'
       responses:
@@ -2265,6 +2265,22 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Process'
+
+    delete:
+      consumes: []
+      operationId: deleteProcess
+      tags:
+        - job
+      description: |
+        Deletes the process corresponding to the given id.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        202:
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/Queue'
+
 
   # Long Running Request related paths
   /queue:
