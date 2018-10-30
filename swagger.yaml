@@ -313,6 +313,10 @@ definitions:
             default: 1024
             minimum: 128
             maximum: 3008
+          functionEnvironment:
+            description: |
+              Environment variables passed to function.
+            $ref: '#/definitions/Map'
     example:
       name: "functionName"
       sourceCodeUrl: "https://www.example.com/sourceCode.zip"
