@@ -2270,11 +2270,11 @@ paths:
       consumes: []
       operationId: deleteProcess
       tags:
-        - job
+      - job
       description: |
         Deletes the process corresponding to the given id.
       parameters:
-        - $ref: '#/parameters/id'
+      - $ref: '#/parameters/id'
       responses:
         202:
           description: ACCEPTED
@@ -2981,4 +2981,23 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  #YAML related paths
+  /yaml:
+    post:
+      consumes:
+      - application/yaml
+      operationId: parseYAML
+      parameters:
+      - name: yaml
+        in: body
+        description: YAML payload
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: 'ACCEPTED'
+
+
 
