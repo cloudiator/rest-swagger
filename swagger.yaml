@@ -2997,7 +2997,10 @@ paths:
           type: string
       responses:
         202:
-          description: 'ACCEPTED'
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/Queue'
+
 
 
 
