@@ -2156,6 +2156,23 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
 
+  /jobs/{id}/graph:
+    get:
+      consumes: []
+      description: |
+        Returns a json graph representation usable by cyctoscape.js
+      operationId: jobGraph
+      tags:
+      - job
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            See js.cyctoscape.org
+          schema:
+            type: object
+
   /schedule:
     get:
       consumes: []
@@ -2988,7 +3005,7 @@ paths:
       consumes:
       - application/yaml
       tags:
-        - yaml
+      - yaml
       operationId: parseYAML
       parameters:
       - name: yaml
