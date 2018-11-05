@@ -2987,6 +2987,8 @@ paths:
     post:
       consumes:
       - application/yaml
+      tags:
+        - yaml
       operationId: parseYAML
       parameters:
       - name: yaml
@@ -2996,10 +2998,10 @@ paths:
         schema:
           type: string
       responses:
-        202:
-          description: ACCEPTED
+        200:
+          description: OK
           schema:
-            $ref: '#/definitions/Queue'
+            $ref: '#/definitions/Job'
 
 
 
