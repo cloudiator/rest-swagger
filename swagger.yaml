@@ -1177,11 +1177,15 @@ definitions:
     type: object
     required:
     - id
+    - type
     allOf:
     - $ref: '#/definitions/ProcessNew'
     - properties:
         id:
           type: string
+        type:
+          type: string
+          enum: ["LANCE","SPARK"]
 
   ProcessGroup:
     type: object
