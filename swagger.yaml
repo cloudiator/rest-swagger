@@ -1234,6 +1234,12 @@ definitions:
         description: "Unique identifier for the queued task"
       status:
         $ref: '#/definitions/QueueStatus'
+      start:
+        type: string
+        format: 'date-time'
+      end:
+        type: string
+        format: 'date-time'
       diagnosis:
         type: string
         description: "Gives human-readable feedback"
