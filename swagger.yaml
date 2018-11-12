@@ -156,6 +156,7 @@ definitions:
     type: object
     required:
     - id
+    - state
     allOf:
     - $ref: '#/definitions/NewCloud'
     - properties:
