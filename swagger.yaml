@@ -2198,7 +2198,7 @@ paths:
       consumes: []
       operationId: getSchedules
       tags:
-      - job
+      - process
       description: |
         Retrieves all schedules by the current user.
       responses:
@@ -2211,7 +2211,7 @@ paths:
     post:
       operationId: addSchedule
       tags:
-      - job
+      - process
       description: |
         Creates a new schedule
       parameters:
@@ -2233,7 +2233,7 @@ paths:
       consumes: []
       operationId: findSchedule
       tags:
-      - job
+      - process
       parameters:
       - $ref: '#/parameters/id'
       description: |
@@ -2243,13 +2243,27 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Schedule'
+    delete:
+      consumes: []
+      operationId: deleteSchedule
+      tags:
+      - job
+      parameters:
+      - $ref: '#/parameters/id'
+      description: |
+        Deletes the schedule identified by the given id and all corresponding processes and nodes.
+      responses:
+        202:
+          description: "ACCEPTED"
+          schema:
+            $ref: '#/definitions/Queue'
 
   /process:
     get:
       consumes: []
       operationId: getProcesses
       tags:
-      - job
+      - process
       description: |
         Retrieves all process of the current user matching the parameters.
       parameters:
@@ -2270,7 +2284,7 @@ paths:
     post:
       operationId: createProcess
       tags:
-      - job
+      - process
       description: |
         Creates a new process
       parameters:
@@ -2292,7 +2306,7 @@ paths:
       consumes: []
       operationId: findProcess
       tags:
-      - job
+      - process
       description: |
         Finds the process corresponding to the given id.
       parameters:
@@ -2307,7 +2321,7 @@ paths:
       consumes: []
       operationId: deleteProcess
       tags:
-      - job
+      - process
       description: |
         Deletes the process corresponding to the given id.
       parameters:
