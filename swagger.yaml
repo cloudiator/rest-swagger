@@ -962,8 +962,6 @@ definitions:
       Represents the operating system of an image
     type: object
     properties:
-      operatingSystemType:
-        $ref: '#/definitions/OperatingSystemType'
       operatingSystemFamily:
         $ref: '#/definitions/OperatingSystemFamily'
       operatingSystemArchitecture:
