@@ -156,6 +156,7 @@ definitions:
     type: object
     required:
     - id
+    - state
     allOf:
     - $ref: '#/definitions/NewCloud'
     - properties:
@@ -163,6 +164,13 @@ definitions:
           example: "1a79a4d60de6718e8e5b326e338ae533"
           type: string
           description: Unique identifier for the cloud
+        state:
+          type: string
+          enum: ['OK','ERROR']
+          description: State of the cloud
+        diagnostic:
+          type: string
+          description: Diagnostic information for the cloud
 
   CloudConfiguration:
     description: |
@@ -969,6 +977,9 @@ definitions:
         type: string
       name:
         type: string
+      state:
+        type: string
+        enum: ['OK','ERROR']
       loginCredential:
         $ref: '#/definitions/LoginCredential'
       nodeType:
@@ -990,6 +1001,8 @@ definitions:
     description: attributes defining a node
     type: object
     properties:
+      providerId:
+        type: string
       numberOfCores:
         type: integer
         format: int32
@@ -1077,8 +1090,6 @@ definitions:
       Represents the operating system of an image
     type: object
     properties:
-      operatingSystemType:
-        $ref: '#/definitions/OperatingSystemType'
       operatingSystemFamily:
         $ref: '#/definitions/OperatingSystemFamily'
       operatingSystemArchitecture:
@@ -1294,11 +1305,15 @@ definitions:
     type: object
     required:
     - id
+    - type
     allOf:
     - $ref: '#/definitions/ProcessNew'
     - properties:
         id:
           type: string
+        type:
+          type: string
+          enum: ["LANCE","SPARK"]
 
   ProcessGroup:
     type: object
@@ -1363,6 +1378,12 @@ definitions:
         description: "Unique identifier for the queued task"
       status:
         $ref: '#/definitions/QueueStatus'
+      start:
+        type: string
+        format: 'date-time'
+      end:
+        type: string
+        format: 'date-time'
       diagnosis:
         type: string
         description: "Gives human-readable feedback"
@@ -2305,12 +2326,29 @@ paths:
         504:
           $ref: '#/responses/504GatewayTimeout'
 
+  /jobs/{id}/graph:
+    get:
+      consumes: []
+      description: |
+        Returns a json graph representation usable by cyctoscape.js
+      operationId: jobGraph
+      tags:
+      - job
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            See js.cyctoscape.org
+          schema:
+            type: object
+
   /schedule:
     get:
       consumes: []
       operationId: getSchedules
       tags:
-      - job
+      - process
       description: |
         Retrieves all schedules by the current user.
       responses:
@@ -2323,7 +2361,7 @@ paths:
     post:
       operationId: addSchedule
       tags:
-      - job
+      - process
       description: |
         Creates a new schedule
       parameters:
@@ -2345,7 +2383,7 @@ paths:
       consumes: []
       operationId: findSchedule
       tags:
-      - job
+      - process
       parameters:
       - $ref: '#/parameters/id'
       description: |
@@ -2355,13 +2393,27 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Schedule'
+    delete:
+      consumes: []
+      operationId: deleteSchedule
+      tags:
+      - job
+      parameters:
+      - $ref: '#/parameters/id'
+      description: |
+        Deletes the schedule identified by the given id and all corresponding processes and nodes.
+      responses:
+        202:
+          description: "ACCEPTED"
+          schema:
+            $ref: '#/definitions/Queue'
 
   /process:
     get:
       consumes: []
       operationId: getProcesses
       tags:
-      - job
+      - process
       description: |
         Retrieves all process of the current user matching the parameters.
       parameters:
@@ -2382,7 +2434,7 @@ paths:
     post:
       operationId: createProcess
       tags:
-      - job
+      - process
       description: |
         Creates a new process
       parameters:
@@ -2404,9 +2456,9 @@ paths:
       consumes: []
       operationId: findProcess
       tags:
-      - job
+      - process
       description: |
-        Finds the job corresponding to the given id and parameters.
+        Finds the process corresponding to the given id.
       parameters:
       - $ref: '#/parameters/id'
       responses:
@@ -2414,6 +2466,22 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Process'
+
+    delete:
+      consumes: []
+      operationId: deleteProcess
+      tags:
+      - process
+      description: |
+        Deletes the process corresponding to the given id.
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        202:
+          description: ACCEPTED
+          schema:
+            $ref: '#/definitions/Queue'
+
 
   # Long Running Request related paths
   /queue:
@@ -3143,4 +3211,28 @@ paths:
           $ref: '#/responses/500ErrorResponse'
         504:
           $ref: '#/responses/504GatewayTimeout'
+
+  #YAML related paths
+  /yaml:
+    post:
+      consumes:
+      - application/yaml
+      tags:
+      - yaml
+      operationId: parseYAML
+      parameters:
+      - name: yaml
+        in: body
+        description: YAML payload
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Job'
+
+
+
 
