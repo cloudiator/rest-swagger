@@ -343,6 +343,8 @@ definitions:
         default: 1024
         minimum: 128
         maximum: 3008
+      stackId:
+        type: string
 
   GeoLocation:
     description: |
@@ -2660,6 +2662,35 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/VirtualMachine'
+
+  # Function related tasks
+  /function:
+    get:
+      operationId: findFunctions
+      tags:
+      - cloud
+      description: "Finds all functions the user has access to"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Function'
+
+  /function/{id}:
+    get:
+      operationId: getFunction
+      tags:
+      - cloud
+      description: "Finds the function identified by the given id parameter"
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Function'
 
   # encryption related paths
   /encryption/{text}:
