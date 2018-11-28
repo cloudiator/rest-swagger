@@ -269,6 +269,91 @@ definitions:
         type: string
         example: 'Not found'
 
+  FaasInterface:
+    description: |
+      Part of a Task.
+      Represents one function.
+    type: object
+    required:
+     - functionName
+     - sourceCodeUrl
+     - handler
+     - runtime
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          functionName:
+            description: |
+              Unique name of the function.
+            type: string
+          sourceCodeUrl:
+            description: |
+              URL path to ZIP artifact.
+            type: string
+          handler:
+            description: |
+              function in the code to be invoked.
+            type: string
+          runtime:
+            description: |
+              Code language.
+            type: string
+          triggers:
+            description: |
+              Events on which function will be invoked.
+            type: array
+            items:
+              $ref: '#/definitions/Trigger'
+          timeout:
+            description: |
+              Allowed time in seconds for function to finish its task.
+            type: integer
+            format: int32
+            default: 6
+            minimum: 1
+            maximum: 600
+          memory:
+            description: |
+              Memory (in megabytes) available to function.
+              CPU is allocated proportionally.
+            type: integer
+            format: int32
+            default: 1024
+            minimum: 128
+            maximum: 3008
+          functionEnvironment:
+            description: |
+              Environment variables passed to function.
+            $ref: '#/definitions/Map'
+    example:
+      name: "functionName"
+      sourceCodeUrl: "https://www.example.com/sourceCode.zip"
+      handler: "file.functionIdentifier"
+      runtime: "nodejs6.10"
+      timeout: 900
+      memory: 1024
+
+  Function:
+    type: object
+    properties:
+      id:
+        type: string
+      cloudId:
+        type: string
+      locationId:
+        type: string
+      memory:
+        description: |
+          Memory (in megabytes) available to function.
+          CPU is allocated proportionally.
+        type: integer
+        format: int32
+        default: 1024
+        minimum: 128
+        maximum: 3008
+      stackId:
+        type: string
+
   GeoLocation:
     description: |
       Part of Location
@@ -335,6 +420,23 @@ definitions:
         example: 100
       location:
         $ref: '#/definitions/Location'
+
+  HttpTrigger:
+    description: |
+      Subtype of Trigger.
+      Represents a HTTP request which will trigger a function.
+    type: object
+    allOf:
+      - $ref: '#/definitions/Trigger'
+      - properties:
+          httpPath:
+            type: string
+          httpMethod:
+            type: string
+    example:
+      type: "HttpTrigger"
+      httpPath: "path/to/resource"
+      httpMethod: "GET"
 
   IdentifierRequirement:
     type: object
@@ -887,6 +989,7 @@ definitions:
         - VM
         - BYON
         - CONTAINER
+        - FAAS
       ipAddresses:
         type: array
         items:
@@ -920,6 +1023,13 @@ definitions:
     properties:
       id:
         type: string
+      nodeCandidateType:
+        type: string
+        enum:
+        - IAAS
+        - FAAS
+        - PAAS
+        - BYON
       price:
         type: number
         format: double
@@ -931,6 +1041,21 @@ definitions:
         $ref: '#/definitions/Hardware'
       location:
         $ref: '#/definitions/Location'
+      pricePerInvocation:
+        type: number
+        format: double
+      memoryPrice:
+        type: number
+        format: double
+      environment:
+        $ref: '#/definitions/Environment'
+
+  Environment:
+    description: Node candidate environment
+    type: object
+    properties:
+      runtime:
+        $ref: '#/definitions/Runtime'
 
   OCLOptimization:
     type: object
@@ -1232,6 +1357,17 @@ definitions:
           description: "The interval at which the sensor is executed"
           $ref: '#/definitions/Interval'
 
+  Runtime:
+    description: |
+      Represents runtime provided by a FaaS platform.
+    type: string
+    enum:
+      - nodejs
+      - python
+      - java
+      - dotnet
+      - go
+      
   Queue:
     description: |
       Represents a queued task within the system. Used to execute long running requests.
@@ -1439,6 +1575,19 @@ definitions:
     description: a Cloudiator tool to be installed on a node
     type: string
     enum: ["DOCKER","KAIROSDB", "LANCE", "VISOR", "AXE", "SPARK_WORKER", "DLMS_AGENT", "ALLUXIO_CLIENT"]
+
+  Trigger:
+    description: |
+      Represents an event that triggers a function.
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        description: |
+          Discriminator for polymorphism.
 
   User:
     type: object
@@ -2581,6 +2730,35 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/VirtualMachine'
+
+  # Function related tasks
+  /function:
+    get:
+      operationId: findFunctions
+      tags:
+      - cloud
+      description: "Finds all functions the user has access to"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Function'
+
+  /function/{id}:
+    get:
+      operationId: getFunction
+      tags:
+      - cloud
+      description: "Finds the function identified by the given id parameter"
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Function'
 
   # encryption related paths
   /encryption/{text}:
