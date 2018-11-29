@@ -1164,7 +1164,7 @@ definitions:
     required:
     - schedule
     - task
-    - node
+    - nodeGroup
     properties:
       schedule:
         type: string
@@ -1172,9 +1172,9 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-      node:
+      nodeGroup:
         type: string
-        description: "Tne id of the node this process is hosted on."
+        description: "The id of the nodeGroup this process is hosted on."
 
   Process:
     type: object
@@ -2332,6 +2332,52 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Queue'
+            
+            
+  /processGroup:
+    get:
+      consumes: []
+      operationId: findProcessGroups
+      tags:
+      - process
+      description: "Returns all process groups for the current user"
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProcessGroup'
+
+
+  /processGroup/{id}:
+    get:
+      consumes: []
+      operationId: getProcessGroup
+      tags:
+      - node
+      description: 'Retrieves a process group, which groups multiple processes that were create during one request'
+      parameters:
+      - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/ProcessGroup'
+        400:
+          $ref: '#/responses/400BadRequestResponse'
+        401:
+          $ref: '#/responses/401UnauthorizedResponse'
+        403:
+          $ref: '#/responses/403ForbiddenResponse'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+        504:
+          $ref: '#/responses/504GatewayTimeout'          
 
 
   # Long Running Request related paths
