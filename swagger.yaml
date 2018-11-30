@@ -1303,36 +1303,40 @@ definitions:
 
   SingleProcess:
     type: object
-    required:
-      - node
     allOf:
     - $ref: '#/definitions/Process'
-    properties:
+    - properties:
         node:
           type: string
-          description: "The id of the node this process is hosted on."  
+          description: "The id of the node this process is hosted on."
+      required:
+        - node    
           
   ClusterProcess:
     type: object
-    required:
-      - nodeGroup
     allOf:
     - $ref: '#/definitions/Process'
-    properties:
+    - properties:
         nodeGroup:
           type: string
           description: "The id of the nodeGroup this process is hosted on."   
+      required:
+        - nodeGroup    
   
   Process:
     type: object
+    discriminator: processType
     required:
     - id
+    - processType
     - type
     - schedule
     - task
     properties:
       id:
         type: string
+      processType:
+        type: string  
       type:
         type: string
         enum: ["LANCE","SPARK"]
