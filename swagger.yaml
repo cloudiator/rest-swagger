@@ -1301,19 +1301,50 @@ definitions:
         type: string
         description: "The id of the nodeGroup this process is hosted on."
 
+  SingleProcess:
+    type: object
+    required:
+      - node
+    allOf:
+    - $ref: '#/definitions/Process'
+    properties:
+        node:
+          type: string
+          description: "The id of the node this process is hosted on."  
+          
+  ClusterProcess:
+    type: object
+    required:
+      - nodeGroup
+    allOf:
+    - $ref: '#/definitions/Process'
+    properties:
+        nodeGroup:
+          type: string
+          description: "The id of the nodeGroup this process is hosted on."   
+  
   Process:
     type: object
     required:
     - id
     - type
-    allOf:
-    - $ref: '#/definitions/ProcessNew'
-    - properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum: ["LANCE","SPARK"]
+    - schedule
+    - task
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum: ["LANCE","SPARK"]
+      schedule:
+        type: string
+        description: "The id of the schedule this process belongs to."
+      task:
+        type: string
+        description: "The id of the task that is instantiated by this process."  
+    
+          
+          
 
   ProcessGroup:
     type: object
