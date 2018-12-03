@@ -1283,7 +1283,7 @@ definitions:
       updateAction: "./mediawiki-tutorial/scripts/lance/haproxy.sh configure"
       isMandatory: true
 
-  ProcessNew:
+  CloudiatorProcessNew:
     type: object
     description: "A process represents a task running on a node"
     required:
@@ -1304,7 +1304,7 @@ definitions:
   SingleProcess:
     type: object
     allOf:
-    - $ref: '#/definitions/Process'
+    - $ref: '#/definitions/CloudiatorProcess'
     - properties:
         node:
           type: string
@@ -1315,7 +1315,7 @@ definitions:
   ClusterProcess:
     type: object
     allOf:
-    - $ref: '#/definitions/Process'
+    - $ref: '#/definitions/CloudiatorProcess'
     - properties:
         nodeGroup:
           type: string
@@ -1323,7 +1323,7 @@ definitions:
       required:
         - nodeGroup    
   
-  Process:
+  CloudiatorProcess:
     type: object
     discriminator: processType
     required:
@@ -1363,7 +1363,7 @@ definitions:
       processes:
         type: array
         items:
-          $ref: '#/definitions/Process'
+          $ref: '#/definitions/CloudiatorProcess'
 
 
   PushSensor:
@@ -1478,7 +1478,7 @@ definitions:
         processes:
           type: array
           items:
-            $ref: '#/definitions/Process'
+            $ref: '#/definitions/CloudiatorProcess'
 
   Sensor:
     type: object
@@ -2465,7 +2465,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Process'
+              $ref: '#/definitions/CloudiatorProcess'
 
     post:
       operationId: createProcess
@@ -2480,7 +2480,7 @@ paths:
           Process to be created
         required: true
         schema:
-          $ref: '#/definitions/ProcessNew'
+          $ref: '#/definitions/CloudiatorProcessNew'
       responses:
         202:
           description: ACCEPTED
@@ -2501,7 +2501,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: '#/definitions/Process'
+            $ref: '#/definitions/CloudiatorProcess'
 
     delete:
       consumes: []
