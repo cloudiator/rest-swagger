@@ -2275,6 +2275,27 @@ paths:
       responses:
         200:
           description: "OK"
+    put:
+      operationId: updateMonitor
+      tags:
+      - monitoring
+      description: |
+        Updating a monitor
+      parameters:
+        - $ref: '#/parameters/metric'
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be updated
+          required: true
+          schema:
+           $ref: '#/definitions/Monitor'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Monitor'
 
 
   # Jobs related paths
