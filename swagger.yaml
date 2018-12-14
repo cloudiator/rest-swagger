@@ -294,10 +294,6 @@ definitions:
             description: |
               function in the code to be invoked.
             type: string
-          runtime:
-            description: |
-              Code language.
-            type: string
           triggers:
             description: |
               Events on which function will be invoked.
@@ -311,16 +307,6 @@ definitions:
             format: int32
             default: 6
             minimum: 1
-            maximum: 600
-          memory:
-            description: |
-              Memory (in megabytes) available to function.
-              CPU is allocated proportionally.
-            type: integer
-            format: int32
-            default: 1024
-            minimum: 128
-            maximum: 3008
           functionEnvironment:
             description: |
               Environment variables passed to function.
@@ -329,9 +315,7 @@ definitions:
       name: "functionName"
       sourceCodeUrl: "https://www.example.com/sourceCode.zip"
       handler: "file.functionIdentifier"
-      runtime: "nodejs6.10"
       timeout: 900
-      memory: 1024
 
   Function:
     type: object
@@ -343,14 +327,10 @@ definitions:
       locationId:
         type: string
       memory:
-        description: |
-          Memory (in megabytes) available to function.
-          CPU is allocated proportionally.
         type: integer
         format: int32
-        default: 1024
-        minimum: 128
-        maximum: 3008
+      runtime:
+        $ref: '#/definitions/Runtime'
       stackId:
         type: string
 
