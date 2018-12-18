@@ -278,7 +278,6 @@ definitions:
      - functionName
      - sourceCodeUrl
      - handler
-     - runtime
     allOf:
       - $ref: '#/definitions/TaskInterface'
       - properties:
