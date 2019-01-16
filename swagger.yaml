@@ -1338,7 +1338,6 @@ definitions:
         type: string
       processType:
         type: string  
-        enum: ["SINGLE","CLUSTER"]
       type:
         type: string
         enum: ["LANCE","SPARK"]
