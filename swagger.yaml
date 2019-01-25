@@ -234,7 +234,7 @@ definitions:
     properties:
       type:
         type: string
-        enum: ["KAIROS_DB","INFLUX"]
+        enum: ["KAIROS_DB","INFLUX", "CLI","JMS"]
       configuration:
         $ref: '#/definitions/Map'
 
