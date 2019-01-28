@@ -15,11 +15,11 @@ info:
     name: Apache License 2.0
     url: https://raw.githubusercontent.com/cloudiator/rest/master/LICENSE
 schemes:
-- http
+  - http
 consumes:
-- application/json
+  - application/json
 produces:
-- application/json
+  - application/json
 
 host: localhost:9000
 
@@ -37,7 +37,7 @@ securityDefinitions:
 
 
 security:
-- ApiKeyAuth: []
+  - ApiKeyAuth: []
 
 
 ################################################################################
@@ -85,8 +85,8 @@ definitions:
       A key - value tuple
     type: object
     required:
-    - key
-    - value
+      - key
+      - value
     properties:
       key:
         type: string
@@ -102,7 +102,7 @@ definitions:
       Represents an API used by a cloud
     type: object
     required:
-    - providerName
+      - providerName
     properties:
       providerName:
         type: string
@@ -113,35 +113,35 @@ definitions:
     type: object
     description: "Refers to the attribute that should be optimized"
     required:
-    - objectiveClass
-    - objectiveAttribute
-    - aggregation
+      - objectiveClass
+      - objectiveAttribute
+      - aggregation
     allOf:
-    - $ref: '#/definitions/Optimization'
-    - properties:
-        objectiveClass:
-          type: string
-        objectiveAttribute:
-          type: string
-        aggregation:
-          type: string
-          enum: ["SUM","AVG"]
+      - $ref: '#/definitions/Optimization'
+      - properties:
+          objectiveClass:
+            type: string
+          objectiveAttribute:
+            type: string
+          aggregation:
+            type: string
+            enum: ["SUM","AVG"]
 
   AttributeRequirement:
     type: object
     description: |
       Subtype of Requirement
     allOf:
-    - $ref: '#/definitions/Requirement'
-    - properties:
-        requirementClass:
-          type: string
-        requirementAttribute:
-          type: string
-        requirementOperator:
-          $ref: '#/definitions/RequirementOperator'
-        value:
-          type: string
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          requirementClass:
+            type: string
+          requirementAttribute:
+            type: string
+          requirementOperator:
+            $ref: '#/definitions/RequirementOperator'
+          value:
+            type: string
     example:
       type: 'AttributeRequirement'
       requirementClass: 'requirementClassExample'
@@ -155,22 +155,26 @@ definitions:
       Representation of a cloud used by Cloudiator
     type: object
     required:
-    - id
-    - state
+      - id
+      - state
     allOf:
-    - $ref: '#/definitions/NewCloud'
-    - properties:
-        id:
-          example: "1a79a4d60de6718e8e5b326e338ae533"
-          type: string
-          description: Unique identifier for the cloud
-        state:
-          type: string
-          enum: ['OK','ERROR']
-          description: State of the cloud
-        diagnostic:
-          type: string
-          description: Diagnostic information for the cloud
+      - $ref: '#/definitions/NewCloud'
+      - properties:
+          id:
+            example: "1a79a4d60de6718e8e5b326e338ae533"
+            type: string
+            description: Unique identifier for the cloud
+          userId:
+            type: string
+            description: |
+              Id of the user owning this cloud.
+          state:
+            type: string
+            enum: ['OK','ERROR']
+            description: State of the cloud
+          diagnostic:
+            type: string
+            description: Diagnostic information for the cloud
 
   CloudConfiguration:
     description: |
@@ -190,8 +194,8 @@ definitions:
       Represents the credentials used to authenticate with a cloud
     type: object
     required:
-    - user
-    - secret
+      - user
+      - secret
     properties:
       user:
         type: string
@@ -243,23 +247,23 @@ definitions:
     description: |
       Subtype of TaskInterface to represent docker containers
     allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        dockerImage:
-          description: |
-            Name of the docker image (should include repository, credentials, tags)
-          type: string
-        environment:
-          description: |
-            A key-value map representing the environment of the docker container
-          $ref: '#/definitions/Map'
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          dockerImage:
+            description: |
+              Name of the docker image (should include repository, credentials, tags)
+            type: string
+          environment:
+            description: |
+              A key-value map representing the environment of the docker container
+            $ref: '#/definitions/Map'
 
   Error:
     description: |
       Basic errorClass
     required:
-    - code
-    - message
+      - code
+      - message
     properties:
       code:
         type: integer
@@ -275,10 +279,10 @@ definitions:
       Represents one function.
     type: object
     required:
-     - functionName
-     - sourceCodeUrl
-     - handler
-     - runtime
+      - functionName
+      - sourceCodeUrl
+      - handler
+      - runtime
     allOf:
       - $ref: '#/definitions/TaskInterface'
       - properties:
@@ -385,11 +389,11 @@ definitions:
       Represents a hardware offer by a cloud
     type: object
     required:
-    - id
-    - name
-    - providerId
-    - cores
-    - ram
+      - id
+      - name
+      - providerId
+      - cores
+      - ram
     properties:
       id:
         description: "Unique identifier for the hardware"
@@ -443,18 +447,18 @@ definitions:
     description: |
       Subtype of Requirement
     required:
-    - hardwareId
-    - locationId
-    - imageId
+      - hardwareId
+      - locationId
+      - imageId
     allOf:
-    - $ref: '#/definitions/Requirement'
-    - properties:
-        hardwareId:
-          type: string
-        locationId:
-          type: string
-        imageId:
-          type: string
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          hardwareId:
+            type: string
+          locationId:
+            type: string
+          imageId:
+            type: string
     example:
       hardwareId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/3"
       locationId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
@@ -466,10 +470,10 @@ definitions:
       Represents an image offer by a cloud
     type: object
     required:
-    - id
-    - name
-    - providerId
-    - operatingSystem
+      - id
+      - name
+      - providerId
+      - operatingSystem
     properties:
       id:
         type: string
@@ -515,8 +519,8 @@ definitions:
   IpAddress:
     type: object
     required:
-    - IpAddressType
-    - IpVersion
+      - IpAddressType
+      - IpVersion
     properties:
       IpAddressType:
         $ref: '#/definitions/IpAddressType'
@@ -540,17 +544,17 @@ definitions:
       group of tasks
     type: object
     allOf:
-    - $ref: '#/definitions/JobNew'
-    - properties:
-        id:
-          type: string
+      - $ref: '#/definitions/JobNew'
+      - properties:
+          id:
+            type: string
 
   JobNew:
     description: |
       Represents a job that should be created in the system.
     type: object
     required:
-    - name
+      - name
     properties:
       name:
         type: string
@@ -575,31 +579,31 @@ definitions:
       Subtype of TaskInterface. Describes how to deploy a Task to Spark.
     type: object
     allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        file:
-          description: |
-            An URI where the executable of the Spark Application can be retrieved.
-            Either a URL pointing to a web endpoint, or a locally available file.
-          type: string
-        className:
-          description: |
-            Optional className of the class containing the main method. Only required for Java.
-          type: string
-        arguments:
-          description: |
-            Array of arguments passed to the application.
-          type: array
-          items:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          file:
+            description: |
+              An URI where the executable of the Spark Application can be retrieved.
+              Either a URL pointing to a web endpoint, or a locally available file.
             type: string
-        sparkArguments:
-          description: |
-            Additional Arguments passed to Spark.
-          $ref: '#/definitions/Map'
-        sparkConfiguration:
-          description: |
-            Spark configuration properties.
-          $ref: '#/definitions/Map'
+          className:
+            description: |
+              Optional className of the class containing the main method. Only required for Java.
+            type: string
+          arguments:
+            description: |
+              Array of arguments passed to the application.
+            type: array
+            items:
+              type: string
+          sparkArguments:
+            description: |
+              Additional Arguments passed to Spark.
+            $ref: '#/definitions/Map'
+          sparkConfiguration:
+            description: |
+              Spark configuration properties.
+            $ref: '#/definitions/Map'
 
   LanceInterface:
     description: |
@@ -607,69 +611,69 @@ definitions:
       Subtype of TaskInterface.
     type: object
     required:
-    - start
+      - start
     allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        containerType:
-          description: |
-            The container type that lance should use.
-            Can be DOCKER to force a docker deployment, NATIVE to force a plain container
-            deployment or BOTH to let the system derive the container type.
-          type: string
-          enum: ["NATIVE", "DOCKER", "BOTH"]
-        init:
-          description: |
-            Initialization action.
-          type: string
-        preInstall:
-          description: |
-            Executed before installation action. Can be e.g. used for downloading binaries.
-          type: string
-        install:
-          description: |
-            Used for installing the application.
-          type: string
-        postInstall:
-          description: |
-            Used for configuration of the application component. First action where Lance environment variables are set.
-          type: string
-        preStart:
-          description: |
-            Called before starting the application. Can be e.g. used for configuration an environment.
-          type: string
-        start:
-          description: |
-            Starts the component. Needs to return for PlainContainer and not return for Docker.
-          type: string
-        startDetection:
-          description: |
-            Detects the start of the application. Required if the application does not start instantianous.
-          type: string
-        stopDetection:
-          description: |
-            Checks if the application has stopped. Is periodically checked to detect a crash of the application.
-          type: string
-        postStart:
-          description: |
-            Executed after the application has successfully started.
-          type: string
-        preStop:
-          description: |
-            Called before the application is stopped.
-          type: string
-        stop:
-          description: |
-            Stops the application.
-          type: string
-        postStop:
-          description: |
-            Executed after the application is successfully stopped.
-          type: string
-        shutdown:
-          description: |
-            Executed before the container is shutdown. Can be used to backup state.
-          type: string
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          containerType:
+            description: |
+              The container type that lance should use.
+              Can be DOCKER to force a docker deployment, NATIVE to force a plain container
+              deployment or BOTH to let the system derive the container type.
+            type: string
+            enum: ["NATIVE", "DOCKER", "BOTH"]
+          init:
+            description: |
+              Initialization action.
+            type: string
+          preInstall:
+            description: |
+              Executed before installation action. Can be e.g. used for downloading binaries.
+            type: string
+          install:
+            description: |
+              Used for installing the application.
+            type: string
+          postInstall:
+            description: |
+              Used for configuration of the application component. First action where Lance environment variables are set.
+            type: string
+          preStart:
+            description: |
+              Called before starting the application. Can be e.g. used for configuration an environment.
+            type: string
+          start:
+            description: |
+              Starts the component. Needs to return for PlainContainer and not return for Docker.
+            type: string
+          startDetection:
+            description: |
+              Detects the start of the application. Required if the application does not start instantianous.
+            type: string
+          stopDetection:
+            description: |
+              Checks if the application has stopped. Is periodically checked to detect a crash of the application.
+            type: string
+          postStart:
+            description: |
+              Executed after the application has successfully started.
+            type: string
+          preStop:
+            description: |
+              Called before the application is stopped.
+            type: string
+          stop:
+            description: |
+              Stops the application.
+            type: string
+          postStop:
+            description: |
+              Executed after the application is successfully stopped.
+            type: string
+          shutdown:
+            description: |
+              Executed before the container is shutdown. Can be used to backup state.
+            type: string
     example:
       name: haproxy
       preInstall: |
@@ -683,11 +687,11 @@ definitions:
       Repesents a (virtual) location offers by a cloud
     type: object
     required:
-    - id
-    - name
-    - providerId
-    - locationScope
-    - isAssignable
+      - id
+      - name
+      - providerId
+      - locationScope
+      - isAssignable
     properties:
       id:
         description: "Unique identifier"
@@ -722,9 +726,9 @@ definitions:
     description: |
       Login information provided by the user to be authorized
     required:
-    - email
-    - tenant
-    - password
+      - email
+      - tenant
+      - password
     properties:
       email:
         description: "EMail address of the user"
@@ -785,7 +789,7 @@ definitions:
   Monitor:
     type: object
     required:
-    - metric
+      - metric
     properties:
       metric:
         description: "Name of the collected metric"
@@ -808,7 +812,7 @@ definitions:
   MonitoringTarget:
     type: object
     required:
-    - type
+      - type
     properties:
       type:
         description: "target to be monitored"
@@ -834,9 +838,9 @@ definitions:
       Represents a new cloud that is to be created
     type: object
     required:
-    - api
-    - credential
-    - cloudType
+      - api
+      - credential
+      - cloudType
     properties:
       endpoint:
         type: string
@@ -856,9 +860,9 @@ definitions:
       Repesents a new PaaS provider to be created
     type: object
     required:
-    - name
-    - api
-    - credential
+      - name
+      - api
+      - credential
     properties:
       name:
         description: "Human-readable name"
@@ -881,9 +885,9 @@ definitions:
       Repesents a PaaS environemnt to run an component
     type: object
     required:
-    - name
-    - platformHardware
-    - platformRuntime
+      - name
+      - platformHardware
+      - platformRuntime
     properties:
       name:
         description: "Human-readable name"
@@ -904,10 +908,10 @@ definitions:
       Represents a hardware configuration for a Platform (not all attributes might be supported for all PaaS providers)
     type: object
     required:
-    - name
-    - cores
-    - ram
-    - disk
+      - name
+      - cores
+      - ram
+      - disk
     properties:
       name:
         description: "Human-readable name for the hardware"
@@ -933,10 +937,10 @@ definitions:
     description: "Represents a runtime for a Platform component, e.g. Java, PHP, Tomcat"
     type: object
     required:
-    - name
-    - language
-    - runtimeType
-    - version
+      - name
+      - language
+      - runtimeType
+      - version
     properties:
       name:
         description: "human readable name"
@@ -962,10 +966,16 @@ definitions:
 
   NodeGroup:
     type: object
+    description: |
+      A logical group of multiple nodes.
     properties:
       id:
         type: string
+        description: |
+          Unique identifier of the node group.
       nodes:
+        description: |
+          An array of multiple nodes belonging to this group.
         type: array
         items:
           $ref: '#/definitions/Node'
@@ -973,49 +983,94 @@ definitions:
   Node:
     type: object
     properties:
-      nodeId:
+      id:
         type: string
+        description: |
+          Unique identifier of this node.
+      originId:
+        type: string
+        description: |
+          Original id of this node. Is present of the node was created e.g. at a cloud provider.
+      userId:
+        type: string
+        description: |
+          User id of the owner of this node.
       name:
         type: string
+        description: |
+          Human-readable name for the node.
       state:
         type: string
         enum: ['OK','ERROR']
+        description: |
+          The state the node is currently in.
       loginCredential:
         $ref: '#/definitions/LoginCredential'
       nodeType:
         type: string
         enum:
-        - UNKNOWN_TYPE
-        - VM
-        - BYON
-        - CONTAINER
-        - FAAS
+          - UNKNOWN_TYPE
+          - VM
+          - BYON
+          - CONTAINER
+          - FAAS
+        description: |
+          The type of this node.
       ipAddresses:
         type: array
         items:
           $ref: '#/definitions/IpAddress'
+        description: |
+          The public/private ip addresses under which this node is reachable.
       nodeProperties:
         $ref: '#/definitions/NodeProperties'
+        description: |
+          Further properties of this node.
+      reason:
+        type: string
+        description: |
+          Reason this node was created
+      diagnostic:
+        type: string
+        description: |
+          Diagnostic information about the node state
+      nodeCandidate:
+        type: string
+        description: |
+          The node candidate this node was created from if applicable.
 
   NodeProperties:
-    description: attributes defining a node
+    description: Attributes defining this node
     type: object
     properties:
       providerId:
         type: string
+        description: |
+          Id of the provider where this node is managed. For virtual machines this e.g.
+          the id of the cloud.
       numberOfCores:
         type: integer
         format: int32
+        description: |
+          Number of cores the node has.
       memory:
         type: integer
         format: int64
+        description: |
+          Amount of RAM this node has (in MB).
       disk:
         type: number
         format: float
+        description: |
+          Amount of disk space this node has (in GB).
       operatingSystem:
         $ref: '#/definitions/OperatingSystem'
+        description: |
+          Operating system of this node.
       geoLocation:
         $ref: '#/definitions/GeoLocation'
+        description: |
+          Geographical location this node resides in.
 
   NodeCandidate:
     description: A node creatable by the system
@@ -1026,10 +1081,10 @@ definitions:
       nodeCandidateType:
         type: string
         enum:
-        - IAAS
-        - FAAS
-        - PAAS
-        - BYON
+          - IAAS
+          - FAAS
+          - PAAS
+          - BYON
       price:
         type: number
         format: double
@@ -1061,26 +1116,26 @@ definitions:
     type: object
     description: "An OCL attribute expression that should be optimized"
     required:
-    - expression
+      - expression
     allOf:
-    - $ref: '#/definitions/Optimization'
-    - properties:
-        expression:
-          description: |
-            The expression that is to be opimized.
-          type: string
+      - $ref: '#/definitions/Optimization'
+      - properties:
+          expression:
+            description: |
+              The expression that is to be opimized.
+            type: string
 
   OclRequirement:
     type: object
     description: |
       Subytpe of Requirement
     required:
-    - constraint
+      - constraint
     allOf:
-    - $ref: '#/definitions/Requirement'
-    - properties:
-        constraint:
-          type: string
+      - $ref: '#/definitions/Requirement'
+      - properties:
+          constraint:
+            type: string
     example:
       constraint: "nodes->forAll(hardware.cores >= 4)"
       type: "OclRequirement"
@@ -1122,7 +1177,7 @@ definitions:
     description: "Superclass for polymorphism, only subtypes are allowed"
     discriminator: type
     required:
-    - type
+      - type
     properties:
       type:
         type: string
@@ -1134,40 +1189,40 @@ definitions:
     description: Representation of a platform used by Cloudiator
     type: object
     required:
-    - id
+      - id
     allOf:
-    - $ref: '#/definitions/NewPlatform'
-    - properties:
-        id:
-          type: string
-          description: Unique identifier for the platform
+      - $ref: '#/definitions/NewPlatform'
+      - properties:
+          id:
+            type: string
+            description: Unique identifier for the platform
 
   PlatformEnvironment:
     description: |
       Repesents a PaaS environemnt to run an component
     type: object
     required:
-    - id
+      - id
     allOf:
-    - $ref: '#/definitions/NewPlatformEnvironment'
-    - properties:
-        id:
-          description: "Unique identifier"
-          type: string
+      - $ref: '#/definitions/NewPlatformEnvironment'
+      - properties:
+          id:
+            description: "Unique identifier"
+            type: string
 
   PlatformHardware:
     description: |
       Repesents a PaaS environemnt to run an component
     type: object
     required:
-    - id
+      - id
     allOf:
-    - $ref: '#/definitions/NewPlatformHardware'
-    - properties:
-        id:
-          description: "Unique identifier for the hardware"
-          type: string
-          example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+      - $ref: '#/definitions/NewPlatformHardware'
+      - properties:
+          id:
+            description: "Unique identifier for the hardware"
+            type: string
+            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
 
   PlatformInterface:
     description: |
@@ -1175,36 +1230,36 @@ definitions:
       Represents a PaaS interface
     type: object
     required:
-    - sourceRepository
+      - sourceRepository
     allOf:
-    - $ref: '#/definitions/TaskInterface'
-    - properties:
-        sourceRepository:
-          description: |
-            URL to the source code repository (currently only git is supported)
-          type: string
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          sourceRepository:
+            description: |
+              URL to the source code repository (currently only git is supported)
+            type: string
 
   PlatformRuntime:
     description: |
       Repesents a PaaS environemnt to run an component
     type: object
     required:
-    - id
+      - id
     allOf:
-    - $ref: '#/definitions/NewPlatformRuntime'
-    - properties:
-        id:
-          description: "Unique identifier for the hardwareRuntime"
-          type: string
-          example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
+      - $ref: '#/definitions/NewPlatformRuntime'
+      - properties:
+          id:
+            description: "Unique identifier for the hardwareRuntime"
+            type: string
+            example: "1a79a4d60de6718e8e5b326e33812345/example.p1"
 
   PlatformService:
     description: |
       Repesents additional PaaS services to component, e.g. a database, TODO!
     type: object
     required:
-    - id
-    - name
+      - id
+      - name
     properties:
       id:
         description: "Unique identifier"
@@ -1220,8 +1275,8 @@ definitions:
       polymorphic superclass, only subtypes are allowed.
       Represents a communication port of a task
     required:
-    - type
-    - name
+      - type
+      - name
     properties:
       type:
         description: |
@@ -1245,14 +1300,14 @@ definitions:
       Represents a communication port that the tasks provides for other tasks
       or the end user.
     allOf:
-    - $ref: '#/definitions/Port'
-    - type: object
-      required:
-      - port
-      properties:
-        port:
-          type: integer
-          format: int32
+      - $ref: '#/definitions/Port'
+      - type: object
+        required:
+          - port
+        properties:
+          port:
+            type: integer
+            format: int32
     example:
       type: 'PortProvided'
       name: 'PortProvidedExample'
@@ -1264,20 +1319,20 @@ definitions:
       Subtype of port.
       Represents a communication port that the task requires from other (downstream) tasks.
     allOf:
-    - $ref: '#/definitions/Port'
-    - type: object
-      required:
-      - isMandatory
-      properties:
-        updateAction:
-          type: string
-          description: |
-            A script that is executed if a new instance of a downstream task is available.
-        isMandatory:
-          type: boolean
-          description: |
-            States if an instance of a downstream tasks needs to be already started (true), or
-            if the task can start without a downstream task (false).
+      - $ref: '#/definitions/Port'
+      - type: object
+        required:
+          - isMandatory
+        properties:
+          updateAction:
+            type: string
+            description: |
+              A script that is executed if a new instance of a downstream task is available.
+          isMandatory:
+            type: boolean
+            description: |
+              States if an instance of a downstream tasks needs to be already started (true), or
+              if the task can start without a downstream task (false).
     example:
       type: 'PortProvided'
       name: 'PortProvidedExample'
@@ -1288,9 +1343,9 @@ definitions:
     type: object
     description: "A process represents a task running on a node"
     required:
-    - schedule
-    - task
-    - nodeGroup
+      - schedule
+      - task
+      - nodeGroup
     properties:
       schedule:
         type: string
@@ -1305,39 +1360,39 @@ definitions:
   SingleProcess:
     type: object
     allOf:
-    - $ref: '#/definitions/CloudiatorProcess'
-    - properties:
-        node:
-          type: string
-          description: "The id of the node this process is hosted on."
-      required:
-        - node    
-          
+      - $ref: '#/definitions/CloudiatorProcess'
+      - properties:
+          node:
+            type: string
+            description: "The id of the node this process is hosted on."
+        required:
+          - node
+
   ClusterProcess:
     type: object
     allOf:
-    - $ref: '#/definitions/CloudiatorProcess'
-    - properties:
-        nodeGroup:
-          type: string
-          description: "The id of the nodeGroup this process is hosted on."   
-      required:
-        - nodeGroup    
-  
+      - $ref: '#/definitions/CloudiatorProcess'
+      - properties:
+          nodeGroup:
+            type: string
+            description: "The id of the nodeGroup this process is hosted on."
+        required:
+          - nodeGroup
+
   CloudiatorProcess:
     type: object
     discriminator: processType
     required:
-    - id
-    - processType
-    - type
-    - schedule
-    - task
+      - id
+      - processType
+      - type
+      - schedule
+      - task
     properties:
       id:
         type: string
       processType:
-        type: string  
+        type: string
       type:
         type: string
         enum: ["LANCE","SPARK"]
@@ -1346,17 +1401,17 @@ definitions:
         description: "The id of the schedule this process belongs to."
       task:
         type: string
-        description: "The id of the task that is instantiated by this process."  
-    
-          
-          
+        description: "The id of the task that is instantiated by this process."
+
+
+
 
   ProcessGroup:
     type: object
     description: "Groups multiple processes."
     required:
-    - id
-    - processes
+      - id
+      - processes
     properties:
       id:
         type: string
@@ -1369,29 +1424,29 @@ definitions:
   PushSensor:
     type: object
     allOf:
-    - $ref: '#/definitions/Sensor'
-    - properties:
-        port:
-          description: |
-            (optional) port recommendation for starting the push sensor. API does not guarantee
-            that this port will be used.
-          type: integer
-          format: int32
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          port:
+            description: |
+              (optional) port recommendation for starting the push sensor. API does not guarantee
+              that this port will be used.
+            type: integer
+            format: int32
 
   PullSensor:
     type: object
     allOf:
-    - $ref: '#/definitions/Sensor'
-    - properties:
-        className:
-          description: "ClassName of the sensor"
-          type: string
-        configuration:
-          description: "Configuration of the sensor as key-value map"
-          $ref: '#/definitions/Map'
-        interval:
-          description: "The interval at which the sensor is executed"
-          $ref: '#/definitions/Interval'
+      - $ref: '#/definitions/Sensor'
+      - properties:
+          className:
+            description: "ClassName of the sensor"
+            type: string
+          configuration:
+            description: "Configuration of the sensor as key-value map"
+            $ref: '#/definitions/Map'
+          interval:
+            description: "The interval at which the sensor is executed"
+            $ref: '#/definitions/Interval'
 
   Runtime:
     description: |
@@ -1403,7 +1458,7 @@ definitions:
       - java
       - dotnet
       - go
-      
+
   Queue:
     description: |
       Represents a queued task within the system. Used to execute long running requests.
@@ -1438,7 +1493,7 @@ definitions:
     description: "polymorphic Superclass, only subtypes are allowed"
     discriminator: type
     required:
-    - type
+      - type
     properties:
       type:
         type: string
@@ -1469,16 +1524,16 @@ definitions:
   Schedule:
     type: object
     required:
-    - id
+      - id
     allOf:
-    - $ref: '#/definitions/ScheduleNew'
-    - properties:
-        id:
-          type: string
-        processes:
-          type: array
-          items:
-            $ref: '#/definitions/CloudiatorProcess'
+      - $ref: '#/definitions/ScheduleNew'
+      - properties:
+          id:
+            type: string
+          processes:
+            type: array
+            items:
+              $ref: '#/definitions/CloudiatorProcess'
 
   Sensor:
     type: object
@@ -1495,8 +1550,8 @@ definitions:
       Represents a new task of a job.
     type: object
     required:
-    - name
-    - taskType
+      - name
+      - taskType
     properties:
       name:
         description: "Human-readable name. Uniquely identifies a task."
@@ -1521,24 +1576,24 @@ definitions:
     example: #ExampleTask
       name: "TaskTest"
       ports:
-      - type: "PortProvided"
-        name: "PortProvidedTest"
-        port: 12345
-      - type: "PortRequired"
-        name: "PortRequiredTest"
-        updateAction: "UpdateActionTest"
-        isMandatory: true
+        - type: "PortProvided"
+          name: "PortProvidedTest"
+          port: 12345
+        - type: "PortRequired"
+          name: "PortRequiredTest"
+          updateAction: "UpdateActionTest"
+          isMandatory: true
       interfaces:
-      - type: "DockerInterface"
-        dockerImage: "DockerImage"
+        - type: "DockerInterface"
+          dockerImage: "DockerImage"
       executionEnvironment: "LANCE"
       requirements:
-      - type: "OclRequirement"
-        constraint: "oclRequirement"
-      - type: "IdentifierRequirement"
-        hardwareId: "hardwareId"
-        locationId: "locationId"
-        imageId: "imageId"
+        - type: "OclRequirement"
+          constraint: "oclRequirement"
+        - type: "IdentifierRequirement"
+          hardwareId: "hardwareId"
+          locationId: "locationId"
+          imageId: "imageId"
       taskType: "BATCH"
 
   TaskType:
@@ -1551,7 +1606,7 @@ definitions:
     type: object
     discriminator: type
     required:
-    - type
+      - type
     properties:
       type:
         type: string
@@ -1563,7 +1618,7 @@ definitions:
     description: |
       Represents a tenant of the system.
     required:
-    - tenant
+      - tenant
     properties:
       tenant:
         type: string
@@ -1575,7 +1630,7 @@ definitions:
     description: |
       Represents a string as valid json object
     required:
-    - content
+      - content
     properties:
       content:
         type: string
@@ -1586,7 +1641,7 @@ definitions:
     description: |
       Represents an API Token, that is used to represent a successful authentication of a user
     required:
-    - token
+      - token
     properties:
       token:
         type: string
@@ -1641,10 +1696,10 @@ definitions:
     description: |
       Represents a user that should be create in the system
     required:
-    - email
-    - password
-    - passwordRepeat
-    - tenant
+      - email
+      - password
+      - passwordRepeat
+      - tenant
     properties:
       email:
         type: string
@@ -1751,16 +1806,16 @@ paths:
     post:
       operationId: login
       tags:
-      - user
+        - user
       description: |
         Authenticates a user
       parameters:
-      - name: login
-        in: body
-        description: |
-          User login request
-        schema:
-          $ref: '#/definitions/Login'
+        - name: login
+          in: body
+          description: |
+            User login request
+          schema:
+            $ref: '#/definitions/Login'
       responses:
         200:
           description: OK
@@ -1770,16 +1825,16 @@ paths:
     post:
       operationId: createUser
       tags:
-      - user
+        - user
       description: |
         Creates a new user
       parameters:
-      - name: user
-        in: body
-        description: |
-          User creation request
-        schema:
-          $ref: '#/definitions/UserNew'
+        - name: user
+          in: body
+          description: |
+            User creation request
+          schema:
+            $ref: '#/definitions/UserNew'
       responses:
         200:
           description: OK
@@ -1790,16 +1845,16 @@ paths:
     post:
       operationId: createTenant
       tags:
-      - user
+        - user
       description: |
         Creates a new tenant
       parameters:
-      - name: tenant
-        in: body
-        description: |
-          Tenant creation request
-        schema:
-          $ref: '#/definitions/Tenant'
+        - name: tenant
+          in: body
+          description: |
+            Tenant creation request
+          schema:
+            $ref: '#/definitions/Tenant'
       responses:
         200:
           description: OK
@@ -1811,19 +1866,19 @@ paths:
     post:
       operationId: findNodeCandidates
       tags:
-      - matchmaking
+        - matchmaking
       description: |
         Returns possible node candidates.
       parameters:
-      - name: nodeRequirements
-        in: body
-        description: |
-          Node Request
-        required: false
-        schema:
-          type: array
-          items:
-            $ref: '#/definitions/Requirement'
+        - name: nodeRequirements
+          in: body
+          description: |
+            Node Request
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Requirement'
       responses:
         202:
           description: ACCEPTED
@@ -1837,15 +1892,15 @@ paths:
     put:
       operationId: solveMatchmaking
       tags:
-      - matchmaking
+        - matchmaking
       description: 'Solves a matchmaking problem'
       parameters:
-      - name: nodeRequirements
-        in: body
-        description: 'The requirements with respect to nodes'
-        required: true
-        schema:
-          $ref: '#/definitions/NodeRequirements'
+        - name: nodeRequirements
+          in: body
+          description: 'The requirements with respect to nodes'
+          required: true
+          schema:
+            $ref: '#/definitions/NodeRequirements'
       responses:
         200:
           description: OK
@@ -1858,15 +1913,15 @@ paths:
     post:
       operationId: installTools
       tags:
-      - misc
+        - misc
       description: Installs Cloudiator tools on provided node
       parameters:
-      - name: installRequest
-        in: body
-        description: a request to install the cloudiator tools on a provided node
-        required: true
-        schema:
-          $ref: '#/definitions/InstallationRequest'
+        - name: installRequest
+          in: body
+          description: a request to install the cloudiator tools on a provided node
+          required: true
+          schema:
+            $ref: '#/definitions/InstallationRequest'
       responses:
         '200':
           description: OK
@@ -1877,7 +1932,7 @@ paths:
       consumes: []
       operationId: findClouds
       tags:
-      - cloud
+        - cloud
       description: |
         Returns all clouds from the system that the user has access to
       responses:
@@ -1899,15 +1954,15 @@ paths:
     post:
       operationId: addCloud
       tags:
-      - cloud
+        - cloud
       description: Creates a new cloud.
       parameters:
-      - name: cloud
-        in: body
-        description: Cloud to add
-        required: true
-        schema:
-          $ref: '#/definitions/NewCloud'
+        - name: cloud
+          in: body
+          description: Cloud to add
+          required: true
+          schema:
+            $ref: '#/definitions/NewCloud'
       responses:
         201:
           description: "Created"
@@ -1934,11 +1989,11 @@ paths:
       consumes: []
       operationId: findCloud
       tags:
-      - cloud
+        - cloud
       description: |
         Returns the cloud identified by the given id parameter
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -1957,11 +2012,11 @@ paths:
       consumes: []
       operationId: deleteCloud
       tags:
-      - cloud
+        - cloud
       description: |
         Deletes the cloud identified by the given id paramater.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: "OK"
@@ -1984,11 +2039,11 @@ paths:
       consumes: []
       operationId: findImages
       tags:
-      - cloud
+        - cloud
       description: |
         Returns all images visable to the user
       parameters:
-      - $ref: '#/parameters/cloudId'
+        - $ref: '#/parameters/cloudId'
       responses:
         200:
           description: |
@@ -2009,12 +2064,12 @@ paths:
   /images/{id}:
     get:
       tags:
-      - cloud
+        - cloud
       operationId: getImage
       description: |
         Retrieves the image with the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2023,19 +2078,19 @@ paths:
             $ref: '#/definitions/Image'
     put:
       tags:
-      - cloud
+        - cloud
       operationId: editImage
       description: |
         Updates a specific image
       parameters:
-      - $ref: '#/parameters/id'
-      - name: image
-        in: body
-        description: |
-          Image to update
-        required: true
-        schema:
-          $ref: '#/definitions/Image'
+        - $ref: '#/parameters/id'
+        - name: image
+          in: body
+          description: |
+            Image to update
+          required: true
+          schema:
+            $ref: '#/definitions/Image'
       responses:
         200:
           description: |
@@ -2061,11 +2116,11 @@ paths:
       consumes: []
       operationId: findHardware
       tags:
-      - cloud
+        - cloud
       description: |
         Returns all hardware visible to the user
       parameters:
-      - $ref: '#/parameters/cloudId'
+        - $ref: '#/parameters/cloudId'
       responses:
         200:
           description: |
@@ -2086,12 +2141,12 @@ paths:
   /hardware/{id}:
     get:
       tags:
-      - cloud
+        - cloud
       operationId: getHardware
       description: |
         Retrieves the hardware with the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2100,19 +2155,19 @@ paths:
             $ref: '#/definitions/Hardware'
     put:
       tags:
-      - cloud
+        - cloud
       operationId: editHardware
       description: |
         Updates a specific hardware
       parameters:
-      - $ref: '#/parameters/id'
-      - name: hardware
-        in: body
-        description: |
-          Hardware to update
-        required: true
-        schema:
-          $ref: '#/definitions/Hardware'
+        - $ref: '#/parameters/id'
+        - name: hardware
+          in: body
+          description: |
+            Hardware to update
+          required: true
+          schema:
+            $ref: '#/definitions/Hardware'
       responses:
         200:
           description: |
@@ -2138,9 +2193,9 @@ paths:
       consumes: []
       operationId: findLocations
       parameters:
-      - $ref: '#/parameters/cloudId'
+        - $ref: '#/parameters/cloudId'
       tags:
-      - cloud
+        - cloud
       description: |
         Returns all locations visible to the user
       responses:
@@ -2163,12 +2218,12 @@ paths:
   /locations/{id}:
     get:
       tags:
-      - cloud
+        - cloud
       operationId: getLocation
       description: |
         Retrieves the location with the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2177,19 +2232,19 @@ paths:
             $ref: '#/definitions/Location'
     put:
       tags:
-      - cloud
+        - cloud
       operationId: editLocation
       description: |
         Updates a specific location
       parameters:
-      - $ref: '#/parameters/id'
-      - name: location
-        in: body
-        description: |
-          Location to update
-        required: true
-        schema:
-          $ref: '#/definitions/Location'
+        - $ref: '#/parameters/id'
+        - name: location
+          in: body
+          description: |
+            Location to update
+          required: true
+          schema:
+            $ref: '#/definitions/Location'
       responses:
         200:
           description: |
@@ -2216,7 +2271,7 @@ paths:
       consumes: []
       operationId: findMonitors
       tags:
-      - monitoring
+        - monitoring
       description: |
         Returns all monitors visible to the user
       responses:
@@ -2230,17 +2285,17 @@ paths:
     post:
       operationId: addMonitor
       tags:
-      - monitoring
+        - monitoring
       description: |
         Creates a monitor
       parameters:
-      - name: monitor
-        in: body
-        description: |
-          Monitor to be created
-        required: true
-        schema:
-          $ref: '#/definitions/Monitor'
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be created
+          required: true
+          schema:
+            $ref: '#/definitions/Monitor'
       responses:
         200:
           description: |
@@ -2252,11 +2307,11 @@ paths:
       consumes: []
       operationId: getMonitor
       tags:
-      - monitoring
+        - monitoring
       description: |
         Retrieves the monitor with the given metric name
       parameters:
-      - $ref: '#/parameters/metric'
+        - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
@@ -2268,11 +2323,11 @@ paths:
       consumes: []
       operationId: deleteMonitor
       tags:
-      - monitoring
+        - monitoring
       description: |
         Deletes the monitor identified by the given metric name.
       parameters:
-      - $ref: '#/parameters/metric'
+        - $ref: '#/parameters/metric'
       responses:
         200:
           description: "OK"
@@ -2285,7 +2340,7 @@ paths:
       consumes: []
       operationId: findJobs
       tags:
-      - job
+        - job
       description: |
         Returns all jobs visible to the user
       responses:
@@ -2307,17 +2362,17 @@ paths:
     post:
       operationId: addJob
       tags:
-      - job
+        - job
       description:
         Creates a new job
       parameters:
-      - name: job
-        in: body
-        description: |
-          Job to be created.
-        required: true
-        schema:
-          $ref: '#/definitions/JobNew'
+        - name: job
+          in: body
+          description: |
+            Job to be created.
+          required: true
+          schema:
+            $ref: '#/definitions/JobNew'
       responses:
         200:
           description: |
@@ -2342,11 +2397,11 @@ paths:
       consumes: []
       operationId: findJob
       tags:
-      - job
+        - job
       description: |
         Returns the job with the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2369,9 +2424,9 @@ paths:
         Returns a json graph representation usable by cyctoscape.js
       operationId: jobGraph
       tags:
-      - job
+        - job
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2384,7 +2439,7 @@ paths:
       consumes: []
       operationId: getSchedules
       tags:
-      - process
+        - process
       description: |
         Retrieves all schedules by the current user.
       responses:
@@ -2397,17 +2452,17 @@ paths:
     post:
       operationId: addSchedule
       tags:
-      - process
+        - process
       description: |
         Creates a new schedule
       parameters:
-      - name: schedule
-        in: body
-        description: |
-          Schedule to be created
-        required: true
-        schema:
-          $ref: '#/definitions/ScheduleNew'
+        - name: schedule
+          in: body
+          description: |
+            Schedule to be created
+          required: true
+          schema:
+            $ref: '#/definitions/ScheduleNew'
       responses:
         202:
           description: ACCEPTED
@@ -2419,9 +2474,9 @@ paths:
       consumes: []
       operationId: findSchedule
       tags:
-      - process
+        - process
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       description: |
         Retrieves the schedule identified by parameter id.
       responses:
@@ -2433,9 +2488,9 @@ paths:
       consumes: []
       operationId: deleteSchedule
       tags:
-      - job
+        - job
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       description: |
         Deletes the schedule identified by the given id and all corresponding processes and nodes.
       responses:
@@ -2449,16 +2504,16 @@ paths:
       consumes: []
       operationId: getProcesses
       tags:
-      - process
+        - process
       description: |
         Retrieves all process of the current user matching the parameters.
       parameters:
-      - name: scheduleId
-        in: query
-        description: |
-          Id of the schedule.
-        required: false
-        type: string
+        - name: scheduleId
+          in: query
+          description: |
+            Id of the schedule.
+          required: false
+          type: string
       responses:
         200:
           description: "OK"
@@ -2470,17 +2525,17 @@ paths:
     post:
       operationId: createProcess
       tags:
-      - process
+        - process
       description: |
         Creates a new process
       parameters:
-      - name: process
-        in: body
-        description: |
-          Process to be created
-        required: true
-        schema:
-          $ref: '#/definitions/CloudiatorProcessNew'
+        - name: process
+          in: body
+          description: |
+            Process to be created
+          required: true
+          schema:
+            $ref: '#/definitions/CloudiatorProcessNew'
       responses:
         202:
           description: ACCEPTED
@@ -2492,11 +2547,11 @@ paths:
       consumes: []
       operationId: findProcess
       tags:
-      - process
+        - process
       description: |
         Finds the process corresponding to the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: "OK"
@@ -2507,24 +2562,24 @@ paths:
       consumes: []
       operationId: deleteProcess
       tags:
-      - process
+        - process
       description: |
         Deletes the process corresponding to the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         202:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Queue'
-            
-            
+
+
   /processGroup:
     get:
       consumes: []
       operationId: findProcessGroups
       tags:
-      - process
+        - process
       description: "Returns all process groups for the current user"
       responses:
         200:
@@ -2541,10 +2596,10 @@ paths:
       consumes: []
       operationId: getProcessGroup
       tags:
-      - node
+        - node
       description: 'Retrieves a process group, which groups multiple processes that were create during one request'
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2562,7 +2617,7 @@ paths:
         500:
           $ref: '#/responses/500ErrorResponse'
         504:
-          $ref: '#/responses/504GatewayTimeout'          
+          $ref: '#/responses/504GatewayTimeout'
 
 
   # Long Running Request related paths
@@ -2571,7 +2626,7 @@ paths:
       consumes: []
       operationId: getQueuedTasks
       tags:
-      - queue
+        - queue
       description: |
         Returns all running queued tasks visible to the user
       responses:
@@ -2595,11 +2650,11 @@ paths:
       consumes: []
       operationId: findQueuedTask
       tags:
-      - queue
+        - queue
       description: |
         Returns the queued task with the given id.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
@@ -2620,7 +2675,7 @@ paths:
       consumes: []
       operationId: findNodes
       tags:
-      - node
+        - node
       description: "Retrieve all nodes the current user has access to"
       responses:
         200:
@@ -2632,15 +2687,15 @@ paths:
     post:
       operationId: addNode
       tags:
-      - node
+        - node
       description: 'Create a new node request'
       parameters:
-      - name: nodeRequest
-        in: body
-        description: 'Node Request'
-        required: true
-        schema:
-          $ref: '#/definitions/NodeRequest'
+        - name: nodeRequest
+          in: body
+          description: 'Node Request'
+          required: true
+          schema:
+            $ref: '#/definitions/NodeRequest'
       responses:
         202:
           description: ACCEPTED
@@ -2664,10 +2719,10 @@ paths:
       consumes: []
       operationId: getNode
       tags:
-      - node
+        - node
       description: "Retrieves the node with the given id."
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2679,9 +2734,9 @@ paths:
       description: 'Deletes the node with the given id.'
       operationId: deleteNode
       tags:
-      - node
+        - node
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         202:
           description: |
@@ -2694,7 +2749,7 @@ paths:
       consumes: []
       operationId: findNodeGroups
       tags:
-      - node
+        - node
       description: "Returns all node groups for the current user"
       responses:
         200:
@@ -2711,10 +2766,10 @@ paths:
       consumes: []
       operationId: getNodeGroup
       tags:
-      - node
+        - node
       description: 'Retrieves a node group, which groups multiple nodes that were create during one request'
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -2738,15 +2793,15 @@ paths:
     post:
       operationId: addBYON
       tags:
-      - node
+        - node
       description: "Registers an already existing node for usage"
       parameters:
-      - name: node
-        in: body
-        required: true
-        description: 'Node to be registered'
-        schema:
-          $ref: '#/definitions/Node'
+        - name: node
+          in: body
+          required: true
+          description: 'Node to be registered'
+          schema:
+            $ref: '#/definitions/Node'
       responses:
         200:
           description: 'OK'
@@ -2758,10 +2813,10 @@ paths:
     get:
       operationId: findVMs
       tags:
-      - cloud
+        - cloud
       description: "Finds all virtual machines the user has access to"
       parameters:
-      - $ref: '#/parameters/cloudId'
+        - $ref: '#/parameters/cloudId'
       responses:
         200:
           description: "OK"
@@ -2772,15 +2827,15 @@ paths:
     post:
       operationId: addVM
       tags:
-      - cloud
+        - cloud
       description: 'Creates a new virtual machine request'
       parameters:
-      - name: virtualMachineRequest
-        in: body
-        description: 'VirtualMachine Request'
-        required: true
-        schema:
-          $ref: '#/definitions/VirtualMachineRequest'
+        - name: virtualMachineRequest
+          in: body
+          description: 'VirtualMachine Request'
+          required: true
+          schema:
+            $ref: '#/definitions/VirtualMachineRequest'
       responses:
         202:
           description: ACCEPTED
@@ -2803,10 +2858,10 @@ paths:
     get:
       operationId: getVM
       tags:
-      - cloud
+        - cloud
       description: "Finds the virtual machine identified by the given id parameter"
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: "OK"
@@ -2818,7 +2873,7 @@ paths:
     get:
       operationId: findFunctions
       tags:
-      - cloud
+        - cloud
       description: "Finds all functions the user has access to"
       responses:
         200:
@@ -2832,10 +2887,10 @@ paths:
     get:
       operationId: getFunction
       tags:
-      - cloud
+        - cloud
       description: "Finds the function identified by the given id parameter"
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: "OK"
@@ -2848,14 +2903,14 @@ paths:
       consumes: []
       operationId: encrypt
       tags:
-      - security
+        - security
       description: "Encrypts the given string"
       parameters:
-      - name: text
-        in: path
-        description: Text to encrypt
-        required: true
-        type: string
+        - name: text
+          in: path
+          description: Text to encrypt
+          required: true
+          type: string
       responses:
         200:
           description: "OK"
@@ -2867,14 +2922,14 @@ paths:
       consumes: []
       operationId: decrypt
       tags:
-      - security
+        - security
       description: "Decrypts the given string"
       parameters:
-      - name: text
-        in: path
-        description: "Text to decrypt"
-        required: true
-        type: string
+        - name: text
+          in: path
+          description: "Text to decrypt"
+          required: true
+          type: string
       responses:
         200:
           description: "OK"
@@ -2887,16 +2942,16 @@ paths:
       consumes: []
       operationId: retrieveSecure
       tags:
-      - security
+        - security
       description: |
         Retrieves the stored value.
       parameters:
-      - name: key
-        in: path
-        description: |
-          Key of the stored variable
-        required: true
-        type: string
+        - name: key
+          in: path
+          description: |
+            Key of the stored variable
+          required: true
+          type: string
       responses:
         200:
           description: "OK"
@@ -2905,21 +2960,21 @@ paths:
     put:
       operationId: storeSecure
       tags:
-      - security
+        - security
       parameters:
-      - name: key
-        in: path
-        description: |
-          Key of the stored variable
-        required: true
-        type: string
-      - name: value
-        in: body
-        description: |
-          Value of the stored variable
-        required: true
-        schema:
-          $ref: '#/definitions/Text'
+        - name: key
+          in: path
+          description: |
+            Key of the stored variable
+          required: true
+          type: string
+        - name: value
+          in: body
+          description: |
+            Value of the stored variable
+          required: true
+          schema:
+            $ref: '#/definitions/Text'
       responses:
         200:
           description: "OK"
@@ -2928,14 +2983,14 @@ paths:
     delete:
       operationId: deleteSecure
       tags:
-      - security
+        - security
       parameters:
-      - name: key
-        in: path
-        description: |
-          Key of the stored variable
-        required: true
-        type: string
+        - name: key
+          in: path
+          description: |
+            Key of the stored variable
+          required: true
+          type: string
       responses:
         200:
           description: "OK"
@@ -2949,7 +3004,7 @@ paths:
       consumes: []
       operationId: findPlatforms
       tags:
-      - platform
+        - platform
       description: |
         Returns all platform from the system that the user has access to
       responses:
@@ -2971,15 +3026,15 @@ paths:
     post:
       operationId: addPlatform
       tags:
-      - platform
+        - platform
       description: Creates a new platform.
       parameters:
-      - name: platform
-        in: body
-        description: Platform to add
-        required: true
-        schema:
-          $ref: '#/definitions/NewPlatform'
+        - name: platform
+          in: body
+          description: Platform to add
+          required: true
+          schema:
+            $ref: '#/definitions/NewPlatform'
       responses:
         200:
           description: "OK"
@@ -3003,11 +3058,11 @@ paths:
       consumes: []
       operationId: findPlatform
       tags:
-      - platform
+        - platform
       description: |
         Returns the platform identified by the given id parameter
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: |
@@ -3025,11 +3080,11 @@ paths:
     delete:
       operationId: deletePlatform
       tags:
-      - platform
+        - platform
       description: |
         Deletes the platform identified by the given id paramater.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: "OK"
@@ -3052,7 +3107,7 @@ paths:
       consumes: []
       operationId: findPlatformHardwares
       tags:
-      - platform
+        - platform
       description: |
         Returns all platform hardware visible to the user
       responses:
@@ -3075,17 +3130,17 @@ paths:
     post:
       operationId: addPlatformHardware
       tags:
-      - platform
+        - platform
       description: |
         Creates a new PlatformHardware
       parameters:
-      - name: platformHardware
-        in: body
-        description: |
-          PlatformHardware to be created
-        required: true
-        schema:
-          $ref: '#/definitions/NewPlatformHardware'
+        - name: platformHardware
+          in: body
+          description: |
+            PlatformHardware to be created
+          required: true
+          schema:
+            $ref: '#/definitions/NewPlatformHardware'
       responses:
         200:
           description: |
@@ -3110,11 +3165,11 @@ paths:
       consumes: []
       operationId: findPlatformHardware
       tags:
-      - platform
+        - platform
       description: |
         Returns the PlatformHardware identified by the id parameter.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
@@ -3135,7 +3190,7 @@ paths:
       consumes: []
       operationId: findPlatformEnvironments
       tags:
-      - platform
+        - platform
       description: |
         Returns all platform environment  visible to the user
       responses:
@@ -3157,17 +3212,17 @@ paths:
     post:
       operationId: addPlatformEnvironment
       tags:
-      - platform
+        - platform
       description: |
         Creates a new PlatformEnvironment
       parameters:
-      - name: platformEnvironment
-        in: body
-        description: |
-          PlatformEnvironment to be created
-        required: true
-        schema:
-          $ref: '#/definitions/NewPlatformEnvironment'
+        - name: platformEnvironment
+          in: body
+          description: |
+            PlatformEnvironment to be created
+          required: true
+          schema:
+            $ref: '#/definitions/NewPlatformEnvironment'
       responses:
         200:
           description: |
@@ -3192,11 +3247,11 @@ paths:
       consumes: []
       operationId: findPlatformEnvironment
       tags:
-      - platform
+        - platform
       description: |
         Returns the PlatformEnvironment identified by the id parameter.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
@@ -3217,7 +3272,7 @@ paths:
       consumes: []
       operationId: findPlatformRuntimes
       tags:
-      - platform
+        - platform
       description: |
         Returns all platform runtime  visible to the user
       responses:
@@ -3240,17 +3295,17 @@ paths:
     post:
       operationId: addPlatformRuntime
       tags:
-      - platform
+        - platform
       description: |
         Creates a new PlatformRuntime
       parameters:
-      - name: platformRuntime
-        in: body
-        description: |
-          PlatformRuntime to be created
-        required: true
-        schema:
-          $ref: '#/definitions/NewPlatformRuntime'
+        - name: platformRuntime
+          in: body
+          description: |
+            PlatformRuntime to be created
+          required: true
+          schema:
+            $ref: '#/definitions/NewPlatformRuntime'
       responses:
         200:
           description: |
@@ -3275,11 +3330,11 @@ paths:
       consumes: []
       operationId: findPlatformRuntime
       tags:
-      - platform
+        - platform
       description: |
         Returns the PlatformRuntime identified by the id parameter.
       parameters:
-      - $ref: '#/parameters/id'
+        - $ref: '#/parameters/id'
       responses:
         200:
           description: 'OK'
@@ -3298,17 +3353,17 @@ paths:
   /yaml:
     post:
       consumes:
-      - application/yaml
+        - application/yaml
       tags:
-      - yaml
+        - yaml
       operationId: parseYAML
       parameters:
-      - name: yaml
-        in: body
-        description: YAML payload
-        required: true
-        schema:
-          type: string
+        - name: yaml
+          in: body
+          description: YAML payload
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
