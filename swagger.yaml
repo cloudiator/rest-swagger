@@ -980,7 +980,7 @@ definitions:
           Human-readable name for the node.
       state:
         type: string
-        enum: ['OK','ERROR']
+        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
         description: |
           The state the node is currently in.
       loginCredential:
@@ -1372,6 +1372,9 @@ definitions:
         type: string
       processType:
         type: string
+      state:
+        type: string
+        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
       type:
         type: string
         enum: ["LANCE","SPARK"]
