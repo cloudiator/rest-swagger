@@ -1074,9 +1074,10 @@ definitions:
       operatingSystemArchitecture:
         $ref: '#/definitions/OperatingSystemArchitecture'
       operatingSystemVersion:
-        type: string
+        type: number
+        format: int32
         description: "Version of the OS"
-        example: "16.04 LTS"
+        example: "1604"
 
   OperatingSystemArchitecture:
     description: "Type of OS Architecture"
