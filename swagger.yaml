@@ -238,7 +238,7 @@ definitions:
     properties:
       type:
         type: string
-        enum: ["KAIROS_DB","INFLUX"]
+        enum: ["KAIROS_DB","INFLUX", "CLI","JMS"]
       configuration:
         $ref: '#/definitions/Map'
 
@@ -1374,7 +1374,7 @@ definitions:
         type: string
       state:
         type: string
-        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
+        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED','FINISHED']
       type:
         type: string
         enum: ["LANCE","SPARK"]
