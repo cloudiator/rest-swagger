@@ -1374,7 +1374,7 @@ definitions:
         type: string
       state:
         type: string
-        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
+        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED','FINISHED']
       type:
         type: string
         enum: ["LANCE","SPARK"]
