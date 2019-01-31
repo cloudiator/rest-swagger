@@ -279,9 +279,9 @@ definitions:
       Represents one function.
     type: object
     required:
-     - functionName
-     - sourceCodeUrl
-     - handler
+      - functionName
+      - sourceCodeUrl
+      - handler
     allOf:
       - $ref: '#/definitions/TaskInterface'
       - properties:
@@ -1367,6 +1367,7 @@ definitions:
       - type
       - schedule
       - task
+      - state
     properties:
       id:
         type: string
@@ -1384,9 +1385,15 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-
-
-
+      diagnostic:
+        type: string
+        description: "Diagnostic information about this process"
+      reason:
+        type: string
+        description: "Reason this process was created"
+      owner:
+        type: string
+        description: "The user this process was created for"
 
   ProcessGroup:
     type: object
@@ -1394,9 +1401,17 @@ definitions:
     required:
       - id
       - processes
+      - schedule
     properties:
       id:
         type: string
+        description: "Unique identifier of the group"
+      schedule:
+        type: string
+        description: "The schedule this group was created for"
+      owner:
+        type: string
+        description: "The user this group was created for"
       processes:
         type: array
         items:
@@ -2316,7 +2331,7 @@ paths:
     put:
       operationId: updateMonitor
       tags:
-      - monitoring
+        - monitoring
       description: |
         Updating a monitor
       parameters:
@@ -2327,7 +2342,7 @@ paths:
             Monitor to be updated
           required: true
           schema:
-           $ref: '#/definitions/Monitor'
+            $ref: '#/definitions/Monitor'
       responses:
         200:
           description: |
