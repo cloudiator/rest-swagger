@@ -527,6 +527,8 @@ definitions:
       - properties:
           id:
             type: string
+          owner:
+            type: string
 
   JobNew:
     description: |
@@ -1526,6 +1528,8 @@ definitions:
       - $ref: '#/definitions/ScheduleNew'
       - properties:
           id:
+            type: string
+          owner:
             type: string
           processes:
             type: array
