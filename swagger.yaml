@@ -2506,7 +2506,7 @@ paths:
       consumes: []
       operationId: deleteSchedule
       tags:
-        - job
+        - process
       parameters:
         - $ref: '#/parameters/id'
       description: |
@@ -2516,6 +2516,23 @@ paths:
           description: "ACCEPTED"
           schema:
             $ref: '#/definitions/Queue'
+
+  /schedule/{id}/graph:
+    get:
+      consumes: []
+      description: |
+        Returns a json graph representation usable by cyctoscape.js
+      operationId: scheduleGraph
+      tags:
+        - process
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            See js.cyctoscape.org
+          schema:
+            type: object
 
   /process:
     get:
