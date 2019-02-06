@@ -784,9 +784,8 @@ definitions:
         items:
           $ref: '#/definitions/DataSink'
       tags:
-        type: array
-        items:
-          $ref: '#/definitions/MonitoringTag'
+        description: "MonitoringTags as key-value map"
+        $ref: '#/definitions/Map'
 
   MonitoringTarget:
     type: object
