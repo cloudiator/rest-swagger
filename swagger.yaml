@@ -279,9 +279,9 @@ definitions:
       Represents one function.
     type: object
     required:
-     - functionName
-     - sourceCodeUrl
-     - handler
+      - functionName
+      - sourceCodeUrl
+      - handler
     allOf:
       - $ref: '#/definitions/TaskInterface'
       - properties:
@@ -526,6 +526,8 @@ definitions:
       - $ref: '#/definitions/JobNew'
       - properties:
           id:
+            type: string
+          owner:
             type: string
 
   JobNew:
@@ -1366,6 +1368,7 @@ definitions:
       - type
       - schedule
       - task
+      - state
     properties:
       id:
         type: string
@@ -1373,7 +1376,7 @@ definitions:
         type: string
       state:
         type: string
-        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
+        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED','FINISHED']
       type:
         type: string
         enum: ["LANCE","SPARK"]
@@ -1383,9 +1386,15 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-
-
-
+      diagnostic:
+        type: string
+        description: "Diagnostic information about this process"
+      reason:
+        type: string
+        description: "Reason this process was created"
+      owner:
+        type: string
+        description: "The user this process was created for"
 
   ProcessGroup:
     type: object
@@ -1393,9 +1402,17 @@ definitions:
     required:
       - id
       - processes
+      - schedule
     properties:
       id:
         type: string
+        description: "Unique identifier of the group"
+      schedule:
+        type: string
+        description: "The schedule this group was created for"
+      owner:
+        type: string
+        description: "The user this group was created for"
       processes:
         type: array
         items:
@@ -1510,6 +1527,8 @@ definitions:
       - $ref: '#/definitions/ScheduleNew'
       - properties:
           id:
+            type: string
+          owner:
             type: string
           processes:
             type: array
@@ -2312,6 +2331,27 @@ paths:
       responses:
         200:
           description: "OK"
+    put:
+      operationId: updateMonitor
+      tags:
+        - monitoring
+      description: |
+        Updating a monitor
+      parameters:
+        - $ref: '#/parameters/metric'
+        - name: monitor
+          in: body
+          description: |
+            Monitor to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/Monitor'
+      responses:
+        200:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Monitor'
 
 
   # Jobs related paths
@@ -2469,7 +2509,7 @@ paths:
       consumes: []
       operationId: deleteSchedule
       tags:
-        - job
+        - process
       parameters:
         - $ref: '#/parameters/id'
       description: |
@@ -2479,6 +2519,23 @@ paths:
           description: "ACCEPTED"
           schema:
             $ref: '#/definitions/Queue'
+
+  /schedule/{id}/graph:
+    get:
+      consumes: []
+      description: |
+        Returns a json graph representation usable by cyctoscape.js
+      operationId: scheduleGraph
+      tags:
+        - process
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            See js.cyctoscape.org
+          schema:
+            type: object
 
   /process:
     get:
