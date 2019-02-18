@@ -1052,6 +1052,27 @@ definitions:
         description: |
           Geographical location this node resides in.
 
+  Solution:
+    description: A valid solution to a matchmaking problem.
+    type: object
+    properties:
+      id:
+        type: string
+      costs:
+        type: number
+        format: double
+      time:
+        type: number
+        format: float
+      isOptimal:
+        type: boolean
+      valid:
+        type: boolean
+      nodeCandidates:
+        type: array
+        items:
+          $ref: '#/definitions/NodeCandidate'
+
   NodeCandidate:
     description: A node creatable by the system
     type: object
@@ -1862,6 +1883,22 @@ paths:
             $ref: '#/definitions/Tenant'
 
   # Matchmaking related paths
+  /nodeCandidates/{id}:
+    get:
+      operationId: getNodeCanidate
+      tags:
+        - matchmaking
+      description: |
+        Returns the node candidate with the given id if it exists.
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            The node candidate identified with the id
+          schema:
+            $ref: '#/definitions/NodeCandidate'
+
   /nodeCandidates:
     post:
       operationId: findNodeCandidates
@@ -1888,6 +1925,22 @@ paths:
               $ref: '#/definitions/NodeCandidate'
 
   # MISC
+  /solution/{id}:
+    get:
+      operationId: getSolution
+      tags:
+        - matchmaking
+      description: |
+        Returns a solution of the matchmaking process (if it is still available)
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: |
+            The solution identified with the id
+          schema:
+            $ref: '#/definitions/Solution'
+
   /matchmaking:
     put:
       operationId: solveMatchmaking
@@ -1902,12 +1955,10 @@ paths:
           schema:
             $ref: '#/definitions/NodeRequirements'
       responses:
-        200:
-          description: OK
+        202:
+          description: ACCEPTED
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/NodeCandidate'
+            $ref: '#/definitions/Queue'
 
   /installer:
     post:
