@@ -1885,7 +1885,7 @@ paths:
   # Matchmaking related paths
   /nodeCandidates/{id}:
     get:
-      operationId: getNodeCanidate
+      operationId: getNodeCandidate
       tags:
         - matchmaking
       description: |
