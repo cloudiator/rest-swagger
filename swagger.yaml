@@ -373,6 +373,7 @@ definitions:
       - providerId
       - cores
       - ram
+      - state
     properties:
       id:
         description: "Unique identifier for the hardware"
@@ -403,6 +404,9 @@ definitions:
         example: 100
       location:
         $ref: '#/definitions/Location'
+      state:
+        $ref: '#/definitions/DiscoveryItemState'
+
 
   HttpTrigger:
     description: |
@@ -444,6 +448,10 @@ definitions:
       imageId: "01101b2075b7046fff5eaa9beae14ccd:RegionOne/72a4b00b-705f-4290-a4de-c79eddc03fe3"
       type: "IdentifierRequirement"
 
+  DiscoveryItemState:
+    type: string
+    enum: ['NEW','OK','REMOTELY_DELETED','LOCALLY_DELETED','DISABLED','UNKNOWN']
+
   Image:
     description:  |
       Represents an image offer by a cloud
@@ -470,6 +478,8 @@ definitions:
         $ref: '#/definitions/OperatingSystem'
       location:
         $ref: '#/definitions/Location'
+      state:
+        $ref: '#/definitions/DiscoveryItemState'
 
   InstallationRequest:
     description: todo
@@ -701,6 +711,8 @@ definitions:
         # self reference is broken in editor and UI
         # see https://github.com/swagger-api/swagger-editor/issues/1005
         $ref: '#/definitions/Location'
+      state:
+        $ref: '#/definitions/DiscoveryItemState'
 
   Login:
     type: object
