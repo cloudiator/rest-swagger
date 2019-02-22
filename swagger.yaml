@@ -450,7 +450,7 @@ definitions:
 
   DiscoveryItemState:
     type: string
-    enum: ['NEW','OK','REMOTELY_DELETED','LOCALLY_DELETED','DISABLED','UNKNOWN']
+    enum: ['NEW','OK','REMOTELY_DELETED','LOCALLY_DELETED','DISABLED','DELETED','UNKNOWN']
 
   Image:
     description:  |
