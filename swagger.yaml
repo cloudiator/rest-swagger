@@ -406,6 +406,8 @@ definitions:
         $ref: '#/definitions/Location'
       state:
         $ref: '#/definitions/DiscoveryItemState'
+      owner:
+        type: string
 
 
   HttpTrigger:
@@ -480,6 +482,8 @@ definitions:
         $ref: '#/definitions/Location'
       state:
         $ref: '#/definitions/DiscoveryItemState'
+      owner:
+        type: string
 
   InstallationRequest:
     description: todo
@@ -713,6 +717,8 @@ definitions:
         $ref: '#/definitions/Location'
       state:
         $ref: '#/definitions/DiscoveryItemState'
+      owner:
+        type: string
 
   Login:
     type: object
@@ -1764,6 +1770,8 @@ definitions:
           $ref: '#/definitions/IpAddress'
       logincredential:
         $ref: '#/definitions/LoginCredential'
+      owner:
+        type: string
 
   VirtualMachineRequest:
     type: object
