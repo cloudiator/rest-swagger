@@ -999,7 +999,7 @@ definitions:
           Human-readable name for the node.
       state:
         type: string
-        enum: ['CREATED','FAILED','RUNNING','ERROR','DELETED']
+        enum: ['PENDING','RUNNING','ERROR','DELETED']
         description: |
           The state the node is currently in.
       loginCredential:
