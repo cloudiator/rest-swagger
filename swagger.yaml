@@ -2383,6 +2383,13 @@ paths:
         Retrieves the monitor with the given metric name
       parameters:
         - $ref: '#/parameters/metric'
+        - name: target
+          in: body
+          description: |
+            Target of the Monitor
+          required: true
+          schema:
+            $ref: '#/definitions/MonitoringTarget'
       responses:
         200:
           description: "OK"
@@ -2399,6 +2406,13 @@ paths:
         Deletes the monitor identified by the given metric name.
       parameters:
         - $ref: '#/parameters/metric'
+        - name: target
+          in: body
+          description: |
+            Target of the Monitor
+          required: true
+          schema:
+            $ref: '#/definitions/MonitoringTarget'
       responses:
         200:
           description: "OK"
