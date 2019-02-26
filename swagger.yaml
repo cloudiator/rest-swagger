@@ -1772,6 +1772,9 @@ definitions:
         $ref: '#/definitions/LoginCredential'
       owner:
         type: string
+      state:
+        type: string
+        enum: ['RUNNING','ERROR']
 
   VirtualMachineRequest:
     type: object
