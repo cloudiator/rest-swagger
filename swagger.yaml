@@ -957,22 +957,6 @@ definitions:
         format: double
         example: 2.0
 
-  NodeGroup:
-    type: object
-    description: |
-      A logical group of multiple nodes.
-    properties:
-      id:
-        type: string
-        description: |
-          Unique identifier of the node group.
-      nodes:
-        description: |
-          An array of multiple nodes belonging to this group.
-        type: array
-        items:
-          $ref: '#/definitions/Node'
-
   Node:
     type: object
     properties:
@@ -1359,7 +1343,6 @@ definitions:
     required:
       - schedule
       - task
-      - nodeGroup
     properties:
       schedule:
         type: string
@@ -1367,9 +1350,6 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-      nodeGroup:
-        type: string
-        description: "The id of the nodeGroup this process is hosted on."
 
   SingleProcess:
     type: object
@@ -1387,11 +1367,13 @@ definitions:
     allOf:
       - $ref: '#/definitions/CloudiatorProcess'
       - properties:
-          nodeGroup:
-            type: string
-            description: "The id of the nodeGroup this process is hosted on."
+          nodes:
+            type: array
+            items:
+              type: string
+            description: "A list of node identifiers this process is hosted on."
         required:
-          - nodeGroup
+          - nodes
 
   CloudiatorProcess:
     type: object
@@ -2863,51 +2845,6 @@ paths:
             OK
           schema:
             $ref: '#/definitions/Queue'
-
-  /nodeGroup:
-    get:
-      consumes: []
-      operationId: findNodeGroups
-      tags:
-        - node
-      description: "Returns all node groups for the current user"
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/NodeGroup'
-
-
-  /nodeGroup/{id}:
-    get:
-      consumes: []
-      operationId: getNodeGroup
-      tags:
-        - node
-      description: 'Retrieves a node group, which groups multiple nodes that were create during one request'
-      parameters:
-        - $ref: '#/parameters/id'
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/NodeGroup'
-        400:
-          $ref: '#/responses/400BadRequestResponse'
-        401:
-          $ref: '#/responses/401UnauthorizedResponse'
-        403:
-          $ref: '#/responses/403ForbiddenResponse'
-        404:
-          $ref: '#/responses/404NotFoundResponse'
-        500:
-          $ref: '#/responses/500ErrorResponse'
-        504:
-          $ref: '#/responses/504GatewayTimeout'
 
   /byon:
     post:
