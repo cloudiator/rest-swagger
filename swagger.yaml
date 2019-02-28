@@ -1350,6 +1350,11 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
+      nodes:
+        type: array
+        items:
+          type: string
+        description: "A list of node identifiers this process is hosted on."
 
   SingleProcess:
     type: object
