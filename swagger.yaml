@@ -568,6 +568,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
+      optimization:
+        $ref: '#/definitions/Optimization'
 
   SparkInterface:
     description: |
