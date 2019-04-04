@@ -2337,12 +2337,6 @@ paths:
             type: object
             additionalProperties:
               type: object
-              properties:
-                id:
-                  type: string
-                value:
-                  type: integer
-                  format: int32
 
 
   # Monitoring related paths
