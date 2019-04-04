@@ -2328,7 +2328,7 @@ paths:
         - cloud
       operationId: discoveryStatus
       description: |
-        "Gets the status of the discovery engine"
+        Gets the status of the discovery engine
       responses:
         200:
           description: |
