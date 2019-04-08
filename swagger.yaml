@@ -601,6 +601,11 @@ definitions:
             description: |
               Spark configuration properties.
             $ref: '#/definitions/Map'
+          processMapping:
+            type: string
+            enum:
+              - SINGLE
+              - CLUSTER
 
   LanceInterface:
     description: |
@@ -1345,6 +1350,7 @@ definitions:
     required:
       - schedule
       - task
+      - lifecycleInterface
     properties:
       schedule:
         type: string
@@ -1352,16 +1358,14 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-      nodes:
-        type: array
-        items:
-          type: string
-        description: "A list of node identifiers this process is hosted on."
+      lifecycleInterface:
+        type: string
+        description: "The lifecycle interface used for running the process."
 
-  SingleProcess:
+  SingleProcessNew:
     type: object
     allOf:
-      - $ref: '#/definitions/CloudiatorProcess'
+      - $ref: '#/definitions/CloudiatorProcessNew'
       - properties:
           node:
             type: string
@@ -1369,29 +1373,22 @@ definitions:
         required:
           - node
 
-  ClusterProcess:
+  ClusterProcessNew:
     type: object
     allOf:
-      - $ref: '#/definitions/CloudiatorProcess'
+      - $ref: '#/definitions/CloudiatorProcessNew'
       - properties:
           nodes:
             type: array
             items:
               type: string
-            description: "A list of node identifiers this process is hosted on."
+            description: "A list of node identifiers defining the cluster the process is hosted on."
         required:
           - nodes
 
   CloudiatorProcess:
     type: object
     discriminator: processType
-    required:
-      - id
-      - processType
-      - type
-      - schedule
-      - task
-      - state
     properties:
       id:
         type: string
@@ -1419,28 +1416,25 @@ definitions:
         type: string
         description: "The user this process was created for"
 
-  ProcessGroup:
+  SingleProcess:
     type: object
-    description: "Groups multiple processes."
-    required:
-      - id
-      - processes
-      - schedule
-    properties:
-      id:
-        type: string
-        description: "Unique identifier of the group"
-      schedule:
-        type: string
-        description: "The schedule this group was created for"
-      owner:
-        type: string
-        description: "The user this group was created for"
-      processes:
-        type: array
-        items:
-          $ref: '#/definitions/CloudiatorProcess'
+    allOf:
+      - $ref: '#/definitions/CloudiatorProcess'
+      - properties:
+          node:
+            type: string
+            description: "The id of the node this process is hosted on."
 
+  ClusterProcess:
+    type: object
+    allOf:
+      - $ref: '#/definitions/CloudiatorProcess'
+      - properties:
+          nodes:
+            type: array
+            items:
+              type: string
+            description: "A list of node identifiers defining the cluster the process is hosted on."
 
   PushSensor:
     type: object
@@ -2740,53 +2734,6 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Queue'
-
-
-  /processGroup:
-    get:
-      consumes: []
-      operationId: findProcessGroups
-      tags:
-        - process
-      description: "Returns all process groups for the current user"
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ProcessGroup'
-
-
-  /processGroup/{id}:
-    get:
-      consumes: []
-      operationId: getProcessGroup
-      tags:
-        - node
-      description: 'Retrieves a process group, which groups multiple processes that were create during one request'
-      parameters:
-        - $ref: '#/parameters/id'
-      responses:
-        200:
-          description: |
-            OK
-          schema:
-            $ref: '#/definitions/ProcessGroup'
-        400:
-          $ref: '#/responses/400BadRequestResponse'
-        401:
-          $ref: '#/responses/401UnauthorizedResponse'
-        403:
-          $ref: '#/responses/403ForbiddenResponse'
-        404:
-          $ref: '#/responses/404NotFoundResponse'
-        500:
-          $ref: '#/responses/500ErrorResponse'
-        504:
-          $ref: '#/responses/504GatewayTimeout'
-
 
   # Long Running Request related paths
   /queue:
