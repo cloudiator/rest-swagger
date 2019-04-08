@@ -1574,7 +1574,7 @@ definitions:
     type: object
     required:
       - name
-      - taskType
+      - behaviour
     properties:
       name:
         description: "Human-readable name. Uniquely identifies a task."
@@ -1594,9 +1594,9 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Requirement'
-      taskType:
-        $ref: '#/definitions/TaskType'
-    example: #ExampleTask
+      behaviour:
+        $ref: '#/definitions/Behaviour'
+    example:
       name: "TaskTest"
       ports:
         - type: "PortProvided"
@@ -1609,7 +1609,6 @@ definitions:
       interfaces:
         - type: "DockerInterface"
           dockerImage: "DockerImage"
-      executionEnvironment: "LANCE"
       requirements:
         - type: "OclRequirement"
           constraint: "oclRequirement"
@@ -1617,11 +1616,54 @@ definitions:
           hardwareId: "hardwareId"
           locationId: "locationId"
           imageId: "imageId"
-      taskType: "BATCH"
 
-  TaskType:
-    type: string
-    enum: ['BATCH','SERVICE']
+  Behaviour:
+    description: |
+      Represents the runtime behaviour of a task
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        description: |
+          Discriminator for polymorphism
+
+  ServiceBehaviour:
+    description: |
+      Subtype of Behaviour
+      Represents a service runtime behaviour
+    type: object
+    required:
+      - restart
+    allOf:
+      - $ref: '#/definitions/Behaviour'
+      - properties:
+          restart:
+            description: |
+              True if the service should be restarted failure, false if not
+            type: boolean
+
+  PeriodicBehaviour:
+    description: |
+      Subtype of Behaviour
+      Represents a periodic runtime behaviour
+    type: object
+    required:
+      - interval
+      - collisionHandling
+    allOf:
+      - $ref: '#/definitions/Behaviour'
+      - properties:
+          interval:
+            $ref: '#/definitions/Interval'
+          collisionHandling:
+            type: string
+            enum:
+              - CANCEL
+              - PARALLEL
+              - SKIP
 
   TaskInterface:
     description: |
