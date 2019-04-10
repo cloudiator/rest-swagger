@@ -1346,21 +1346,24 @@ definitions:
 
   CloudiatorProcessNew:
     type: object
+    discriminator: processType
     description: "A process represents a task running on a node"
     required:
       - schedule
       - task
-      - lifecycleInterface
+      - taskInterface
     properties:
+      processType:
+        type: string
       schedule:
         type: string
         description: "The id of the schedule this process belongs to."
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
-      lifecycleInterface:
+      taskInterface:
         type: string
-        description: "The lifecycle interface used for running the process."
+        description: "The task interface used for running the process."
 
   SingleProcessNew:
     type: object
