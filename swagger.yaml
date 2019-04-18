@@ -1556,6 +1556,15 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/CloudiatorProcess'
+          state:
+            type: string
+            enum:
+              - PENDING
+              - RUNNING
+              - ERROR
+              - RESTORING
+              - DELETED
+              - MANUAL
 
   Sensor:
     type: object
