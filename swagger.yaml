@@ -676,6 +676,10 @@ definitions:
             description: |
               Executed before the container is shutdown. Can be used to backup state.
             type: string
+          updateAction:
+            type: string
+            description: |
+              A script that is executed if a new instance of a downstream task is available.
     example:
       name: haproxy
       preInstall: |
@@ -1329,10 +1333,6 @@ definitions:
         required:
           - isMandatory
         properties:
-          updateAction:
-            type: string
-            description: |
-              A script that is executed if a new instance of a downstream task is available.
           isMandatory:
             type: boolean
             description: |
