@@ -1411,6 +1411,9 @@ definitions:
       task:
         type: string
         description: "The id of the task that is instantiated by this process."
+      taskInterface:
+        type: string
+        description: "The task interface used for running the process."
       diagnostic:
         type: string
         description: "Diagnostic information about this process"
