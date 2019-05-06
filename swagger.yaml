@@ -606,6 +606,19 @@ definitions:
             enum:
               - SINGLE
               - CLUSTER
+  
+  HdfsInterface:
+    description: |
+      Subtype of TaskInterface. Describes how to deploy a Task to Hdfs.
+    type: object
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          processMapping:
+            type: string
+            enum:
+              - SINGLE
+              - CLUSTER            
 
   LanceInterface:
     description: |
