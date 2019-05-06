@@ -602,10 +602,24 @@ definitions:
               Spark configuration properties.
             $ref: '#/definitions/Map'
           processMapping:
-            type: string
-            enum:
-              - SINGLE
-              - CLUSTER
+            $ref: '#/definitions/ProcessMapping'
+  
+  HdfsInterface:
+    description: |
+      Subtype of TaskInterface. Describes how to deploy a Task to Hdfs.
+    type: object
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          processMapping:
+            $ref: '#/definitions/ProcessMapping'
+          
+              
+  ProcessMapping:
+    type: string
+    enum:
+      - SINGLE
+      - CLUSTER            
 
   LanceInterface:
     description: |
