@@ -602,10 +602,7 @@ definitions:
               Spark configuration properties.
             $ref: '#/definitions/Map'
           processMapping:
-            type: string
-            enum:
-              - SINGLE
-              - CLUSTER
+            $ref: '#/definitions/ProcessMapping'
   
   HdfsInterface:
     description: |
@@ -615,10 +612,14 @@ definitions:
       - $ref: '#/definitions/TaskInterface'
       - properties:
           processMapping:
-            type: string
-            enum:
-              - SINGLE
-              - CLUSTER            
+            $ref: '#/definitions/ProcessMapping'
+          
+              
+  ProcessMapping:
+    type: string
+    enum:
+      - SINGLE
+      - CLUSTER            
 
   LanceInterface:
     description: |
