@@ -257,7 +257,11 @@ definitions:
             description: |
               A key-value map representing the environment of the docker container
             $ref: '#/definitions/Map'
-
+          updateAction:
+            type: string
+            description: |
+              An (optional) update action for updating the communication.
+              
   Error:
     description: |
       Basic errorClass
@@ -1423,6 +1427,16 @@ definitions:
       owner:
         type: string
         description: "The user this process was created for"
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+        description: |
+          The public/private ip addresses under which this process is reachable.
+      endpoint:
+        type: string
+        description: |
+          The endpoint where this process is reachable.
 
   SingleProcess:
     type: object
