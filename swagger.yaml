@@ -2920,17 +2920,17 @@ paths:
         - node
       description: "Registers an already existing node for usage"
       parameters:
-        - name: node
+        - name: new-node
           in: body
           required: true
           description: 'Node to be registered'
           schema:
-            $ref: '#/definitions/Node'
+            $ref: '#/definitions/NewNode'
       responses:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/Node'
+            $ref: '#/definitions/NewNode'
 
   # Virtual machine related tasks
   /vm:
