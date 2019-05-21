@@ -882,26 +882,12 @@ definitions:
       Represents a new node that is to be created
     type: object
     properties:
-      originId:
-        type: string
-        description: |
-          Original id of this node. Is present of the node was created e.g. at a cloud provider.
       name:
         type: string
         description: |
           Human-readable name for the node.
       loginCredential:
         $ref: '#/definitions/LoginCredential'
-      nodeType:
-        type: string
-        enum:
-          - UNKNOWN_TYPE
-          - VM
-          - BYON
-          - CONTAINER
-          - FAAS
-        description: |
-          The type of this node.
       ipAddresses:
         type: array
         items:
@@ -1044,10 +1030,24 @@ definitions:
             type: string
             description: |
               Unique identifier of this node.
+          originId:
+            type: string
+            description: |
+              Original id of this node. Is present of the node was created e.g. at a cloud provider.
           userId:
             type: string
             description: |
               User id of the owner of this node.
+          nodeType:
+            type: string
+            enum:
+              - UNKNOWN_TYPE
+              - VM
+              - BYON
+              - CONTAINER
+              - FAAS
+            description: |
+              The type of this node.
           state:
             type: string
             enum: ['PENDING','RUNNING','ERROR','DELETED']
