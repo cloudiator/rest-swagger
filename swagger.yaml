@@ -1030,6 +1030,10 @@ definitions:
             type: string
             description: |
               Unique identifier of this BYON.
+          allocated:
+            type: boolean
+            description: |
+              Signals if the node was allocated by cloudiator
 
   Node:
     description: "Representation of a node used by Cloudiator"
@@ -2925,6 +2929,19 @@ paths:
             $ref: '#/definitions/Queue'
 
   /byon:
+    get:
+      consumes: []
+      operationId: findBYONs
+      tags:
+        - node
+      description: "Retrieve all BYONs the current user has access to"
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ByonNode'
     post:
       operationId: addBYON
       tags:
