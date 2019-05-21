@@ -1020,6 +1020,17 @@ definitions:
         format: double
         example: 2.0
 
+  ByonNode:
+    description: "Representation of a BYON used by Cloudiator"
+    type: object
+    allOf:
+      - $ref: '#/definitions/NewNode'
+      - properties:
+          id:
+            type: string
+            description: |
+              Unique identifier of this BYON.
+
   Node:
     description: "Representation of a node used by Cloudiator"
     type: object
@@ -2930,7 +2941,22 @@ paths:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/NewNode'
+            $ref: '#/definitions/ByonNode'
+
+  /byon/{id}:
+    delete:
+      consumes: []
+      description: 'Deletes the already existing node from cloudiator, if not allocated.'
+      operationId: deleteBYON
+      tags:
+        - node
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "OK"
+        404:
+          $ref: '#/responses/404NotFoundResponse'
 
   # Virtual machine related tasks
   /vm:
