@@ -2931,7 +2931,7 @@ paths:
   /byon:
     get:
       consumes: []
-      operationId: findBYONs
+      operationId: findByons
       tags:
         - node
       description: "Retrieve all BYONs the current user has access to"
@@ -2943,7 +2943,7 @@ paths:
             items:
               $ref: '#/definitions/ByonNode'
     post:
-      operationId: addBYON
+      operationId: addByon
       tags:
         - node
       description: "Registers an already existing node for usage"
@@ -2964,7 +2964,7 @@ paths:
     delete:
       consumes: []
       description: 'Deletes the already existing node from cloudiator, if not allocated.'
-      operationId: deleteBYON
+      operationId: deleteByon
       tags:
         - node
       parameters:
