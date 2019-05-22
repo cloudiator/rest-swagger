@@ -2958,7 +2958,7 @@ paths:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/ByonNode'
+            $ref: '#/definitions/Queue'
 
   /byon/{id}:
     delete:
