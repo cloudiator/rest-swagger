@@ -2970,8 +2970,11 @@ paths:
       parameters:
         - $ref: '#/parameters/id'
       responses:
-        200:
-          description: "OK"
+        202:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Queue'
         404:
           $ref: '#/responses/404NotFoundResponse'
 
