@@ -625,6 +625,39 @@ definitions:
       - SINGLE
       - CLUSTER
 
+  Distribution:
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        description: |
+          Discriminator for polymorphism.
+
+  NormalDistribution:
+    allOf:
+      - $ref: '#/definitions/Distribution'
+      - properties:
+          mean:
+            type: number
+            format: double
+          stdDev:
+            type: number
+            format: double
+
+  SimulationInterface:
+    description: |
+      Simulated task interface
+    type: object
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          startTime:
+            $ref: '#/definitions/Distribution'
+
+
   LanceInterface:
     description: |
       Part of a task.
