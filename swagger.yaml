@@ -261,7 +261,7 @@ definitions:
             type: string
             description: |
               An (optional) update action for updating the communication.
-              
+
   Error:
     description: |
       Basic errorClass
@@ -607,7 +607,7 @@ definitions:
             $ref: '#/definitions/Map'
           processMapping:
             $ref: '#/definitions/ProcessMapping'
-  
+
   HdfsInterface:
     description: |
       Subtype of TaskInterface. Describes how to deploy a Task to Hdfs.
@@ -617,13 +617,13 @@ definitions:
       - properties:
           processMapping:
             $ref: '#/definitions/ProcessMapping'
-          
-              
+
+
   ProcessMapping:
     type: string
     enum:
       - SINGLE
-      - CLUSTER            
+      - CLUSTER
 
   LanceInterface:
     description: |
@@ -1855,8 +1855,8 @@ definitions:
       location:
         type: string
         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
-        
-        
+
+
   Scale:
     type: object
     description: |
@@ -1867,12 +1867,12 @@ definitions:
         type: string
       task:
         description: "The identifier of the task"
-        type: string  
+        type: string
       nodes:
-        description: "An optional list of nodes"
         type: array
         items:
-          $ref: '#/definitions/Node'  
+          type: string
+        description: "An optional list of nodes for the scaling process"
 
 
 responses:
@@ -3502,9 +3502,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Job'
-            
-            
-            
+
+
+
   /scale:
     post:
       operationId: triggerScale
