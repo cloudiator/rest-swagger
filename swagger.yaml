@@ -1455,7 +1455,7 @@ definitions:
         enum: ['PENDING','RUNNING','ERROR','DELETED','FINISHED']
       type:
         type: string
-        enum: ["LANCE","SPARK","FAAS","UNKNOWN"]
+        enum: ["LANCE","SPARK","FAAS","SIMULATION","UNKNOWN"]
       schedule:
         type: string
         description: "The id of the schedule this process belongs to."
