@@ -1030,6 +1030,10 @@ definitions:
             type: string
             description: |
               Unique identifier of this BYON.
+          userId:
+            type: string
+            description: |
+              User id of the owner of this node.
           allocated:
             type: boolean
             description: |
