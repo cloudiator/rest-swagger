@@ -261,7 +261,7 @@ definitions:
             type: string
             description: |
               An (optional) update action for updating the communication.
-              
+
   Error:
     description: |
       Basic errorClass
@@ -607,7 +607,7 @@ definitions:
             $ref: '#/definitions/Map'
           processMapping:
             $ref: '#/definitions/ProcessMapping'
-  
+
   HdfsInterface:
     description: |
       Subtype of TaskInterface. Describes how to deploy a Task to Hdfs.
@@ -617,13 +617,46 @@ definitions:
       - properties:
           processMapping:
             $ref: '#/definitions/ProcessMapping'
-          
-              
+
+
   ProcessMapping:
     type: string
     enum:
       - SINGLE
-      - CLUSTER            
+      - CLUSTER
+
+  Distribution:
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        description: |
+          Discriminator for polymorphism.
+
+  NormalDistribution:
+    allOf:
+      - $ref: '#/definitions/Distribution'
+      - properties:
+          mean:
+            type: number
+            format: double
+          stdDev:
+            type: number
+            format: double
+
+  SimulationInterface:
+    description: |
+      Simulated task interface
+    type: object
+    allOf:
+      - $ref: '#/definitions/TaskInterface'
+      - properties:
+          startTime:
+            $ref: '#/definitions/Distribution'
+
 
   LanceInterface:
     description: |
@@ -1450,7 +1483,7 @@ definitions:
         enum: ['PENDING','RUNNING','ERROR','DELETED','FINISHED']
       type:
         type: string
-        enum: ["LANCE","SPARK","FAAS","UNKNOWN"]
+        enum: ["LANCE","SPARK","FAAS","SIMULATION","UNKNOWN"]
       schedule:
         type: string
         description: "The id of the schedule this process belongs to."
@@ -1883,8 +1916,8 @@ definitions:
       location:
         type: string
         example: "01101b2075b7046fff5eaa9beae14ccd:RegionOne"
-        
-        
+
+
   Scale:
     type: object
     description: |
@@ -1895,12 +1928,12 @@ definitions:
         type: string
       task:
         description: "The identifier of the task"
-        type: string  
+        type: string
       nodes:
-        description: "An optional list of nodes"
         type: array
         items:
-          $ref: '#/definitions/Node'  
+          type: string
+        description: "An optional list of nodes for the scaling process"
 
 
 responses:
@@ -3561,9 +3594,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Job'
-            
-            
-            
+
+
+
   /scale:
     post:
       operationId: triggerScale
