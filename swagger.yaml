@@ -1246,7 +1246,7 @@ definitions:
   OperatingSystemArchitecture:
     description: "Type of OS Architecture"
     type: string
-    enum: ['AMD64','UNKOWN','I386']
+    enum: ['AMD64','UNKOWN','I386','ARM']
 
   OperatingSystemFamily:
     description: "Type of OS Family"
@@ -1929,6 +1929,11 @@ definitions:
       task:
         description: "The identifier of the task"
         type: string
+      scaleDirection:
+        type: string
+        enum:
+          - SCALE_IN
+          - SCALE_OUT
       nodes:
         type: array
         items:
