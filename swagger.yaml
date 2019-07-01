@@ -1218,7 +1218,7 @@ definitions:
   OperatingSystemArchitecture:
     description: "Type of OS Architecture"
     type: string
-    enum: ['AMD64','UNKOWN','I386']
+    enum: ['AMD64','UNKOWN','I386','ARM']
 
   OperatingSystemFamily:
     description: "Type of OS Family"
