@@ -916,6 +916,40 @@ definitions:
       cloudConfiguration:
         $ref: '#/definitions/CloudConfiguration'
 
+  NewNode:
+    description: |
+      Represents a new node that is to be created
+    type: object
+    properties:
+      name:
+        type: string
+        description: |
+          Human-readable name for the node.
+      loginCredential:
+        $ref: '#/definitions/LoginCredential'
+      ipAddresses:
+        type: array
+        items:
+          $ref: '#/definitions/IpAddress'
+        description: |
+          The public/private ip addresses under which this node is reachable.
+      nodeProperties:
+        $ref: '#/definitions/NodeProperties'
+        description: |
+          Further properties of this node.
+      reason:
+        type: string
+        description: |
+          Reason this node was created
+      diagnostic:
+        type: string
+        description: |
+          Diagnostic information about the node state
+      nodeCandidate:
+        type: string
+        description: |
+          The node candidate this node was created from if applicable.
+
   NewPlatform:
     description: |
       Repesents a new PaaS provider to be created
@@ -1025,64 +1059,58 @@ definitions:
         format: double
         example: 2.0
 
-  Node:
+  ByonNode:
+    description: "Representation of a BYON used by Cloudiator"
     type: object
-    properties:
-      id:
-        type: string
-        description: |
-          Unique identifier of this node.
-      originId:
-        type: string
-        description: |
-          Original id of this node. Is present of the node was created e.g. at a cloud provider.
-      userId:
-        type: string
-        description: |
-          User id of the owner of this node.
-      name:
-        type: string
-        description: |
-          Human-readable name for the node.
-      state:
-        type: string
-        enum: ['PENDING','RUNNING','ERROR','DELETED']
-        description: |
-          The state the node is currently in.
-      loginCredential:
-        $ref: '#/definitions/LoginCredential'
-      nodeType:
-        type: string
-        enum:
-          - UNKNOWN_TYPE
-          - VM
-          - BYON
-          - CONTAINER
-          - FAAS
-        description: |
-          The type of this node.
-      ipAddresses:
-        type: array
-        items:
-          $ref: '#/definitions/IpAddress'
-        description: |
-          The public/private ip addresses under which this node is reachable.
-      nodeProperties:
-        $ref: '#/definitions/NodeProperties'
-        description: |
-          Further properties of this node.
-      reason:
-        type: string
-        description: |
-          Reason this node was created
-      diagnostic:
-        type: string
-        description: |
-          Diagnostic information about the node state
-      nodeCandidate:
-        type: string
-        description: |
-          The node candidate this node was created from if applicable.
+    allOf:
+      - $ref: '#/definitions/NewNode'
+      - properties:
+          id:
+            type: string
+            description: |
+              Unique identifier of this BYON.
+          userId:
+            type: string
+            description: |
+              User id of the owner of this node.
+          allocated:
+            type: boolean
+            description: |
+              Signals if the node was allocated by cloudiator
+
+  Node:
+    description: "Representation of a node used by Cloudiator"
+    type: object
+    allOf:
+      - $ref: '#/definitions/NewNode'
+      - properties:
+          id:
+            type: string
+            description: |
+              Unique identifier of this node.
+          originId:
+            type: string
+            description: |
+              Original id of this node. Is present of the node was created e.g. at a cloud provider.
+          userId:
+            type: string
+            description: |
+              User id of the owner of this node.
+          nodeType:
+            type: string
+            enum:
+              - UNKNOWN_TYPE
+              - VM
+              - BYON
+              - CONTAINER
+              - FAAS
+            description: |
+              The type of this node.
+          state:
+            type: string
+            enum: ['PENDING','RUNNING','ERROR','DELETED']
+            description: |
+              The state the node is currently in.
 
   NodeProperties:
     description: Attributes defining this node
@@ -2967,23 +2995,54 @@ paths:
             $ref: '#/definitions/Queue'
 
   /byon:
-    post:
-      operationId: addBYON
+    get:
+      consumes: []
+      operationId: findByons
       tags:
         - node
-      description: "Registers an already existing node for usage"
-      parameters:
-        - name: node
-          in: body
-          required: true
-          description: 'Node to be registered'
-          schema:
-            $ref: '#/definitions/Node'
+      description: "Retrieve all BYONs the current user has access to"
       responses:
         200:
           description: 'OK'
           schema:
-            $ref: '#/definitions/Node'
+            type: array
+            items:
+              $ref: '#/definitions/ByonNode'
+    post:
+      operationId: addByon
+      tags:
+        - node
+      description: "Registers an already existing node for usage"
+      parameters:
+        - name: new-node
+          in: body
+          required: true
+          description: 'Node to be registered'
+          schema:
+            $ref: '#/definitions/NewNode'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/ByonNode'
+
+  /byon/{id}:
+    delete:
+      consumes: []
+      description: 'Deletes the already existing node from cloudiator, if not allocated.'
+      operationId: deleteByon
+      tags:
+        - node
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        202:
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/Queue'
+        404:
+          $ref: '#/responses/404NotFoundResponse'
 
   # Virtual machine related tasks
   /vm:
