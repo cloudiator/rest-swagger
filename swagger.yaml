@@ -1599,6 +1599,9 @@ definitions:
       location:
         type: string
         description: "Location of the original entity"
+      taskId:
+        type: string
+        description: "Id of the original entity"
 
   QueueStatus:
     description: |
