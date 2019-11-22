@@ -67,7 +67,7 @@ parameters:
   secret:
     name: secret
     in: path
-    description: Secret in get request
+    description: Secret in path
     required: true
     type: string
 
