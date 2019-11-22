@@ -64,7 +64,12 @@ parameters:
     description: Unique identifier of a monitor
     required: true
     type: string
-
+  secret:
+    name: secret
+    in: path
+    description: Secret in get request
+    required: true
+    type: string
 
 ################################################################################
 ####                                                                        ####
@@ -2872,6 +2877,21 @@ paths:
           description: ACCEPTED
           schema:
             $ref: '#/definitions/Queue'
+
+  /process/{id}/{secret}:
+    post:
+      consumes: []
+      operationId: finishProcess
+      tags:
+        - process
+      description: |
+        Finishes the process with the corresponding id
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/secret'
+      responses:
+        200:
+          description: ACCEPTED
 
   # Long Running Request related paths
   /queue:
