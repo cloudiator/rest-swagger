@@ -663,7 +663,7 @@ definitions:
             type: number
             format: double
 
-  Fixed:
+  FixedDistribution:
     allOf:
       - $ref: '#/definitions/Distribution'
       - properties:
