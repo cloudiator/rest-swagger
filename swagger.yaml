@@ -1204,6 +1204,7 @@ definitions:
           - FAAS
           - PAAS
           - BYON
+          - SIMULATION
       price:
         type: number
         format: double
