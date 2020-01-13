@@ -216,7 +216,7 @@ definitions:
   CloudType:
     type: string
     description: type of the cloud
-    enum: ['PRIVATE','PUBLIC']
+    enum: ['PRIVATE','PUBLIC','SIMULATION']
 
   Communication:
     type: object
@@ -1128,6 +1128,7 @@ definitions:
               - BYON
               - CONTAINER
               - FAAS
+              - SIMULATION
             description: |
               The type of this node.
           state:
