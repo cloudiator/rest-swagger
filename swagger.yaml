@@ -216,7 +216,7 @@ definitions:
   CloudType:
     type: string
     description: type of the cloud
-    enum: ['PRIVATE','PUBLIC']
+    enum: ['PRIVATE','PUBLIC','SIMULATION']
 
   Communication:
     type: object
@@ -510,9 +510,7 @@ definitions:
     description: "A time interval consisting of unit and period"
     properties:
       unit:
-        description: "The unit of the interval"
-        type: string
-        enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
+        $ref: '#/definitions/TimeUnit'
       period:
         description: "The period of the interval"
         type: integer
@@ -630,6 +628,19 @@ definitions:
       - SINGLE
       - CLUSTER
 
+  TimeUnit:
+    description: "The unit of the interval"
+    type: string
+    enum: ['DAYS', 'HOURS', 'MICROSECONDS', 'MILLISECONDS', 'MINUTES', 'NANOSECONDS', 'SECONDS']
+
+  StartTime:
+    type: object
+    properties:
+      distribution:
+        $ref: '#/definitions/Distribution'
+      unit:
+        $ref: '#/definitions/TimeUnit'
+
   Distribution:
     type: object
     discriminator: type
@@ -652,6 +663,14 @@ definitions:
             type: number
             format: double
 
+  FixedDistribution:
+    allOf:
+      - $ref: '#/definitions/Distribution'
+      - properties:
+          value:
+            type: number
+            format: double
+
   SimulationInterface:
     description: |
       Simulated task interface
@@ -660,7 +679,7 @@ definitions:
       - $ref: '#/definitions/TaskInterface'
       - properties:
           startTime:
-            $ref: '#/definitions/Distribution'
+            $ref: '#/definitions/StartTime'
 
 
   LanceInterface:
@@ -1109,6 +1128,7 @@ definitions:
               - BYON
               - CONTAINER
               - FAAS
+              - SIMULATION
             description: |
               The type of this node.
           state:
@@ -1184,6 +1204,7 @@ definitions:
           - FAAS
           - PAAS
           - BYON
+          - SIMULATION
       price:
         type: number
         format: double
